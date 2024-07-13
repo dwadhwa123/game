@@ -65,7 +65,6 @@ public class SignIn extends BorderPane {
             else if(App.mdb.getSize() == 2){
                 App.playerNumber = 2;
             }
-            System.out.println(App.username + App.playerNumber);
             new CorporateLobby(currStage, currApp);
         });
 
