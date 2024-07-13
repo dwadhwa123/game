@@ -113,14 +113,14 @@ public class CompetitorPerformance extends BorderPane {
             this.setStyle("-fx-font-family: serif");
             Label revenueLabel = new Label();
             revenueLabel.setText("Revenue"); // 
-            revenueLabel.setPrefSize(100, 20);// set size of Index label
-            revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
+            revenueLabel.setPrefSize(100, 20);// set size of Revenue label
+            revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
             revenueLabel.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(revenueLabel); // add index label to task
+            this.getChildren().add(revenueLabel); // add label to VBox
 
             revenueTF = new TextField(String.valueOf(profitRevenueResults[0])); 
             revenueTF.setPrefSize(380, 20); // set size of text field
-            revenueTF.setStyle("-fx-font-family: serif"); // set background color of
+            revenueTF.setStyle("-fx-font-family: serif"); // set background color
             // texfield                
             revenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
             revenueTF.setEditable(false);
@@ -131,16 +131,16 @@ public class CompetitorPerformance extends BorderPane {
             this.setStyle("-fx-font-family: serif");
             Label profitLabel = new Label();
             profitLabel.setText("Profit"); // 
-            profitLabel.setPrefSize(100, 20);// set size of Index label
-            profitLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
+            profitLabel.setPrefSize(100, 20);
+            profitLabel.setPadding(new Insets(10, 0, 10, 0)); 
             profitLabel.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(profitLabel); // add index label to task
+            this.getChildren().add(profitLabel); 
 
             profitTF = new TextField(String.valueOf(profitRevenueResults[1])); 
-            profitTF.setPrefSize(380, 20); // set size of text field
-            profitTF.setStyle("-fx-font-family: serif"); // set background color of
+            profitTF.setPrefSize(380, 20);
+            profitTF.setStyle("-fx-font-family: serif"); 
             // texfield                
-            profitTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            profitTF.setPadding(new Insets(10, 0, 10, 0)); 
             profitTF.setEditable(false);
             this.getChildren().add(profitTF); 
             this.setAlignment(Pos.CENTER_LEFT);

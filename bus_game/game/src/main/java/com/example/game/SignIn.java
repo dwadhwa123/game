@@ -97,12 +97,12 @@ public class SignIn extends BorderPane {
 
             prompt = new Label();
             prompt.setText("Password: "); // create password prompt
-            prompt.setPrefSize(80, 20); // set size of Index label
-            prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
+            prompt.setPrefSize(80, 20);
+            prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
             prompt.setAlignment(Pos.CENTER);
-            this.getChildren().add(prompt); // add index label to task
+            this.getChildren().add(prompt); // add index label to hbox
 
-            password = new TextField(); // create recipe name text field
+            password = new TextField(); // create password text field
             password.setPrefSize(380, 20); // set size of text field
             password.setStyle("-fx-font-family: serif"); // set background color of
             // texfield
@@ -126,18 +126,18 @@ public class SignIn extends BorderPane {
             this.setPrefSize(500, 80);
             this.setStyle("-fx-font-family: serif");
             prompt = new Label();
-            prompt.setText("Username: "); // create index label
-            prompt.setPrefSize(80, 20); // set size of Index label
-            prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
-            this.getChildren().add(prompt); // add index label to task
+            prompt.setText("Username: "); // create prompt label
+            prompt.setPrefSize(80, 20); // set size of prompt label
+            prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            this.getChildren().add(prompt);
 
-            username = new TextField(); // create recipe name text field
+            username = new TextField(); // create username text field
             username.setPrefSize(380, 20); // set size of text field
-            username.setStyle("-fx-font-family: serif"); // set background color of
+            username.setStyle("-fx-font-family: serif"); // set background color
             // texfield
             username.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
             username.setEditable(true);
-            this.getChildren().add(username); // add textlabel to recipe
+            this.getChildren().add(username); 
             this.setAlignment(Pos.CENTER);
         }
 
