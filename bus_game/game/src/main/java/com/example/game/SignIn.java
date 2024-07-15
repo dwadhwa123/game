@@ -57,14 +57,16 @@ public class SignIn extends BorderPane {
             
         });
         signUpButton.setOnAction(e -> {
-            App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText());
-            App.username = username.getUsernameField().getText();
-            if(App.mdb.getSize() == 1){
+            if((App.mdb.getSize()+2)%2 == 0){
                 App.playerNumber = 1;
             }
-            else if(App.mdb.getSize() == 2){
+            else if((App.mdb.getSize()+2)%2 == 1){
                 App.playerNumber = 2;
             }
+            System.out.println(App.username + " " + App.playerNumber);
+            App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText());
+            App.username = username.getUsernameField().getText();
+            App.startMonitoring();
             new CorporateLobby(currStage, currApp);
         });
 

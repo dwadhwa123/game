@@ -7,6 +7,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import java.time.LocalDateTime;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javafx.application.Platform;
+
 /**
  * JavaFX App
  */
@@ -25,7 +32,11 @@ public class App extends Application {
     public static int robotsCostPerPeriod= 200;
     public static int robotsMadePerPeriod = 10;
     public static int playerNumber = 0;
+    public static long gameNumber;
     public static MongoDB mdb = new MongoDB();
+    private static final LocalDateTime TARGET_TIME = LocalDateTime.of(2024, 7, 13, 23, 46, 0);
+    private static ScheduledExecutorService scheduler;
+
     @Override
     public void start(Stage stage) throws IOException {
         SignIn signIn = new SignIn(stage, this);
@@ -36,6 +47,19 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static void startMonitoring() {
+        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            LocalDateTime now = LocalDateTime.now();
+            if (now.isAfter(TARGET_TIME)) {
+                Platform.runLater(() -> {
+                    System.out.println("Hello Time Has Been Reached");
+                });
+                scheduler.shutdown();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
 }

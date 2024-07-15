@@ -52,7 +52,7 @@ public class OurPerformance extends BorderPane {
         });
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username);
+            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
             if(enemyInputs == null){
                 profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice, 0, 0, 0);
@@ -101,7 +101,7 @@ public class OurPerformance extends BorderPane {
 
     class Inputs extends VBox{
         Inputs(){
-            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username);
+            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
             if(enemyInputs == null){
                 profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice, 0, 0, 0);

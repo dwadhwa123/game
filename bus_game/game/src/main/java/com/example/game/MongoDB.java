@@ -39,7 +39,8 @@ public class MongoDB {
     // }
 
     public void addEntry(String username, String password){
-        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spent", 0);
+        App.gameNumber = (this.collection.countDocuments()+2)/2;
+        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spent", 0).append("game number", (this.collection.countDocuments()+2)/2);
         collection.insertOne(d);
     }
 
@@ -56,10 +57,10 @@ public class MongoDB {
         collection.updateOne(query, updates, options);
     }
 
-    public Integer[] recieveEnemyInputs(String username){
+    public Integer[] recieveEnemyInputs(String username, long gameNumber){
         FindIterable<Document> documentCursor = collection.find();
         for(Document doc: documentCursor){
-            if(!doc.get("_id").equals(username)){
+            if(!doc.get("_id").equals(username) && doc.get("game number").equals(gameNumber)){
                 int enemy1 = (Integer) doc.get("basic price");
                 int enemy2 = (Integer) doc.get("quality price");
                 int enemy3 = (Integer) doc.get("advertising spent");
