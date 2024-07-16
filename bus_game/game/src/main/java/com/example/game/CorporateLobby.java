@@ -85,7 +85,7 @@ public class CorporateLobby extends BorderPane {
         InitialConditionLabels(){
             this.setStyle("-fx-font-family: serif");
             pricePerBasicDrone = new Label();
-            pricePerBasicDrone.setText("Price Per Basic Drone: $60");
+            pricePerBasicDrone.setText("Price Per Basic Drone: $" + App.pricePerBasicDrone);
             pricePerBasicDrone.setPrefSize(200, 20);
             pricePerBasicDrone.setPadding(new Insets(10, 0, 10, 0));
             pricePerBasicDrone.setAlignment(Pos.CENTER_LEFT);
@@ -93,7 +93,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             costPerBasicDrone = new Label();
-            costPerBasicDrone.setText("Cost Per Basic Drone: $10");
+            costPerBasicDrone.setText("Cost Per Basic Drone: $" + App.costPerBasicDrone);
             costPerBasicDrone.setPrefSize(200, 20);
             costPerBasicDrone.setPadding(new Insets(10, 0, 10, 0));
             costPerBasicDrone.setAlignment(Pos.CENTER_LEFT);
@@ -101,7 +101,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             pricePerQualityDrone = new Label();
-            pricePerQualityDrone.setText("Price Per Quality Drone: $100");
+            pricePerQualityDrone.setText("Price Per Quality Drone: $" + App.pricePerQualityDrone);
             pricePerQualityDrone.setPrefSize(200, 20);
             pricePerQualityDrone.setPadding(new Insets(10, 0, 10, 0));
             pricePerQualityDrone.setAlignment(Pos.CENTER_LEFT);
@@ -109,7 +109,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             costPerQualityDrone = new Label();
-            costPerQualityDrone.setText("Cost Per Quality Drone: $30");
+            costPerQualityDrone.setText("Cost Per Quality Drone: $" + App.costPerQualityDrone);
             costPerQualityDrone.setPrefSize(200, 20);
             costPerQualityDrone.setPadding(new Insets(10, 0, 10, 0));
             costPerQualityDrone.setAlignment(Pos.CENTER_LEFT);
@@ -117,7 +117,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             basicCustomers = new Label();
-            basicCustomers.setText("Basic Customers: 200");
+            basicCustomers.setText("Basic Customers: " + App.basicCustomers);
             basicCustomers.setPrefSize(200, 20);
             basicCustomers.setPadding(new Insets(10, 0, 10, 0));
             basicCustomers.setAlignment(Pos.CENTER_LEFT);
@@ -125,7 +125,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             qualityCustomers = new Label();
-            qualityCustomers.setText("Quality Customers: 200");
+            qualityCustomers.setText("Quality Customers: " + App.qualityCustomers);
             qualityCustomers.setPrefSize(200, 20);
             qualityCustomers.setPadding(new Insets(10, 0, 10, 0));
             qualityCustomers.setAlignment(Pos.CENTER_LEFT);
@@ -133,7 +133,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             robotsCostPerPeriod = new Label();
-            robotsCostPerPeriod.setText("Robots Cost Per Period: $200");
+            robotsCostPerPeriod.setText("Robots Cost Per Period: $" + App.robotsCostPerPeriod);
             robotsCostPerPeriod.setPrefSize(200, 20);
             robotsCostPerPeriod.setPadding(new Insets(10, 0, 10, 0));
             robotsCostPerPeriod.setAlignment(Pos.CENTER_LEFT);
@@ -141,7 +141,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             robotsMadePerPeriod = new Label();
-            robotsMadePerPeriod.setText("Robots Made Per Period: 10");
+            robotsMadePerPeriod.setText("Robots Made Per Period: " + App.robotsMadePerPeriod);
             robotsMadePerPeriod.setPrefSize(200, 20);
             robotsMadePerPeriod.setPadding(new Insets(10, 0, 10, 0));
             robotsMadePerPeriod.setAlignment(Pos.CENTER_LEFT);

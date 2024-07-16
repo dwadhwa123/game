@@ -15,6 +15,14 @@ import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 
+import java.time.LocalDateTime;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javafx.application.Platform;
+
 public class SignIn extends BorderPane {
     private Header3 header3;
     private AccountLogIn accountLogIn;
@@ -26,6 +34,7 @@ public class SignIn extends BorderPane {
     private Password password;
 
     private Label correctPasswordCheck;
+    private static ScheduledExecutorService scheduler;
 
 
     String defaultLabelStyle = "-fx-font-family: serif";
@@ -52,22 +61,33 @@ public class SignIn extends BorderPane {
                 App.userBasicPrice = userInputs[0];
                 App.userQualityPrice = userInputs[1];
                 App.userAdvertisingPrice = userInputs[2];
+                App.gameNumber = App.mdb.getGameNumber(App.username);
                 new CorporateLobby(currStage, currApp);
             }
             
         });
         signUpButton.setOnAction(e -> {
-            if((App.mdb.getSize()+2)%2 == 0){
+            App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText());
+            if((App.mdb.getSize()+2)%2 == 1){
                 App.playerNumber = 1;
+                try {
+                    App.mdb.stopUntilChange();
+                } catch (InterruptedException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             }
-            else if((App.mdb.getSize()+2)%2 == 1){
+            else if((App.mdb.getSize()+2)%2 == 0){
                 App.playerNumber = 2;
             }
-            System.out.println(App.username + " " + App.playerNumber);
-            App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText());
             App.username = username.getUsernameField().getText();
-            App.startMonitoring();
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            LocalDateTime futureDateTime = currentDateTime.plusSeconds(30);
+            App.startMonitoring(futureDateTime, currStage, currApp);
+            LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(60);
+            App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
             new CorporateLobby(currStage, currApp);
+            System.out.print(App.username + " Change Detection exit worked");
         });
 
     }

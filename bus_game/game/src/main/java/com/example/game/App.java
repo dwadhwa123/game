@@ -34,8 +34,10 @@ public class App extends Application {
     public static int playerNumber = 0;
     public static long gameNumber;
     public static MongoDB mdb = new MongoDB();
-    private static final LocalDateTime TARGET_TIME = LocalDateTime.of(2024, 7, 13, 23, 46, 0);
     private static ScheduledExecutorService scheduler;
+    private static ScheduledExecutorService schedulerEntrant;
+    public static boolean warDisruption = false;
+    public static boolean newEntrantDistruption = false;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -49,15 +51,28 @@ public class App extends Application {
         launch();
     }
 
-    public static void startMonitoring() {
+    public static void startMonitoring(LocalDateTime ltd, Stage currStage, App currApp) {
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             LocalDateTime now = LocalDateTime.now();
-            if (now.isAfter(TARGET_TIME)) {
+            if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
-                    System.out.println("Hello Time Has Been Reached");
+                    new WarDisruption(currStage, currApp);
                 });
                 scheduler.shutdown();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public static void startMonitoringEntrant(LocalDateTime ltd, Stage currStage, App currApp) {
+        schedulerEntrant = Executors.newScheduledThreadPool(1);
+        schedulerEntrant.scheduleAtFixedRate(() -> {
+            LocalDateTime now = LocalDateTime.now();
+            if (now.isAfter(ltd)) {
+                Platform.runLater(() -> {
+                    new NewEntrantDistruption(currStage, currApp);
+                });
+                schedulerEntrant.shutdown();
             }
         }, 0, 1, TimeUnit.SECONDS);
     }

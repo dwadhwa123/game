@@ -13,6 +13,10 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
+import com.mongodb.client.model.changestream.FullDocument;
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoIterable;
+import java.util.concurrent.CountDownLatch;
 
 
 public class MongoDB {
@@ -91,6 +95,18 @@ public class MongoDB {
         return null;
     }
 
+    public Long getGameNumber(String username){
+        FindIterable<Document> documentCursor = collection.find();
+        for(Document doc: documentCursor){
+            if(doc.get("_id").equals(username)){
+                long gN = (Long) doc.get("game number");
+                return gN;
+            }
+        }
+        return null;
+    }
+
+
     public boolean correctUsernameCheck(String username, String password){
         FindIterable<Document> documentCursor = collection.find();
         for(Document doc: documentCursor){
@@ -109,5 +125,25 @@ public class MongoDB {
     public long getSize(){
         return this.collection.countDocuments();
     }
+    public void stopUntilChange() throws InterruptedException{
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try (MongoCursor<ChangeStreamDocument<Document>> cursor = collection.watch().fullDocument(FullDocument.UPDATE_LOOKUP).iterator()) {
+            while (cursor.hasNext()) {
+                ChangeStreamDocument<Document> changeStreamDocument = cursor.next();
+                Document fullDocument = changeStreamDocument.getFullDocument();
+                System.out.println("Change detected: " + fullDocument.toJson());
+
+                // Optionally, you can handle the change here
+                // For demonstration, we just release the latch
+                latch.countDown();
+                return;
+            }
+        }
+
+        // This will block until a change is detected and latch.countDown() is called
+        latch.await();
+    }
+    
 
 }
