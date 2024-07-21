@@ -11,11 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
 
 public class CompetitorPerformance extends BorderPane {
     private Header header;
@@ -36,7 +33,7 @@ public class CompetitorPerformance extends BorderPane {
         this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
-        ourPerformanceScene = new Scene(this, 800, 400);
+        ourPerformanceScene = new Scene(this, App.width, App.height);
         currStage.setScene(ourPerformanceScene);
         inputs = new Inputs();
         this.setCenter(inputs);
@@ -64,10 +61,10 @@ public class CompetitorPerformance extends BorderPane {
             Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
             if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
             }
             else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
             }
             revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
             profitTF.setText(String.valueOf(profitRevenueResults[1])); 
@@ -117,10 +114,10 @@ public class CompetitorPerformance extends BorderPane {
             Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
             if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
             }
             else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
             }
            
             this.setPrefSize(500, 20);

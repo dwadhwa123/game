@@ -2,7 +2,6 @@ package com.example.game;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,9 +18,11 @@ import javafx.application.Platform;
  */
 public class App extends Application {
     private Scene signInScene;
+    public static int height = 400;
+    public static int width = 800;
     public static int userBasicPrice = 0;
     public static int userQualityPrice = 0;
-    public static int userAdvertisingPrice = 0;
+    public static int userAdvertisingSpend = 0;
     public static String username;
     public static int pricePerBasicDrone = 60;
     public static int costPerBasicDrone = 10;
@@ -42,7 +43,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         SignIn signIn = new SignIn(stage, this);
-        signInScene = new Scene(signIn, 800, 400);
+        signInScene = new Scene(signIn, App.width, App.height);
         stage.setScene(signInScene);
         stage.show();
     }

@@ -11,11 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
 
 public class CumulativePerformance extends BorderPane {
     private Header header;
@@ -39,7 +36,7 @@ public class CumulativePerformance extends BorderPane {
         this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
-        cumulativePerformanceScene = new Scene(this, 800, 400);
+        cumulativePerformanceScene = new Scene(this, App.width, App.height);
         currStage.setScene(cumulativePerformanceScene);
         inputs = new Inputs();
         this.setCenter(inputs);

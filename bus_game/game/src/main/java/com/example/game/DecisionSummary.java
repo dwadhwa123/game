@@ -2,10 +2,6 @@ package com.example.game;
 
 import java.util.ArrayList;
 
-import org.bson.Document;
-
-import com.mongodb.client.FindIterable;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,18 +27,18 @@ public class DecisionSummary extends BorderPane {
     private ArrayList<Integer> intInputs;
     TextField basicPriceInput;
     TextField qualityPriceInput;
-    TextField advertisingInput;
+    TextField advertisingSpendInput;
     DecisionSummary(Stage currStage, App currApp){
         currStage.setResizable(true);
         header = new Header();
         this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
-        decisionSummaryScene = new Scene(this, 800, 400);
+        decisionSummaryScene = new Scene(this, App.width, App.height);
         intInputs = new ArrayList<>();
         intInputs.add(App.userBasicPrice);
         intInputs.add(App.userQualityPrice);
-        intInputs.add(App.userAdvertisingPrice);
+        intInputs.add(App.userAdvertisingSpend);
         inputs = new Inputs(intInputs);
         this.setCenter(inputs);
         currStage.setScene(decisionSummaryScene);
@@ -66,9 +62,9 @@ public class DecisionSummary extends BorderPane {
             App.userBasicPrice = Integer.parseInt(basicInput);
             String qualityInput = qualityPriceInput.getText();
             App.userQualityPrice = Integer.parseInt(qualityInput);
-            String advertisingPriceInput = advertisingInput.getText();
-            App.userAdvertisingPrice = Integer.parseInt(advertisingPriceInput);
-            App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+            String advertisingInput = advertisingSpendInput.getText();
+            App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
+            App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
 
             Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
@@ -78,7 +74,7 @@ public class DecisionSummary extends BorderPane {
                 profitRevenueResults[1] = 0.0;
             }
             else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
             }
             Double[] userValues = App.mdb.getUserCumulative(App.username);
             App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
@@ -92,7 +88,7 @@ public class DecisionSummary extends BorderPane {
                 profitRevenueResultsEnemy[1] = 0.0;
             }
             else{
-                profitRevenueResultsEnemy = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+                profitRevenueResultsEnemy = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
             }
             App.mdb.saveCumulative(enemyUsername, enemyValues[0] +  profitRevenueResultsEnemy[0], enemyValues[1] + profitRevenueResultsEnemy[1]);
 
@@ -137,7 +133,7 @@ public class DecisionSummary extends BorderPane {
     class Inputs extends VBox{
         Label basicPrice;
         Label qualityPrice;
-        Label advertisingPrice;
+        Label advertisingSpend;
         Inputs(ArrayList<Integer> integerInputs){
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
@@ -179,21 +175,21 @@ public class DecisionSummary extends BorderPane {
 
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
-            advertisingPrice = new Label();
+            advertisingSpend = new Label();
 
-            advertisingPrice.setText("Advertising Price" + ": ");
-            advertisingPrice.setPrefSize(100, 20);
-            advertisingPrice.setPadding(new Insets(10, 0, 10, 0));
-            advertisingPrice.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(advertisingPrice);
+            advertisingSpend.setText("Advertising Spend" + ": ");
+            advertisingSpend.setPrefSize(140, 20);
+            advertisingSpend.setPadding(new Insets(10, 0, 10, 0));
+            advertisingSpend.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(advertisingSpend);
             String input3 = String.valueOf(integerInputs.get(2));
-            advertisingInput = new TextField(input3);
-            advertisingInput.setPrefSize(380, 20);
-            advertisingInput.setStyle("-fx-font-family: serif");
+            advertisingSpendInput = new TextField(input3);
+            advertisingSpendInput.setPrefSize(380, 20);
+            advertisingSpendInput.setStyle("-fx-font-family: serif");
 
-            advertisingInput.setPadding(new Insets(10, 0, 10, 0));
-            advertisingInput.setEditable(true);
-            this.getChildren().add(advertisingInput);
+            advertisingSpendInput.setPadding(new Insets(10, 0, 10, 0));
+            advertisingSpendInput.setEditable(true);
+            this.getChildren().add(advertisingSpendInput);
             this.setAlignment(Pos.CENTER_LEFT);
 
 

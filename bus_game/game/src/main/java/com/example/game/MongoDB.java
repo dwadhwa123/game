@@ -3,7 +3,6 @@ package com.example.game;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -14,8 +13,6 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
-import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoIterable;
 import java.util.concurrent.CountDownLatch;
 
 
@@ -44,7 +41,7 @@ public class MongoDB {
 
     public void addEntry(String username, String password){
         App.gameNumber = (this.collection.countDocuments()+2)/2;
-        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spent", 0).append("game number", (this.collection.countDocuments()+2)/2)
+        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("game number", (this.collection.countDocuments()+2)/2)
         .append("cumulative revenue", 0.0).append("cumulative profit", 0.0);
         collection.insertOne(d);
     }
@@ -55,7 +52,7 @@ public class MongoDB {
         Bson updates = Updates.combine(
                     Updates.set("basic price", decision1),
                     Updates.set("quality price", decision2),
-                    Updates.set("advertising spent", decision3));
+                    Updates.set("advertising spend", decision3));
 
         UpdateOptions options = new UpdateOptions().upsert(false);
 
@@ -105,7 +102,7 @@ public class MongoDB {
             if(!doc.get("_id").equals(username) && doc.get("game number").equals(gameNumber)){
                 int enemy1 = (Integer) doc.get("basic price");
                 int enemy2 = (Integer) doc.get("quality price");
-                int enemy3 = (Integer) doc.get("advertising spent");
+                int enemy3 = (Integer) doc.get("advertising spend");
                 Integer[] ret = new Integer[3];
                 ret[0] = enemy1;
                 ret[1] = enemy2;
@@ -122,7 +119,7 @@ public class MongoDB {
             if(doc.get("_id").equals(username)){
                 int enemy1 = (Integer) doc.get("basic price");
                 int enemy2 = (Integer) doc.get("quality price");
-                int enemy3 = (Integer) doc.get("advertising spent");
+                int enemy3 = (Integer) doc.get("advertising spend");
                 Integer[] ret = new Integer[3];
                 ret[0] = enemy1;
                 ret[1] = enemy2;

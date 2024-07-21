@@ -7,21 +7,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 
-import org.bson.Document;
-
-import com.mongodb.client.ChangeStreamIterable;
-import com.mongodb.client.model.changestream.ChangeStreamDocument;
-
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 
 import java.time.LocalDateTime;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import javafx.application.Platform;
 
 public class SignIn extends BorderPane {
     private Header3 header3;
@@ -34,7 +24,6 @@ public class SignIn extends BorderPane {
     private Password password;
 
     private Label correctPasswordCheck;
-    private static ScheduledExecutorService scheduler;
 
 
     String defaultLabelStyle = "-fx-font-family: serif";
@@ -60,7 +49,7 @@ public class SignIn extends BorderPane {
                 Integer[] userInputs = App.mdb.recieveUserInputs(App.username);
                 App.userBasicPrice = userInputs[0];
                 App.userQualityPrice = userInputs[1];
-                App.userAdvertisingPrice = userInputs[2];
+                App.userAdvertisingSpend = userInputs[2];
                 App.gameNumber = App.mdb.getGameNumber(App.username);
                 new CorporateLobby(currStage, currApp);
             }

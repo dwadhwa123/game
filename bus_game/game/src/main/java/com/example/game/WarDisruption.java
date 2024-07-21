@@ -3,7 +3,6 @@ package com.example.game;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -21,7 +20,7 @@ public class WarDisruption extends BorderPane{
         currStage.setResizable(true);
         header = new Header3("War Has Broken Out - Material and Robot Shortages");
         this.setTop(header);
-        warDisruptionScene = new Scene(this, 800, 400);
+        warDisruptionScene = new Scene(this, App.width, App.height);
         currStage.setScene(warDisruptionScene);
         App.warDisruption = true;
         App.costPerBasicDrone = App.costPerBasicDrone * 2;

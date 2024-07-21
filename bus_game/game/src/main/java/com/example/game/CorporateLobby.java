@@ -27,7 +27,7 @@ public class CorporateLobby extends BorderPane {
         this.setLeft(lsb);
         initalConditionLabels = new InitialConditionLabels();
         this.setCenter(initalConditionLabels);
-        corporateLobbyScene = new Scene(this, 800, 400);
+        corporateLobbyScene = new Scene(this, App.width, App.height);
         currStage.setScene(corporateLobbyScene);
 
         ourPerformanceButton.setOnAction(e -> {

@@ -3,7 +3,6 @@ package com.example.game;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -23,7 +22,7 @@ public class NewEntrantDistruption extends BorderPane{
         App.warDisruption = false;
         header = new Header3("New Entrant Into the Market");
         this.setTop(header);
-        newEntrantDisruptionScene = new Scene(this, 800, 400);
+        newEntrantDisruptionScene = new Scene(this, App.width, App.height);
         currStage.setScene(newEntrantDisruptionScene);
         App.costPerBasicDrone = App.costPerBasicDrone / 2;
         App.costPerQualityDrone = App.costPerQualityDrone / 2;
