@@ -23,37 +23,48 @@ public class CompetitorPerformance extends BorderPane {
     private Button ourPerformanceButton;
     private Button competitorPerformanceButton;
     private Button decisionSummaryButton;
+    private Button cumulativePerformanceButton;
     private LeftSideButtons lsb;
     private Scene ourPerformanceScene;
     private Inputs inputs;
+    private Timeline timeline; 
     TextField revenueTF;
     TextField profitTF;
     CompetitorPerformance(Stage currStage, App currApp){
+        currStage.setResizable(true);
         header = new Header();
         this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
-        ourPerformanceScene = new Scene(this, 1200, 800);
+        ourPerformanceScene = new Scene(this, 800, 400);
         currStage.setScene(ourPerformanceScene);
         inputs = new Inputs();
         this.setCenter(inputs);
         homePageButton.setOnAction(e -> {
+            timeline.stop();
             new CorporateLobby(currStage, currApp);
         });
 
         ourPerformanceButton.setOnAction(e -> {
+            timeline.stop();
             new OurPerformance(currStage, currApp);
         });
 
         decisionSummaryButton.setOnAction(e -> {
+            timeline.stop();
             new DecisionSummary(currStage, currApp);
         });
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+        cumulativePerformanceButton.setOnAction(e -> {
+            timeline.stop();
+            new CumulativePerformance(currStage, currApp);
+        });
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
             Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
             if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice, 0, 0, 0);
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
             }
             else{
                 profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
@@ -76,11 +87,14 @@ public class CompetitorPerformance extends BorderPane {
             competitorPerformanceButton = new Button("Competitor Performance");
             competitorPerformanceButton.setPrefHeight(40);
             competitorPerformanceButton.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
+            cumulativePerformanceButton = new Button("Cumulative Performance");
+            cumulativePerformanceButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
+            this.getChildren().add(cumulativePerformanceButton);
             this.setAlignment(Pos.CENTER);
         }
 
@@ -103,7 +117,7 @@ public class CompetitorPerformance extends BorderPane {
             Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
             if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice, 0, 0, 0);
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
             }
             else{
                 profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);

@@ -18,10 +18,12 @@ public class NewEntrantDistruption extends BorderPane{
     private Button backButton;
 
     NewEntrantDistruption(Stage currStage, App currApp){
+        currStage.setResizable(true);
         App.newEntrantDistruption = true;
+        App.warDisruption = false;
         header = new Header3("New Entrant Into the Market");
         this.setTop(header);
-        newEntrantDisruptionScene = new Scene(this, 1200, 800);
+        newEntrantDisruptionScene = new Scene(this, 800, 400);
         currStage.setScene(newEntrantDisruptionScene);
         App.costPerBasicDrone = App.costPerBasicDrone / 2;
         App.costPerQualityDrone = App.costPerQualityDrone / 2;

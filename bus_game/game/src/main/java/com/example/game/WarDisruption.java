@@ -18,9 +18,10 @@ public class WarDisruption extends BorderPane{
     private Button backButton;
 
     WarDisruption(Stage currStage, App currApp){
+        currStage.setResizable(true);
         header = new Header3("War Has Broken Out - Material and Robot Shortages");
         this.setTop(header);
-        warDisruptionScene = new Scene(this, 1200, 800);
+        warDisruptionScene = new Scene(this, 800, 400);
         currStage.setScene(warDisruptionScene);
         App.warDisruption = true;
         App.costPerBasicDrone = App.costPerBasicDrone * 2;

@@ -24,6 +24,7 @@ public class DecisionSummary extends BorderPane {
     private Button competitorPerformanceButton;
     private Button decisionSummaryButton;
     private Button saveButton;
+    private Button cumulativePerformanceButton;
     private LeftSideButtons lsb;
     private Scene decisionSummaryScene;
     private Inputs inputs;
@@ -32,11 +33,12 @@ public class DecisionSummary extends BorderPane {
     TextField qualityPriceInput;
     TextField advertisingInput;
     DecisionSummary(Stage currStage, App currApp){
+        currStage.setResizable(true);
         header = new Header();
         this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
-        decisionSummaryScene = new Scene(this, 1200, 800);
+        decisionSummaryScene = new Scene(this, 800, 400);
         intInputs = new ArrayList<>();
         intInputs.add(App.userBasicPrice);
         intInputs.add(App.userQualityPrice);
@@ -56,6 +58,9 @@ public class DecisionSummary extends BorderPane {
         homePageButton.setOnAction(e -> {
             new CorporateLobby(currStage, currApp);
         });
+        cumulativePerformanceButton.setOnAction(e -> {
+            new CumulativePerformance(currStage, currApp);
+        });
         saveButton.setOnAction(e -> {
             String basicInput = basicPriceInput.getText();
             App.userBasicPrice = Integer.parseInt(basicInput);
@@ -64,6 +69,34 @@ public class DecisionSummary extends BorderPane {
             String advertisingPriceInput = advertisingInput.getText();
             App.userAdvertisingPrice = Integer.parseInt(advertisingPriceInput);
             App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+
+            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
+            Double[] profitRevenueResults = new Double[2];
+
+            if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
+                profitRevenueResults[0] = 0.0;
+                profitRevenueResults[1] = 0.0;
+            }
+            else{
+                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
+            }
+            Double[] userValues = App.mdb.getUserCumulative(App.username);
+            App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
+
+            String enemyUsername = App.mdb.getEnemyUsername(App.username, App.gameNumber);
+            Double[] enemyValues = App.mdb.getUserCumulative(enemyUsername);
+
+            Double[] profitRevenueResultsEnemy = new Double[2];
+            if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
+                profitRevenueResultsEnemy[0] = 0.0;
+                profitRevenueResultsEnemy[1] = 0.0;
+            }
+            else{
+                profitRevenueResultsEnemy = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingPrice);
+            }
+            App.mdb.saveCumulative(enemyUsername, enemyValues[0] +  profitRevenueResultsEnemy[0], enemyValues[1] + profitRevenueResultsEnemy[1]);
+
+
         });
     }
 
@@ -76,11 +109,14 @@ public class DecisionSummary extends BorderPane {
             ourPerformanceButton.setPrefHeight(40);
             competitorPerformanceButton = new Button("Competitor Performance");
             competitorPerformanceButton.setPrefHeight(40);
+            cumulativePerformanceButton = new Button("Cumulative Performance");
+            cumulativePerformanceButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
+            this.getChildren().add(cumulativePerformanceButton);
             this.setAlignment(Pos.CENTER);
         }
 

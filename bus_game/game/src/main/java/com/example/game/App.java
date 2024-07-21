@@ -42,7 +42,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         SignIn signIn = new SignIn(stage, this);
-        signInScene = new Scene(signIn, 1200, 800);
+        signInScene = new Scene(signIn, 800, 400);
         stage.setScene(signInScene);
         stage.show();
     }

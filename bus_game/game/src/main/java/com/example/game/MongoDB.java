@@ -44,7 +44,8 @@ public class MongoDB {
 
     public void addEntry(String username, String password){
         App.gameNumber = (this.collection.countDocuments()+2)/2;
-        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spent", 0).append("game number", (this.collection.countDocuments()+2)/2);
+        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spent", 0).append("game number", (this.collection.countDocuments()+2)/2)
+        .append("cumulative revenue", 0.0).append("cumulative profit", 0.0);
         collection.insertOne(d);
     }
 
@@ -59,6 +60,43 @@ public class MongoDB {
         UpdateOptions options = new UpdateOptions().upsert(false);
 
         collection.updateOne(query, updates, options);
+    }
+
+    public void saveCumulative(String username, double cumulativeRevenue, double cumulativeProfit){
+        Document query = new Document().append("_id", username);
+
+        Bson updates = Updates.combine(
+                    Updates.set("cumulative revenue", cumulativeRevenue),
+                    Updates.set("cumulative profit", cumulativeProfit));
+        
+        UpdateOptions options = new UpdateOptions().upsert(false);
+
+        collection.updateOne(query, updates, options);
+    }
+
+    public String getEnemyUsername(String username, Long gameNumber){
+        FindIterable<Document> documentCursor = collection.find();
+        for(Document doc: documentCursor){
+            if(!doc.get("_id").equals(username) && (Long) doc.get("game number") == gameNumber){
+                return (String) doc.get("_id");
+            }
+        }
+        return null;
+    }
+
+    public Double[] getUserCumulative(String username){
+        FindIterable<Document> documentCursor = collection.find();
+        for(Document doc: documentCursor){
+            if(doc.get("_id").equals(username)){
+                Double revenue = (Double) doc.get("cumulative revenue");
+                Double profit = (Double) doc.get("cumulative profit");
+                Double[] ret = new Double[2];
+                ret[0] = revenue;
+                ret[1] = profit;
+                return ret;
+            }
+        }
+        return null;
     }
 
     public Integer[] recieveEnemyInputs(String username, long gameNumber){

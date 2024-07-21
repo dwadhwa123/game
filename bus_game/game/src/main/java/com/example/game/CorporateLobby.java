@@ -16,6 +16,7 @@ public class CorporateLobby extends BorderPane {
     private Button ourPerformanceButton;
     private Button competitorPerformanceButton;
     private Button decisionSummaryButton;
+    private Button cumulativePerformanceButton;
     private LeftSideButtons lsb;
     private Scene corporateLobbyScene;
     private InitialConditionLabels initalConditionLabels;
@@ -26,7 +27,7 @@ public class CorporateLobby extends BorderPane {
         this.setLeft(lsb);
         initalConditionLabels = new InitialConditionLabels();
         this.setCenter(initalConditionLabels);
-        corporateLobbyScene = new Scene(this, 1200, 800);
+        corporateLobbyScene = new Scene(this, 800, 400);
         currStage.setScene(corporateLobbyScene);
 
         ourPerformanceButton.setOnAction(e -> {
@@ -40,6 +41,9 @@ public class CorporateLobby extends BorderPane {
         decisionSummaryButton.setOnAction(e -> {
             new DecisionSummary(currStage, currApp);
         });
+        cumulativePerformanceButton.setOnAction(e -> {
+            new CumulativePerformance(currStage, currApp);
+        });
     }
 
 
@@ -52,11 +56,14 @@ public class CorporateLobby extends BorderPane {
             ourPerformanceButton.setPrefHeight(40);
             competitorPerformanceButton = new Button("Competitor Performance");
             competitorPerformanceButton.setPrefHeight(40);
+            cumulativePerformanceButton = new Button("Cumulative Performance");
+            cumulativePerformanceButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
+            this.getChildren().add(cumulativePerformanceButton);
             this.setAlignment(Pos.CENTER);
         }
 

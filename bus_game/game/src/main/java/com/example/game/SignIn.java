@@ -82,9 +82,9 @@ public class SignIn extends BorderPane {
             }
             App.username = username.getUsernameField().getText();
             LocalDateTime currentDateTime = LocalDateTime.now();
-            LocalDateTime futureDateTime = currentDateTime.plusSeconds(30);
+            LocalDateTime futureDateTime = currentDateTime.plusSeconds(300);
             App.startMonitoring(futureDateTime, currStage, currApp);
-            LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(60);
+            LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(400);
             App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
             new CorporateLobby(currStage, currApp);
             System.out.print(App.username + " Change Detection exit worked");
