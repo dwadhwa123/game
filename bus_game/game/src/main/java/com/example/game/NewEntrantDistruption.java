@@ -27,6 +27,8 @@ public class NewEntrantDistruption extends BorderPane{
         App.costPerBasicDrone = App.costPerBasicDrone / 2;
         App.costPerQualityDrone = App.costPerQualityDrone / 2;
         App.robotsCostPerPeriod = App.robotsCostPerPeriod / 2;
+        App.basicCustomers = App.basicCustomers * 5/4;
+        App.qualityCustomers = App.qualityCustomers * 5/4;
         backButton.setOnAction(e -> {
             new CorporateLobby(currStage, currApp);
         });

@@ -39,6 +39,7 @@ public class App extends Application {
     private static ScheduledExecutorService schedulerEntrant;
     public static boolean warDisruption = false;
     public static boolean newEntrantDistruption = false;
+    private static ScheduledExecutorService schedulerCustomerIncrease;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -76,6 +77,18 @@ public class App extends Application {
                 schedulerEntrant.shutdown();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public static void startMonitoringCustomerIncrease(){
+        schedulerCustomerIncrease = Executors.newScheduledThreadPool(1);
+        schedulerCustomerIncrease.scheduleAtFixedRate(App::taskToDo, 300, 300, TimeUnit.SECONDS);
+    }
+
+    private static void taskToDo() {
+        Platform.runLater(() -> {
+            App.basicCustomers *= 1.05;
+            App.qualityCustomers *= 1.05;
+        });
     }
 
 }

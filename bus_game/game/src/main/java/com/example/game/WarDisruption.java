@@ -26,6 +26,8 @@ public class WarDisruption extends BorderPane{
         App.costPerBasicDrone = App.costPerBasicDrone * 2;
         App.costPerQualityDrone = App.costPerQualityDrone * 2;
         App.robotsCostPerPeriod = App.robotsCostPerPeriod * 2;
+        App.basicCustomers = App.basicCustomers * 4/5;
+        App.qualityCustomers = App.qualityCustomers * 4/5;
         backButton.setOnAction(e -> {
             new CorporateLobby(currStage, currApp);
         });

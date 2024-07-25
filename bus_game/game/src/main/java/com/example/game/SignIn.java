@@ -51,6 +51,12 @@ public class SignIn extends BorderPane {
                 App.userQualityPrice = userInputs[1];
                 App.userAdvertisingSpend = userInputs[2];
                 App.gameNumber = App.mdb.getGameNumber(App.username);
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                LocalDateTime futureDateTime = currentDateTime.plusSeconds(30);
+                App.startMonitoring(futureDateTime, currStage, currApp);
+                LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(60);
+                App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
+                App.startMonitoringCustomerIncrease();
                 new CorporateLobby(currStage, currApp);
             }
             
@@ -71,10 +77,11 @@ public class SignIn extends BorderPane {
             }
             App.username = username.getUsernameField().getText();
             LocalDateTime currentDateTime = LocalDateTime.now();
-            LocalDateTime futureDateTime = currentDateTime.plusSeconds(300);
+            LocalDateTime futureDateTime = currentDateTime.plusSeconds(30);
             App.startMonitoring(futureDateTime, currStage, currApp);
-            LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(400);
+            LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(60);
             App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
+            App.startMonitoringCustomerIncrease();
             new CorporateLobby(currStage, currApp);
             System.out.print(App.username + " Change Detection exit worked");
         });

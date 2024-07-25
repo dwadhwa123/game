@@ -1,5 +1,7 @@
 package com.example.game;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class CorporateLobby extends BorderPane {
     private Header header;
@@ -20,6 +23,9 @@ public class CorporateLobby extends BorderPane {
     private LeftSideButtons lsb;
     private Scene corporateLobbyScene;
     private InitialConditionLabels initalConditionLabels;
+    private Timeline timeline;
+    Label basicCustomers;
+    Label qualityCustomers;
     CorporateLobby(Stage currStage, App currApp){
         header = new Header();
         this.setTop(header);
@@ -31,19 +37,31 @@ public class CorporateLobby extends BorderPane {
         currStage.setScene(corporateLobbyScene);
 
         ourPerformanceButton.setOnAction(e -> {
+            timeline.stop();
             new OurPerformance(currStage, currApp);
         });
 
         competitorPerformanceButton.setOnAction(e -> {
+            timeline.stop();
             new CompetitorPerformance(currStage, currApp);
         });
 
         decisionSummaryButton.setOnAction(e -> {
+            timeline.stop();
             new DecisionSummary(currStage, currApp);
         });
         cumulativePerformanceButton.setOnAction(e -> {
+            timeline.stop();
             new CumulativePerformance(currStage, currApp);
         });
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            basicCustomers.setText("Basic Customers: " + App.basicCustomers);
+            qualityCustomers.setText("Quality Customers: " + App.qualityCustomers);
+
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
+        timeline.play();
     }
 
 
@@ -85,8 +103,6 @@ public class CorporateLobby extends BorderPane {
         Label costPerBasicDrone;
         Label pricePerQualityDrone;
         Label costPerQualityDrone;
-        Label basicCustomers;
-        Label qualityCustomers;
         Label robotsCostPerPeriod;
         Label robotsMadePerPeriod;
         InitialConditionLabels(){
