@@ -11,7 +11,7 @@ import javafx.geometry.Insets;
 import javafx.scene.text.*;
 
 import java.time.LocalDateTime;
-
+import java.util.*;
 
 public class SignIn extends BorderPane {
     private Header3 header3;
@@ -41,49 +41,66 @@ public class SignIn extends BorderPane {
         this.setCenter(accountLogIn);
 
         loginButton.setOnAction(e -> {
+            App.username = username.getUsernameField().getText();
+            if(App.username.equals("admin")){
+                if(!App.mdbAdmin.correctUsernameCheck(username.getUsernameField().getText(), password.getPasswordField().getText())){
+                    correctPasswordCheck.setVisible(true);
+                }
+                else{
+                    new AdminChoices(currStage, currApp);
+                }
+            }
             if(!App.mdb.correctUsernameCheck(username.getUsernameField().getText(), password.getPasswordField().getText())){
                 correctPasswordCheck.setVisible(true);
             }
             else{
-                App.username = username.getUsernameField().getText();
                 Integer[] userInputs = App.mdb.recieveUserInputs(App.username);
                 App.userBasicPrice = userInputs[0];
                 App.userQualityPrice = userInputs[1];
                 App.userAdvertisingSpend = userInputs[2];
                 App.gameNumber = App.mdb.getGameNumber(App.username);
                 LocalDateTime currentDateTime = LocalDateTime.now();
-                LocalDateTime futureDateTime = currentDateTime.plusSeconds(30);
+                ArrayList<Integer> timeChoices = App.mdbAdmin.getAdminInputs();
+                LocalDateTime futureDateTime = currentDateTime.plusMinutes(timeChoices.get(0));
                 App.startMonitoring(futureDateTime, currStage, currApp);
-                LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(60);
+                LocalDateTime futureDateTime2 = currentDateTime.plusMinutes(timeChoices.get(1));
                 App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-                App.startMonitoringCustomerIncrease();
-                new CorporateLobby(currStage, currApp);
+                App.startMonitoringCustomerIncrease(timeChoices.get(2));
+                new CorporateLobby(currStage, currApp);  
             }
             
         });
         signUpButton.setOnAction(e -> {
-            App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText());
-            if((App.mdb.getSize()+2)%2 == 1){
-                App.playerNumber = 1;
-                try {
-                    App.mdb.stopUntilChange();
-                } catch (InterruptedException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+            if(username.getUsernameField().getText().equals("admin")){
+                App.mdbAdmin.addAdmin(password.getPasswordField().getText()); 
+                new AdminChoices(currStage, currApp);
+            }
+            else{
+                App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText());
+                App.playerNumber = (int)(App.mdb.getSize() % App.numPlayers);
+                if(App.playerNumber == 0){
+                    App.playerNumber = App.numPlayers;
                 }
+                if(App.playerNumber < App.numPlayers){
+                    try {
+                        for(int i = App.playerNumber; i < App.numPlayers; i++){
+                            App.mdb.stopUntilChange();
+                        }
+                    } catch (InterruptedException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                }
+                App.username = username.getUsernameField().getText();
+                ArrayList<Integer> timeChoices = App.mdbAdmin.getAdminInputs();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                LocalDateTime futureDateTime = currentDateTime.plusMinutes(timeChoices.get(0));
+                App.startMonitoring(futureDateTime, currStage, currApp);
+                LocalDateTime futureDateTime2 = currentDateTime.plusMinutes(timeChoices.get(1));
+                App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
+                App.startMonitoringCustomerIncrease(timeChoices.get(2));
+                new CorporateLobby(currStage, currApp);
             }
-            else if((App.mdb.getSize()+2)%2 == 0){
-                App.playerNumber = 2;
-            }
-            App.username = username.getUsernameField().getText();
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            LocalDateTime futureDateTime = currentDateTime.plusSeconds(30);
-            App.startMonitoring(futureDateTime, currStage, currApp);
-            LocalDateTime futureDateTime2 = currentDateTime.plusSeconds(60);
-            App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-            App.startMonitoringCustomerIncrease();
-            new CorporateLobby(currStage, currApp);
-            System.out.print(App.username + " Change Detection exit worked");
         });
 
     }

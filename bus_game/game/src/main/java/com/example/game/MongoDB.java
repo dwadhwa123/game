@@ -14,6 +14,7 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import java.util.concurrent.CountDownLatch;
+import java.util.ArrayList;
 
 
 public class MongoDB {
@@ -23,11 +24,11 @@ public class MongoDB {
     MongoDatabase database;
     MongoCollection<Document> collection;
 
-    public MongoDB(){
+    public MongoDB(String collectionChoice){
         try{
             client = MongoClients.create(uri);
             database = client.getDatabase("user_db");
-            collection = database.getCollection("user_collection");
+            collection = database.getCollection(collectionChoice);
         }
         catch (Exception e1) {
             e1.printStackTrace();
@@ -40,10 +41,32 @@ public class MongoDB {
     // }
 
     public void addEntry(String username, String password){
-        App.gameNumber = (this.collection.countDocuments()+2)/2;
-        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("game number", (this.collection.countDocuments()+2)/2)
+        App.gameNumber = (this.collection.countDocuments()+App.numPlayers)/App.numPlayers;
+        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("game number", App.gameNumber)
         .append("cumulative revenue", 0.0).append("cumulative profit", 0.0);
         collection.insertOne(d);
+    }
+
+    public void addAdmin(String password){
+        Document d = new Document("_id", "admin").append("password", password).append("war", 30).append("new entrant", 60).append("customer increase", 5);
+        collection.insertOne(d);
+    }
+
+    public ArrayList<Integer> getAdminInputs(){
+        FindIterable<Document> documentCursor = collection.find();
+        ArrayList<Integer> ret = new ArrayList<>();
+        for(Document doc: documentCursor){
+            if(doc.get("_id").equals("admin")){
+                ret.add((Integer) doc.get("war"));
+                ret.add((Integer) doc.get("new entrant"));
+                ret.add((Integer) doc.get("customer increase"));
+                return ret;
+            }
+        }
+        ret.add(30);
+        ret.add(60);
+        ret.add(5);
+        return ret;
     }
 
     public void saveDecisions(String username, int decision1, int decision2, int decision3){
@@ -53,6 +76,19 @@ public class MongoDB {
                     Updates.set("basic price", decision1),
                     Updates.set("quality price", decision2),
                     Updates.set("advertising spend", decision3));
+
+        UpdateOptions options = new UpdateOptions().upsert(false);
+
+        collection.updateOne(query, updates, options);
+    }
+
+    public void saveAdminDecisions(ArrayList<Integer> decisions){
+        Document query = new Document().append("_id", "admin");
+
+        Bson updates = Updates.combine(
+                    Updates.set("war", decisions.get(0)),
+                    Updates.set("new entrant", decisions.get(1)),
+                    Updates.set("customer increase", decisions.get(2)));
 
         UpdateOptions options = new UpdateOptions().upsert(false);
 
@@ -113,6 +149,24 @@ public class MongoDB {
         return null;
     }
 
+    public ArrayList<Integer[]> recieveMultipleEnemyInputs(String username, long gameNumber){
+        FindIterable<Document> documentCursor = collection.find();
+        ArrayList<Integer[]> enemyInputs = new ArrayList<>();
+        for(Document doc: documentCursor){
+            if(!doc.get("_id").equals(username) && doc.get("game number").equals(gameNumber)){
+                int enemy1 = (Integer) doc.get("basic price");
+                int enemy2 = (Integer) doc.get("quality price");
+                int enemy3 = (Integer) doc.get("advertising spend");
+                Integer[] ret = new Integer[3];
+                ret[0] = enemy1;
+                ret[1] = enemy2;
+                ret[2] = enemy3;
+                enemyInputs.add(ret);
+            }
+        }
+        return enemyInputs;
+    }
+
     public Integer[] recieveUserInputs(String username){
         FindIterable<Document> documentCursor = collection.find();
         for(Document doc: documentCursor){
@@ -167,7 +221,6 @@ public class MongoDB {
             while (cursor.hasNext()) {
                 ChangeStreamDocument<Document> changeStreamDocument = cursor.next();
                 Document fullDocument = changeStreamDocument.getFullDocument();
-                System.out.println("Change detected: " + fullDocument.toJson());
 
                 // Optionally, you can handle the change here
                 // For demonstration, we just release the latch

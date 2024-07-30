@@ -23,9 +23,10 @@ public class WarDisruption extends BorderPane{
         warDisruptionScene = new Scene(this, App.width, App.height);
         currStage.setScene(warDisruptionScene);
         App.warDisruption = true;
-        App.costPerBasicDrone = App.costPerBasicDrone * 2;
-        App.costPerQualityDrone = App.costPerQualityDrone * 2;
-        App.robotsCostPerPeriod = App.robotsCostPerPeriod * 2;
+        App.newEntrantDistruption = false;
+        App.costPerBasicDrone = 20;
+        App.costPerQualityDrone = 60;
+        App.robotsCostPerPeriod = 400;
         App.basicCustomers = App.basicCustomers * 4/5;
         App.qualityCustomers = App.qualityCustomers * 4/5;
         backButton.setOnAction(e -> {

@@ -17,6 +17,7 @@ public class NewEntrantDistruption extends BorderPane{
     private Button backButton;
 
     NewEntrantDistruption(Stage currStage, App currApp){
+        System.out.println("Hello");
         currStage.setResizable(true);
         App.newEntrantDistruption = true;
         App.warDisruption = false;
@@ -24,11 +25,9 @@ public class NewEntrantDistruption extends BorderPane{
         this.setTop(header);
         newEntrantDisruptionScene = new Scene(this, App.width, App.height);
         currStage.setScene(newEntrantDisruptionScene);
-        App.costPerBasicDrone = App.costPerBasicDrone / 2;
-        App.costPerQualityDrone = App.costPerQualityDrone / 2;
-        App.robotsCostPerPeriod = App.robotsCostPerPeriod / 2;
-        App.basicCustomers = App.basicCustomers * 5/4;
-        App.qualityCustomers = App.qualityCustomers * 5/4;
+        App.costPerBasicDrone = 10;
+        App.costPerQualityDrone = 30;
+        App.robotsCostPerPeriod = 200;
         backButton.setOnAction(e -> {
             new CorporateLobby(currStage, currApp);
         });

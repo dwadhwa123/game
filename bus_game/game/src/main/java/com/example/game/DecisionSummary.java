@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.time.LocalDateTime;
 
 public class DecisionSummary extends BorderPane {
     private Header header;
@@ -58,41 +59,45 @@ public class DecisionSummary extends BorderPane {
             new CumulativePerformance(currStage, currApp);
         });
         saveButton.setOnAction(e -> {
-            String basicInput = basicPriceInput.getText();
-            App.userBasicPrice = Integer.parseInt(basicInput);
-            String qualityInput = qualityPriceInput.getText();
-            App.userQualityPrice = Integer.parseInt(qualityInput);
-            String advertisingInput = advertisingSpendInput.getText();
-            App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
-            App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            if(App.availableToSave){     
+                App.availableToSave = false;
+                String basicInput = basicPriceInput.getText();
+                App.userBasicPrice = Integer.parseInt(basicInput);
+                String qualityInput = qualityPriceInput.getText();
+                App.userQualityPrice = Integer.parseInt(qualityInput);
+                String advertisingInput = advertisingSpendInput.getText();
+                App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
+                App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
 
-            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            Double[] profitRevenueResults = new Double[2];
+                Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
+                Double[] profitRevenueResults = new Double[2];
 
-            if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
-                profitRevenueResults[0] = 0.0;
-                profitRevenueResults[1] = 0.0;
+                if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
+                    profitRevenueResults[0] = 0.0;
+                    profitRevenueResults[1] = 0.0;
+                }
+                else{
+                    profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
+                }
+                Double[] userValues = App.mdb.getUserCumulative(App.username);
+                App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
+
+                String enemyUsername = App.mdb.getEnemyUsername(App.username, App.gameNumber);
+                Double[] enemyValues = App.mdb.getUserCumulative(enemyUsername);
+
+                Double[] profitRevenueResultsEnemy = new Double[2];
+                if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
+                    profitRevenueResultsEnemy[0] = 0.0;
+                    profitRevenueResultsEnemy[1] = 0.0;
+                }
+                else{
+                    profitRevenueResultsEnemy = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+                }
+                App.mdb.saveCumulative(enemyUsername, enemyValues[0] +  profitRevenueResultsEnemy[0], enemyValues[1] + profitRevenueResultsEnemy[1]);
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                LocalDateTime futureDateTime = currentDateTime.plusMinutes(5);
+                App.startMonitoringSaveButton(futureDateTime, currStage, currApp);
             }
-            else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
-            }
-            Double[] userValues = App.mdb.getUserCumulative(App.username);
-            App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
-
-            String enemyUsername = App.mdb.getEnemyUsername(App.username, App.gameNumber);
-            Double[] enemyValues = App.mdb.getUserCumulative(enemyUsername);
-
-            Double[] profitRevenueResultsEnemy = new Double[2];
-            if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
-                profitRevenueResultsEnemy[0] = 0.0;
-                profitRevenueResultsEnemy[1] = 0.0;
-            }
-            else{
-                profitRevenueResultsEnemy = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            }
-            App.mdb.saveCumulative(enemyUsername, enemyValues[0] +  profitRevenueResultsEnemy[0], enemyValues[1] + profitRevenueResultsEnemy[1]);
-
-
         });
     }
 

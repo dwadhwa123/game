@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.util.ArrayList;
 
 public class OurPerformance extends BorderPane {
     private Header header;
@@ -66,6 +67,11 @@ public class OurPerformance extends BorderPane {
             else{
                 profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
             }
+
+            // ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+            // Double[] profitRevenueResults = new Double[2];
+            // profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+            
             revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
             profitTF.setText(String.valueOf(profitRevenueResults[1])); 
 
@@ -119,7 +125,10 @@ public class OurPerformance extends BorderPane {
                 profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
             }
 
-
+            // ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+            // Double[] profitRevenueResults = new Double[2];
+            // profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+            
            
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
