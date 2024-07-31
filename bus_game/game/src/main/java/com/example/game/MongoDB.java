@@ -117,6 +117,17 @@ public class MongoDB {
         return null;
     }
 
+    public ArrayList<String> getEnemyUsernames(String username, Long gameNumber){
+        FindIterable<Document> documentCursor = collection.find();
+        ArrayList<String> usernames = new ArrayList<>();
+        for(Document doc: documentCursor){
+            if(!doc.get("_id").equals(username) && (Long) doc.get("game number") == gameNumber){
+                usernames.add((String) doc.get("_id"));
+            }
+        }
+        return usernames;
+    }
+
     public Double[] getUserCumulative(String username){
         FindIterable<Document> documentCursor = collection.find();
         for(Document doc: documentCursor){

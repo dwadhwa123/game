@@ -69,31 +69,30 @@ public class DecisionSummary extends BorderPane {
                 App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
                 App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
 
-                Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-                Double[] profitRevenueResults = new Double[2];
+                ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+                Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
 
-                if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
-                    profitRevenueResults[0] = 0.0;
-                    profitRevenueResults[1] = 0.0;
-                }
-                else{
-                    profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
+                boolean isZero = false;
+                for(Integer[] enemyValues: enemyInputs){
+                    if(enemyValues[0] == 0 && enemyValues[1] == 0 && enemyValues[2] == 0){
+                        profitRevenueResults[0] = 0.0;
+                        profitRevenueResults[1] = 0.0;
+                        isZero = true;
+                        break;
+                    }
                 }
                 Double[] userValues = App.mdb.getUserCumulative(App.username);
                 App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
 
-                String enemyUsername = App.mdb.getEnemyUsername(App.username, App.gameNumber);
-                Double[] enemyValues = App.mdb.getUserCumulative(enemyUsername);
-
-                Double[] profitRevenueResultsEnemy = new Double[2];
-                if(enemyInputs[0] == 0 && enemyInputs[1] == 0 && enemyInputs[2] == 0){
-                    profitRevenueResultsEnemy[0] = 0.0;
-                    profitRevenueResultsEnemy[1] = 0.0;
+                if(!isZero){
+                    for(String name: App.mdb.getEnemyUsernames(App.username, App.gameNumber)){
+                        ArrayList<Integer[]> enemyInputs2 = App.mdb.recieveMultipleEnemyInputs(name, App.gameNumber);
+                        Double[] profitRevenueResultsEnemy = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs2);
+                        Double[] enemyValues = App.mdb.getUserCumulative(App.username);
+                        App.mdb.saveCumulative(name, enemyValues[0] +  profitRevenueResultsEnemy[0], enemyValues[1] + profitRevenueResultsEnemy[1]);
+                    }
                 }
-                else{
-                    profitRevenueResultsEnemy = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-                }
-                App.mdb.saveCumulative(enemyUsername, enemyValues[0] +  profitRevenueResultsEnemy[0], enemyValues[1] + profitRevenueResultsEnemy[1]);
+                
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 LocalDateTime futureDateTime = currentDateTime.plusMinutes(5);
                 App.startMonitoringSaveButton(futureDateTime, currStage, currApp);

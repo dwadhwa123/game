@@ -59,18 +59,18 @@ public class OurPerformance extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            Double[] profitRevenueResults = new Double[2];
-            if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, 0, 0, 0);
-            }
-            else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
-            }
-
-            // ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             // Double[] profitRevenueResults = new Double[2];
-            // profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+            // if(enemyInputs == null){
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, 0, 0, 0);
+            // }
+            // else{
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
+            // }
+
+            ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+            Double[] profitRevenueResults = new Double[2];
+            profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
             
             revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
             profitTF.setText(String.valueOf(profitRevenueResults[1])); 
@@ -116,18 +116,18 @@ public class OurPerformance extends BorderPane {
 
     class Inputs extends VBox{
         Inputs(){
-            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            Double[] profitRevenueResults = new Double[2];
-            if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, 0, 0, 0);
-            }
-            else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
-            }
-
-            // ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             // Double[] profitRevenueResults = new Double[2];
-            // profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+            // if(enemyInputs == null){
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, 0, 0, 0);
+            // }
+            // else{
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
+            // }
+
+            ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+            Double[] profitRevenueResults = new Double[2];
+            profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
             
            
             this.setPrefSize(500, 20);

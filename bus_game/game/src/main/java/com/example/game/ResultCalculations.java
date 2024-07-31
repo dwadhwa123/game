@@ -6,8 +6,8 @@ import java.util.Collections;
 public class ResultCalculations {
 
     public static Double[] twoPlayerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, int oppBasicPrice, int oppQualityPrice, int oppAdvertising){
-        double myBasicCustomers = ((double)(oppBasicPrice))/(oppBasicPrice+myBasicPrice) * App.basicCustomers;
-        double myQualityCustomers = ((double)(myAdvertising))/(oppAdvertising+myAdvertising) * App.qualityCustomers;
+        double myBasicCustomers = ((double)(oppBasicPrice))/(myBasicPrice) * App.basicCustomers/2;
+        double myQualityCustomers = ((double)(myAdvertising))/(oppAdvertising) * App.qualityCustomers/2;
         if(App.newEntrantDistruption){
             myBasicCustomers *= 0.5;
             myQualityCustomers *= 0.5;
@@ -62,7 +62,10 @@ public class ResultCalculations {
 
 
         double myBasicCustomers = App.qualityCustomers * myBasicScore / sumBasic;
-        double myQualityCustomers = App.qualityCustomers * myAdvertising / sumAdvertising;
+        double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
+
+        System.out.println(App.username + " " + myBasicCustomers);
+        System.out.println(App.username + " " + myQualityCustomers);
         
         if(App.newEntrantDistruption){
             myBasicCustomers *= 0.5;
