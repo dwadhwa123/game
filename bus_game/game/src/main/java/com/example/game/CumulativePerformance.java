@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.util.*;
 
 public class CumulativePerformance extends BorderPane {
     private Header header;
@@ -29,6 +30,8 @@ public class CumulativePerformance extends BorderPane {
     TextField profitTF;
     TextField enemyRevenueTF;
     TextField enemyProfitTF;
+    List<TextField> revenueTextFields = new ArrayList<>();
+    List<TextField> profitTextFields = new ArrayList<>();
     Integer[] enemyInputs;
     CumulativePerformance(Stage currStage, App currApp){
         currStage.setResizable(true);
@@ -61,11 +64,14 @@ public class CumulativePerformance extends BorderPane {
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
             Double [] userCumulative = App.mdb.getUserCumulative(App.username);
-            Double [] enemyCumulative = App.mdb.getUserCumulative(App.mdb.getEnemyUsername(App.username,App.gameNumber));
             revenueTF.setText(String.valueOf(userCumulative[0])); 
             profitTF.setText(String.valueOf(userCumulative[1])); 
-            enemyRevenueTF.setText(String.valueOf(enemyCumulative[0])); 
-            enemyProfitTF.setText(String.valueOf(enemyCumulative[1])); 
+
+            ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
+            for(int i = 0; i < revenueTextFields.size(); i++){
+                revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
+                profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
+            }
 
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
@@ -109,8 +115,6 @@ public class CumulativePerformance extends BorderPane {
     class Inputs extends VBox{
         Inputs(){
             Double [] userCumulative = App.mdb.getUserCumulative(App.username);
-            Double [] enemyCumulative = App.mdb.getUserCumulative(App.mdb.getEnemyUsername(App.username,App.gameNumber));
-
            
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
@@ -149,43 +153,60 @@ public class CumulativePerformance extends BorderPane {
             this.setAlignment(Pos.CENTER_LEFT);
 
 
-            this.setPrefSize(500, 20);
-            this.setStyle("-fx-font-family: serif");
-            Label revenueEnemtLabel = new Label();
-            revenueEnemtLabel.setText("Competitor's Revenue"); // 
-            revenueEnemtLabel.setPrefSize(160, 20);// set size of Revenue label
-            revenueEnemtLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            revenueEnemtLabel.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(revenueEnemtLabel); 
+            ArrayList<Double[]> enemyScores = getEnemyScores();
 
-            enemyRevenueTF = new TextField(String.valueOf(enemyCumulative[0])); 
-            enemyRevenueTF.setPrefSize(380, 20); // set size of text field
-            enemyRevenueTF.setStyle("-fx-font-family: serif"); // set background color
-            // texfield                
-            enemyRevenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
-            enemyRevenueTF.setEditable(false);
-            this.getChildren().add(enemyRevenueTF); 
-            this.setAlignment(Pos.CENTER_LEFT);
+            for(Double[] score: enemyScores){
+                this.setPrefSize(500, 20);
+                this.setStyle("-fx-font-family: serif");
+                Label revenueEnemyLabel = new Label();
+                revenueEnemyLabel.setText("Competitor's Revenue"); // 
+                revenueEnemyLabel.setPrefSize(160, 20);// set size of Revenue label
+                revenueEnemyLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+                revenueEnemyLabel.setAlignment(Pos.CENTER_LEFT);
+                this.getChildren().add(revenueEnemyLabel); 
 
-            this.setPrefSize(500, 20);
-            this.setStyle("-fx-font-family: serif");
-            Label profitEnemyLabel = new Label();
-            profitEnemyLabel.setText("Competitors's Profit"); // 
-            profitEnemyLabel.setPrefSize(160, 20);// set size of Profit label
-            profitEnemyLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            profitEnemyLabel.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(profitEnemyLabel); 
+                enemyRevenueTF = new TextField(String.valueOf(score[0])); 
+                enemyRevenueTF.setPrefSize(380, 20); // set size of text field
+                enemyRevenueTF.setStyle("-fx-font-family: serif"); // set background color
+                // texfield                
+                enemyRevenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+                enemyRevenueTF.setEditable(false);
+                this.getChildren().add(enemyRevenueTF); 
+                this.setAlignment(Pos.CENTER_LEFT);
+                revenueTextFields.add(enemyRevenueTF);
 
-            enemyProfitTF = new TextField(String.valueOf(enemyCumulative[1])); 
-            enemyProfitTF.setPrefSize(380, 20); 
-            enemyProfitTF.setStyle("-fx-font-family: serif"); 
-            // texfield                
-            enemyProfitTF.setPadding(new Insets(10, 0, 10, 0)); 
-            enemyProfitTF.setEditable(false);
-            this.getChildren().add(enemyProfitTF); 
-            this.setAlignment(Pos.CENTER_LEFT);
+                this.setPrefSize(500, 20);
+                this.setStyle("-fx-font-family: serif");
+                Label profitEnemyLabel = new Label();
+                profitEnemyLabel.setText("Competitors's Profit"); // 
+                profitEnemyLabel.setPrefSize(160, 20);// set size of Profit label
+                profitEnemyLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+                profitEnemyLabel.setAlignment(Pos.CENTER_LEFT);
+                this.getChildren().add(profitEnemyLabel); 
+
+                enemyProfitTF = new TextField(String.valueOf(score[1])); 
+                enemyProfitTF.setPrefSize(380, 20); 
+                enemyProfitTF.setStyle("-fx-font-family: serif"); 
+                // texfield                
+                enemyProfitTF.setPadding(new Insets(10, 0, 10, 0)); 
+                enemyProfitTF.setEditable(false);
+                this.getChildren().add(enemyProfitTF); 
+                this.setAlignment(Pos.CENTER_LEFT);
+                profitTextFields.add(enemyProfitTF);
+            }
+
+            
 
 
+            }
+
+            public static ArrayList<Double[]> getEnemyScores(){
+                ArrayList<Double[]> profitsAndRevenues = new ArrayList<>();
+                ArrayList<String> usernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
+                for(String str: usernames){
+                    profitsAndRevenues.add(App.mdb.getUserCumulative(str));
+                }
+                return profitsAndRevenues;
             }
 
 

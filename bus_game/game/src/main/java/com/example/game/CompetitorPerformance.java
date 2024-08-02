@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.util.*;
 
 public class CompetitorPerformance extends BorderPane {
     private Header header;
@@ -27,6 +28,8 @@ public class CompetitorPerformance extends BorderPane {
     private Timeline timeline; 
     TextField revenueTF;
     TextField profitTF;
+    List<TextField> revenueTextFields = new ArrayList<>();
+    List<TextField> profitTextFields = new ArrayList<>();
     CompetitorPerformance(Stage currStage, App currApp){
         currStage.setResizable(true);
         header = new Header();
@@ -58,16 +61,22 @@ public class CompetitorPerformance extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            Double[] profitRevenueResults = new Double[2];
-            if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
+            // Double[] profitRevenueResults = new Double[2];
+            // if(enemyInputs == null){
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            // }
+            // else{
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            // }
+            // revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
+            // profitTF.setText(String.valueOf(profitRevenueResults[1])); 
+
+            ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
+            for(int i = 0; i < revenueTextFields.size(); i++){
+                revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
+                profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
             }
-            else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            }
-            revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
-            profitTF.setText(String.valueOf(profitRevenueResults[1])); 
 
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
@@ -111,51 +120,105 @@ public class CompetitorPerformance extends BorderPane {
     class Inputs extends VBox{
         Inputs(){
 
-            Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            Double[] profitRevenueResults = new Double[2];
-            if(enemyInputs == null){
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            }
-            else{
-                profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            }
+            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
+            // Double[] profitRevenueResults = new Double[2];
+            // if(enemyInputs == null){
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            // }
+            // else{
+            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            // }
            
-            this.setPrefSize(500, 20);
-            this.setStyle("-fx-font-family: serif");
-            Label revenueLabel = new Label();
-            revenueLabel.setText("Revenue"); // 
-            revenueLabel.setPrefSize(100, 20);// set size of Revenue label
-            revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            revenueLabel.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(revenueLabel); // add label to VBox
+            // this.setPrefSize(500, 20);
+            // this.setStyle("-fx-font-family: serif");
+            // Label revenueLabel = new Label();
+            // revenueLabel.setText("Revenue"); // 
+            // revenueLabel.setPrefSize(100, 20);// set size of Revenue label
+            // revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            // revenueLabel.setAlignment(Pos.CENTER_LEFT);
+            // this.getChildren().add(revenueLabel); // add label to VBox
 
-            revenueTF = new TextField(String.valueOf(profitRevenueResults[0])); 
-            revenueTF.setPrefSize(380, 20); // set size of text field
-            revenueTF.setStyle("-fx-font-family: serif"); // set background color
-            // texfield                
-            revenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
-            revenueTF.setEditable(false);
-            this.getChildren().add(revenueTF); 
-            this.setAlignment(Pos.CENTER_LEFT);
+            // revenueTF = new TextField(String.valueOf(profitRevenueResults[0])); 
+            // revenueTF.setPrefSize(380, 20); // set size of text field
+            // revenueTF.setStyle("-fx-font-family: serif"); // set background color
+            // // texfield                
+            // revenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            // revenueTF.setEditable(false);
+            // this.getChildren().add(revenueTF); 
+            // this.setAlignment(Pos.CENTER_LEFT);
 
-            this.setPrefSize(500, 20);
-            this.setStyle("-fx-font-family: serif");
-            Label profitLabel = new Label();
-            profitLabel.setText("Profit"); // 
-            profitLabel.setPrefSize(100, 20);
-            profitLabel.setPadding(new Insets(10, 0, 10, 0)); 
-            profitLabel.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(profitLabel); 
+            // this.setPrefSize(500, 20);
+            // this.setStyle("-fx-font-family: serif");
+            // Label profitLabel = new Label();
+            // profitLabel.setText("Profit"); // 
+            // profitLabel.setPrefSize(100, 20);
+            // profitLabel.setPadding(new Insets(10, 0, 10, 0)); 
+            // profitLabel.setAlignment(Pos.CENTER_LEFT);
+            // this.getChildren().add(profitLabel); 
 
-            profitTF = new TextField(String.valueOf(profitRevenueResults[1])); 
-            profitTF.setPrefSize(380, 20);
-            profitTF.setStyle("-fx-font-family: serif"); 
-            // texfield                
-            profitTF.setPadding(new Insets(10, 0, 10, 0)); 
-            profitTF.setEditable(false);
-            this.getChildren().add(profitTF); 
-            this.setAlignment(Pos.CENTER_LEFT);
+            // profitTF = new TextField(String.valueOf(profitRevenueResults[1])); 
+            // profitTF.setPrefSize(380, 20);
+            // profitTF.setStyle("-fx-font-family: serif"); 
+            // // texfield                
+            // profitTF.setPadding(new Insets(10, 0, 10, 0)); 
+            // profitTF.setEditable(false);
+            // this.getChildren().add(profitTF); 
+            // this.setAlignment(Pos.CENTER_LEFT);
+
+            ArrayList<Double[]> enemyScores = getEnemyScores();
+
+            for(Double[] score: enemyScores){
+                this.setPrefSize(500, 20);
+                this.setStyle("-fx-font-family: serif");
+                Label revenueLabel = new Label();
+                revenueLabel.setText("Revenue"); // 
+                revenueLabel.setPrefSize(100, 20);// set size of Revenue label
+                revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+                revenueLabel.setAlignment(Pos.CENTER_LEFT);
+                this.getChildren().add(revenueLabel); // add label to VBox
+
+                revenueTF = new TextField(String.valueOf(score[0])); 
+                revenueTF.setPrefSize(380, 20); // set size of text field
+                revenueTF.setStyle("-fx-font-family: serif"); // set background color
+                // texfield                
+                revenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+                revenueTF.setEditable(false);
+                this.getChildren().add(revenueTF); 
+                this.setAlignment(Pos.CENTER_LEFT);
+                revenueTextFields.add(revenueTF);
+
+                this.setPrefSize(500, 20);
+                this.setStyle("-fx-font-family: serif");
+                Label profitLabel = new Label();
+                profitLabel.setText("Profit"); // 
+                profitLabel.setPrefSize(100, 20);
+                profitLabel.setPadding(new Insets(10, 0, 10, 0)); 
+                profitLabel.setAlignment(Pos.CENTER_LEFT);
+                this.getChildren().add(profitLabel); 
+
+                profitTF = new TextField(String.valueOf(score[1])); 
+                profitTF.setPrefSize(380, 20);
+                profitTF.setStyle("-fx-font-family: serif"); 
+                // texfield                
+                profitTF.setPadding(new Insets(10, 0, 10, 0)); 
+                profitTF.setEditable(false);
+                this.getChildren().add(profitTF); 
+                this.setAlignment(Pos.CENTER_LEFT);
+                profitTextFields.add(profitTF);
             }
+        }
+
+        public static ArrayList<Double[]> getEnemyScores(){
+            ArrayList<Double[]> profitsAndRevenues = new ArrayList<>();
+            ArrayList<String> usernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
+            for(String str: usernames){
+                ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(str, App.gameNumber);
+                Integer[] inputs = App.mdb.getInput(str);
+                Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(inputs[0], inputs[1], inputs[2], enemyInputs);
+                profitsAndRevenues.add(profitRevenueResults);
+            }
+            return profitsAndRevenues;
+        }
 
 
         }

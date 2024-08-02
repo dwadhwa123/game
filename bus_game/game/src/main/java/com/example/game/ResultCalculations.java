@@ -61,11 +61,11 @@ public class ResultCalculations {
         double myBasicScore = myInverse/sumBasicInverses * sumBasic;
 
 
-        double myBasicCustomers = App.qualityCustomers * myBasicScore / sumBasic;
+        double myBasicCustomers = App.basicCustomers * myBasicScore / sumBasic;
         double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
 
-        System.out.println(App.username + " " + myBasicCustomers);
-        System.out.println(App.username + " " + myQualityCustomers);
+        //System.out.println(App.username + " Basic  " + myBasicCustomers + " " +  myBasicPrice);
+        System.out.println(App.username + " Quality  " + myQualityCustomers + " " +  myAdvertising);
         
         if(App.newEntrantDistruption){
             myBasicCustomers *= 0.5;

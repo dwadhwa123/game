@@ -10,6 +10,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.util.*;
 
 public class WarDisruption extends BorderPane{
     private Header3 header;
@@ -27,8 +28,9 @@ public class WarDisruption extends BorderPane{
         App.costPerBasicDrone = 20;
         App.costPerQualityDrone = 60;
         App.robotsCostPerPeriod = 400;
-        App.basicCustomers = App.basicCustomers * 4/5;
-        App.qualityCustomers = App.qualityCustomers * 4/5;
+        ArrayList<Double> choices = App.mdbAdmin.getAdminInputs();
+        App.basicCustomers =  (int) (App.basicCustomers * (1-(choices.get(5).doubleValue()/100)));
+        App.qualityCustomers = (int) (App.qualityCustomers * (1-(choices.get(5).doubleValue()/100)));
         backButton.setOnAction(e -> {
             new CorporateLobby(currStage, currApp);
         });

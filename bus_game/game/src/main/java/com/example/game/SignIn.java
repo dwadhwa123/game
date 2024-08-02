@@ -54,23 +54,28 @@ public class SignIn extends BorderPane {
                 correctPasswordCheck.setVisible(true);
             }
             else{
+                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
                 Integer[] userInputs = App.mdb.recieveUserInputs(App.username);
                 App.userBasicPrice = userInputs[0];
                 App.userQualityPrice = userInputs[1];
                 App.userAdvertisingSpend = userInputs[2];
                 App.gameNumber = App.mdb.getGameNumber(App.username);
                 LocalDateTime currentDateTime = LocalDateTime.now();
-                ArrayList<Integer> timeChoices = App.mdbAdmin.getAdminInputs();
-                LocalDateTime futureDateTime = currentDateTime.plusMinutes(timeChoices.get(0));
+                LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(0) * 60));
                 App.startMonitoring(futureDateTime, currStage, currApp);
-                LocalDateTime futureDateTime2 = currentDateTime.plusMinutes(timeChoices.get(1));
+                LocalDateTime futureDateTime2 = currentDateTime.plusSeconds((long) (timeChoices.get(1) * 60));
                 App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-                App.startMonitoringCustomerIncrease(timeChoices.get(2));
+                LocalDateTime futureDateTime3 = currentDateTime.plusSeconds((long) (timeChoices.get(2) * 60));
+                App.startMonitoringCustomerIncrease(futureDateTime3);
+                LocalDateTime futureDateTime4 = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
+                App.startMonitoringCumulative(futureDateTime4);
                 new CorporateLobby(currStage, currApp);  
             }
             
         });
         signUpButton.setOnAction(e -> {
+            ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+            App.numPlayers = (int) (timeChoices.get(3).doubleValue());
             if(username.getUsernameField().getText().equals("admin")){
                 App.mdbAdmin.addAdmin(password.getPasswordField().getText()); 
                 new AdminChoices(currStage, currApp);
@@ -92,14 +97,16 @@ public class SignIn extends BorderPane {
                     }
                 }
                 App.username = username.getUsernameField().getText();
-                ArrayList<Integer> timeChoices = App.mdbAdmin.getAdminInputs();
                 LocalDateTime currentDateTime = LocalDateTime.now();
-                LocalDateTime futureDateTime = currentDateTime.plusMinutes(timeChoices.get(0));
+                LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(0) * 60));
                 App.startMonitoring(futureDateTime, currStage, currApp);
-                LocalDateTime futureDateTime2 = currentDateTime.plusMinutes(timeChoices.get(1));
+                LocalDateTime futureDateTime2 = currentDateTime.plusSeconds((long) (timeChoices.get(1) * 60));
                 App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-                App.startMonitoringCustomerIncrease(timeChoices.get(2));
-                new CorporateLobby(currStage, currApp);
+                LocalDateTime futureDateTime3 = currentDateTime.plusSeconds((long) (timeChoices.get(2) * 60));
+                App.startMonitoringCustomerIncrease(futureDateTime3);
+                LocalDateTime futureDateTime4 = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
+                App.startMonitoringCumulative(futureDateTime4);
+                new CorporateLobby(currStage, currApp); 
             }
         });
 

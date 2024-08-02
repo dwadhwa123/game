@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
+import java.util.*;
 
 /**
  * JavaFX App
@@ -41,9 +42,8 @@ public class App extends Application {
     public static boolean warDisruption = false;
     public static boolean newEntrantDistruption = false;
     private static ScheduledExecutorService schedulerCustomerIncrease;
-    private static ScheduledExecutorService schedulerSaveButton;
-    public static int numPlayers = 3;
-    public static boolean availableToSave = true;
+    private static ScheduledExecutorService schedulerCumulative;
+    public static int numPlayers = 0;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -66,6 +66,10 @@ public class App extends Application {
                     new WarDisruption(currStage, currApp);
                 });
                 scheduler.shutdown();
+                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(0) * 60));
+                App.startMonitoring(futureDateTime, currStage, currApp);
             }
         }, 0, 1, TimeUnit.SECONDS);
     }
@@ -79,32 +83,52 @@ public class App extends Application {
                     new NewEntrantDistruption(currStage, currApp);
                 });
                 schedulerEntrant.shutdown();
+                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(1) * 60));
+                App.startMonitoringEntrant(futureDateTime, currStage, currApp);
             }
         }, 0, 1, TimeUnit.SECONDS);
     }
 
-    public static void startMonitoringCustomerIncrease(int minutes){
+    public static void startMonitoringCustomerIncrease(LocalDateTime ltd){
         schedulerCustomerIncrease = Executors.newScheduledThreadPool(1);
-        schedulerCustomerIncrease.scheduleAtFixedRate(App::taskToDo, minutes, minutes, TimeUnit.MINUTES);
-    }
-
-    private static void taskToDo() {
-        Platform.runLater(() -> {
-            App.basicCustomers *= 1.05;
-            App.qualityCustomers *= 1.05;
-            System.out.println("Hello");
-        });
-    }
-
-    public static void startMonitoringSaveButton(LocalDateTime ltd, Stage currStage, App currApp) {
-        schedulerSaveButton = Executors.newScheduledThreadPool(1);
-        schedulerSaveButton.scheduleAtFixedRate(() -> {
+        schedulerCustomerIncrease.scheduleAtFixedRate(() -> {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
-                    App.availableToSave = true;
+                    App.basicCustomers *= 1.05;
+                    App.qualityCustomers *= 1.05;
                 });
-                schedulerSaveButton.shutdown();
+                schedulerCustomerIncrease.shutdown();
+                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(2) * 60));
+                App.startMonitoringCustomerIncrease(futureDateTime);
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public static void startMonitoringCumulative(LocalDateTime ltd) {
+        schedulerCumulative = Executors.newScheduledThreadPool(1);
+        schedulerCumulative.scheduleAtFixedRate(() -> {
+            LocalDateTime now = LocalDateTime.now();
+            if (now.isAfter(ltd)) {
+                Platform.runLater(() -> {
+                    // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
+                    // Double[] profitRevenueResults = new Double[2];
+                    // profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
+                    ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+                    Double[] profitRevenueResults = new Double[2];
+                    profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+                    Double[] userValues = App.mdb.getUserCumulative(App.username);
+                    App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
+                });
+                schedulerCumulative.shutdown();
+                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
+                App.startMonitoringCumulative(futureDateTime);
             }
         }, 0, 1, TimeUnit.SECONDS);
     }

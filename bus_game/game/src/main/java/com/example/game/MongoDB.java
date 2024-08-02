@@ -48,24 +48,31 @@ public class MongoDB {
     }
 
     public void addAdmin(String password){
-        Document d = new Document("_id", "admin").append("password", password).append("war", 30).append("new entrant", 60).append("customer increase", 5);
+        Document d = new Document("_id", "admin").append("password", password).append("war", 30.0).append("new entrant", 60.0).append("customer increase", 5.0)
+        .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0);
         collection.insertOne(d);
     }
 
-    public ArrayList<Integer> getAdminInputs(){
+    public ArrayList<Double> getAdminInputs(){
         FindIterable<Document> documentCursor = collection.find();
-        ArrayList<Integer> ret = new ArrayList<>();
+        ArrayList<Double> ret = new ArrayList<>();
         for(Document doc: documentCursor){
             if(doc.get("_id").equals("admin")){
-                ret.add((Integer) doc.get("war"));
-                ret.add((Integer) doc.get("new entrant"));
-                ret.add((Integer) doc.get("customer increase"));
+                ret.add((Double) doc.get("war"));
+                ret.add((Double) doc.get("new entrant"));
+                ret.add((Double) doc.get("customer increase"));
+                ret.add((Double) doc.get("num players"));
+                ret.add((Double) doc.get("decision length"));
+                ret.add((Double) doc.get("war percent change"));
                 return ret;
             }
         }
-        ret.add(30);
-        ret.add(60);
-        ret.add(5);
+        ret.add(30.0);
+        ret.add(60.0);
+        ret.add(5.0);
+        ret.add(2.0);
+        ret.add(5.0);
+        ret.add(20.0);
         return ret;
     }
 
@@ -82,13 +89,16 @@ public class MongoDB {
         collection.updateOne(query, updates, options);
     }
 
-    public void saveAdminDecisions(ArrayList<Integer> decisions){
+    public void saveAdminDecisions(ArrayList<Double> decisions){
         Document query = new Document().append("_id", "admin");
 
         Bson updates = Updates.combine(
                     Updates.set("war", decisions.get(0)),
                     Updates.set("new entrant", decisions.get(1)),
-                    Updates.set("customer increase", decisions.get(2)));
+                    Updates.set("customer increase", decisions.get(2)),
+                    Updates.set("num players", decisions.get(3)),
+                    Updates.set("decision length", decisions.get(4)),
+                    Updates.set("war percent change", decisions.get(5)));
 
         UpdateOptions options = new UpdateOptions().upsert(false);
 
@@ -147,6 +157,23 @@ public class MongoDB {
         FindIterable<Document> documentCursor = collection.find();
         for(Document doc: documentCursor){
             if(!doc.get("_id").equals(username) && doc.get("game number").equals(gameNumber)){
+                int enemy1 = (Integer) doc.get("basic price");
+                int enemy2 = (Integer) doc.get("quality price");
+                int enemy3 = (Integer) doc.get("advertising spend");
+                Integer[] ret = new Integer[3];
+                ret[0] = enemy1;
+                ret[1] = enemy2;
+                ret[2] = enemy3;
+                return ret;
+            }
+        }
+        return null;
+    }
+
+    public Integer[] getInput(String username){
+        FindIterable<Document> documentCursor = collection.find();
+        for(Document doc: documentCursor){
+            if(doc.get("_id").equals(username)){
                 int enemy1 = (Integer) doc.get("basic price");
                 int enemy2 = (Integer) doc.get("quality price");
                 int enemy3 = (Integer) doc.get("advertising spend");
