@@ -69,6 +69,7 @@ public class SignIn extends BorderPane {
                 App.startMonitoringCustomerIncrease(futureDateTime3);
                 LocalDateTime futureDateTime4 = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
                 App.startMonitoringCumulative(futureDateTime4);
+                App.timer = (int) (long) (timeChoices.get(4) * 60);
                 new CorporateLobby(currStage, currApp);  
             }
             
@@ -106,6 +107,7 @@ public class SignIn extends BorderPane {
                 App.startMonitoringCustomerIncrease(futureDateTime3);
                 LocalDateTime futureDateTime4 = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
                 App.startMonitoringCumulative(futureDateTime4);
+                App.timer = (int) (long) (timeChoices.get(4) * 60);
                 new CorporateLobby(currStage, currApp); 
             }
         });

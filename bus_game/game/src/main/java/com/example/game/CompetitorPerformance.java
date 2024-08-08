@@ -60,18 +60,7 @@ public class CompetitorPerformance extends BorderPane {
             new CumulativePerformance(currStage, currApp);
         });
 
-        timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            // Double[] profitRevenueResults = new Double[2];
-            // if(enemyInputs == null){
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            // }
-            // else{
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            // }
-            // revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
-            // profitTF.setText(String.valueOf(profitRevenueResults[1])); 
-
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
             for(int i = 0; i < revenueTextFields.size(); i++){
                 revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));

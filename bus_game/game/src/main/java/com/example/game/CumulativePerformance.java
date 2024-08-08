@@ -62,7 +62,7 @@ public class CumulativePerformance extends BorderPane {
             new DecisionSummary(currStage, currApp);
         });
 
-        timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             Double [] userCumulative = App.mdb.getUserCumulative(App.username);
             revenueTF.setText(String.valueOf(userCumulative[0])); 
             profitTF.setText(String.valueOf(userCumulative[1])); 

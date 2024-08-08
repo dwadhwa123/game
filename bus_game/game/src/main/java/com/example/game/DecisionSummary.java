@@ -66,34 +66,6 @@ public class DecisionSummary extends BorderPane {
                 String advertisingInput = advertisingSpendInput.getText();
                 App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
                 App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-
-                // ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
-                // Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
-
-                // boolean isZero = false;
-                // for(Integer[] enemyValues: enemyInputs){
-                //     if(enemyValues[0] == 0 && enemyValues[1] == 0 && enemyValues[2] == 0){
-                //         profitRevenueResults[0] = 0.0;
-                //         profitRevenueResults[1] = 0.0;
-                //         isZero = true;
-                //         break;
-                //     }
-                // }
-                // Double[] userValues = App.mdb.getUserCumulative(App.username);
-                // App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
-
-                // if(!isZero){
-                //     for(String name: App.mdb.getEnemyUsernames(App.username, App.gameNumber)){
-                //         ArrayList<Integer[]> enemyInputs2 = App.mdb.recieveMultipleEnemyInputs(name, App.gameNumber);
-                //         Double[] profitRevenueResultsEnemy = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs2);
-                //         Double[] enemyValues = App.mdb.getUserCumulative(App.username);
-                //         App.mdb.saveCumulative(name, enemyValues[0] +  profitRevenueResultsEnemy[0], enemyValues[1] + profitRevenueResultsEnemy[1]);
-                //     }
-                // }
-                
-                // LocalDateTime currentDateTime = LocalDateTime.now();
-                // LocalDateTime futureDateTime = currentDateTime.plusMinutes(5);
-                // App.startMonitoringSaveButton(futureDateTime, currStage, currApp);
             });
     }
 

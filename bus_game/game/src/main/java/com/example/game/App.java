@@ -44,6 +44,7 @@ public class App extends Application {
     private static ScheduledExecutorService schedulerCustomerIncrease;
     private static ScheduledExecutorService schedulerCumulative;
     public static int numPlayers = 0;
+    public static int timer = 0;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -115,21 +116,20 @@ public class App extends Application {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
-                    // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-                    // Double[] profitRevenueResults = new Double[2];
-                    // profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
                     ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
                     Double[] profitRevenueResults = new Double[2];
                     profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
                     Double[] userValues = App.mdb.getUserCumulative(App.username);
-                    App.mdb.saveCumulative(App.username, userValues[0] +  profitRevenueResults[0], userValues[1] + profitRevenueResults[1]);
+                    App.mdb.saveCumulative(App.username, Math.floor(userValues[0] +  profitRevenueResults[0] * 100) / 100.0, Math.floor(userValues[1] +  profitRevenueResults[1] * 100) / 100.0);
                 });
                 schedulerCumulative.shutdown();
                 ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
+                App.timer = (int) (long) (timeChoices.get(4) * 60);
                 App.startMonitoringCumulative(futureDateTime);
             }
+            App.timer--;
         }, 0, 1, TimeUnit.SECONDS);
     }
 

@@ -10,11 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class CorporateLobby extends BorderPane {
-    private Header header;
+    //private Header header;
+    Label timer;
+    private FullHeader fullHeader;
     private Button homePageButton;
     private Button ourPerformanceButton;
     private Button competitorPerformanceButton;
@@ -27,8 +30,10 @@ public class CorporateLobby extends BorderPane {
     Label basicCustomers;
     Label qualityCustomers;
     CorporateLobby(Stage currStage, App currApp){
-        header = new Header();
-        this.setTop(header);
+        // header = new Header();
+        // this.setTop(header);
+        fullHeader = new FullHeader();
+        this.setTop(fullHeader);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
         initalConditionLabels = new InitialConditionLabels();
@@ -58,7 +63,7 @@ public class CorporateLobby extends BorderPane {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             basicCustomers.setText("Basic Customers: " + App.basicCustomers);
             qualityCustomers.setText("Quality Customers: " + App.qualityCustomers);
-
+            timer.setText(String.valueOf(App.timer));
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
         timeline.play();
@@ -82,9 +87,27 @@ public class CorporateLobby extends BorderPane {
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
             this.getChildren().add(cumulativePerformanceButton);
-            this.setAlignment(Pos.CENTER);
         }
 
+    }
+    class Timer extends HBox{
+        Timer(){
+            timer = new Label();
+            timer.setFont(new Font(20));
+            timer.setText(String.valueOf(App.timer)); // create prompt label
+            timer.setPrefSize(140, 20); // set size of prompt label
+            timer.setPadding(new Insets(10, 0, 10, 0));
+            this.setStyle("-fx-font-family: serif");
+            this.getChildren().add(timer);
+        }
+    }
+
+    class FullHeader extends HBox{
+        FullHeader(){
+            Timer t = new Timer();
+            Header h = new Header();
+            this.getChildren().addAll(t, h);
+        }
     }
 
     class LeftSideButtons extends VBox{

@@ -58,7 +58,7 @@ public class OurPerformance extends BorderPane {
             new CumulativePerformance(currStage, currApp);
         });
 
-        timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
             // Double[] profitRevenueResults = new Double[2];
             // if(enemyInputs == null){
@@ -116,14 +116,6 @@ public class OurPerformance extends BorderPane {
 
     class Inputs extends VBox{
         Inputs(){
-            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            // Double[] profitRevenueResults = new Double[2];
-            // if(enemyInputs == null){
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, 0, 0, 0);
-            // }
-            // else{
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
-            // }
 
             ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];

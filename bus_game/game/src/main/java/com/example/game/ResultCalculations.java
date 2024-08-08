@@ -65,7 +65,7 @@ public class ResultCalculations {
         double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
 
         //System.out.println(App.username + " Basic  " + myBasicCustomers + " " +  myBasicPrice);
-        System.out.println(App.username + " Quality  " + myQualityCustomers + " " +  myAdvertising);
+        //System.out.println(App.username + " Quality  " + myQualityCustomers + " " +  myAdvertising);
         
         if(App.newEntrantDistruption){
             myBasicCustomers *= 0.5;
@@ -81,6 +81,8 @@ public class ResultCalculations {
         double cost = robotRentalCost + basicMaterialCost + qualityCost;
         double profit = revenue-cost;
         Double[] results = new Double[2];
+        revenue = Math.floor(revenue * 100) / 100.0;
+        profit = Math.floor(profit * 100) / 100.0;
         results[0] = revenue;
         results[1] = profit;
         return results;
