@@ -75,18 +75,29 @@ public class SignIn extends BorderPane {
             
         });
         signUpButton.setOnAction(e -> {
-            ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
-            App.numPlayers = (int) (timeChoices.get(3).doubleValue());
+            if(App.mdb.getSize() == 0){
+                App.gameNumber = 1;
+            }
+            else{
+                boolean previousStarted = App.mdb.lastStarted();
+                if(previousStarted){
+                    App.gameNumber = App.mdb.getPreviousGameNumber() + 1;
+                }
+                else{
+                    App.gameNumber = App.mdb.getPreviousGameNumber();
+                }
+                
+            }
             if(username.getUsernameField().getText().equals("admin")){
                 App.mdbAdmin.addAdmin(password.getPasswordField().getText()); 
                 new AdminChoices(currStage, currApp);
             }
             else{
-                App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText());
-                App.playerNumber = (int)(App.mdb.getSize() % App.numPlayers);
-                if(App.playerNumber == 0){
-                    App.playerNumber = App.numPlayers;
-                }
+                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+                App.numPlayers = (int) (timeChoices.get(3).doubleValue());
+                App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText(), App.gameNumber);
+                App.playerNumber = (int) App.mdb.getGameNumberSize(App.gameNumber);
+                System.out.println(App.playerNumber);
                 if(App.playerNumber < App.numPlayers){
                     try {
                         for(int i = App.playerNumber; i < App.numPlayers; i++){
@@ -98,6 +109,7 @@ public class SignIn extends BorderPane {
                     }
                 }
                 App.username = username.getUsernameField().getText();
+                App.mdb.makeStarted(App.username);
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(0) * 60));
                 App.startMonitoring(futureDateTime, currStage, currApp);

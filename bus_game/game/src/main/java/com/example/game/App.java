@@ -120,6 +120,12 @@ public class App extends Application {
                     Double[] profitRevenueResults = new Double[2];
                     profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
                     Double[] userValues = App.mdb.getUserCumulative(App.username);
+                    if(profitRevenueResults[0].isNaN()){
+                        profitRevenueResults[0] = 0.0;
+                    }
+                    if(profitRevenueResults[1].isNaN()){
+                        profitRevenueResults[1] = 0.0;
+                    }
                     App.mdb.saveCumulative(App.username, Math.floor(userValues[0] +  profitRevenueResults[0] * 100) / 100.0, Math.floor(userValues[1] +  profitRevenueResults[1] * 100) / 100.0);
                 });
                 schedulerCumulative.shutdown();

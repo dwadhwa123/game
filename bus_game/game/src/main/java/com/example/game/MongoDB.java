@@ -9,6 +9,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
@@ -40,11 +41,28 @@ public class MongoDB {
     //     this.collection = collection;
     // }
 
-    public void addEntry(String username, String password){
-        App.gameNumber = (this.collection.countDocuments()+App.numPlayers)/App.numPlayers;
-        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("game number", App.gameNumber)
-        .append("cumulative revenue", 0.0).append("cumulative profit", 0.0);
+    public void addEntry(String username, String password, long gameNumber){
+        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("game number", gameNumber)
+        .append("cumulative revenue", 0.0).append("cumulative profit", 0.0).append("started", false);
         collection.insertOne(d);
+    }
+
+    public void makeStarted(String username){
+        System.out.print("MADE Started " + username);
+        Document query = new Document().append("_id", username);
+        Bson updates = Updates.combine(
+                    Updates.set("started", true));
+
+        UpdateOptions options = new UpdateOptions().upsert(false);
+
+        collection.updateOne(query, updates, options);
+    }
+
+    public boolean lastStarted(){
+        FindIterable<Document> documentCursor = collection.find()
+                                                   .sort(Sorts.descending("game number"))
+                                                   .limit(1);
+        return (boolean) documentCursor.first().get("started");
     }
 
     public void addAdmin(String password){
@@ -222,7 +240,7 @@ public class MongoDB {
         return null;
     }
 
-    public Long getGameNumber(String username){
+    public long getGameNumber(String username){
         FindIterable<Document> documentCursor = collection.find();
         for(Document doc: documentCursor){
             if(doc.get("_id").equals(username)){
@@ -230,7 +248,13 @@ public class MongoDB {
                 return gN;
             }
         }
-        return null;
+        return 0;
+    }
+    public long getPreviousGameNumber(){
+        FindIterable<Document> documentCursor = collection.find()
+                                                   .sort(Sorts.descending("game number"))
+                                                   .limit(1);
+        return (long) documentCursor.first().get("game number");
     }
 
 
@@ -247,6 +271,14 @@ public class MongoDB {
             }
         }
         return false;
+    }
+
+    public long getGameNumberSize(long gameNumber){
+        Document filter = new Document("game number", gameNumber);
+
+        // Count the number of documents that match the filter
+        long count = collection.countDocuments(filter);
+        return count;
     }
 
     public long getSize(){
