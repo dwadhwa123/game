@@ -25,6 +25,7 @@ public class AdminChoices extends BorderPane{
     TextField numPlayersDecision;
     TextField decisionLengthDecision;
     TextField warCustomerDecreaseDecision;
+    TextField newEntrantDecreaseDecision;
     private Button saveButton;
     ArrayList<Double> doubleInputs;
     Choices choices;
@@ -35,7 +36,7 @@ public class AdminChoices extends BorderPane{
         doubleInputs = App.mdbAdmin.getAdminInputs();
         choices = new Choices(doubleInputs);
         this.setRight(choices);
-        adminChoicesScene = new Scene(this, App.width, App.height*1.5);
+        adminChoicesScene = new Scene(this, App.width, App.height*1.65);
         currStage.setScene(adminChoicesScene);
 
 
@@ -47,9 +48,11 @@ public class AdminChoices extends BorderPane{
             double numPlayersChoice = Double.parseDouble(numPlayersDecision.getText());
             double decisionLengthChoice = Double.parseDouble(decisionLengthDecision.getText());
             double warCustomerDecreaseChoice = Double.parseDouble(warCustomerDecreaseDecision.getText());
+            double newEntrantDecreaseChoice = Double.parseDouble(newEntrantDecreaseDecision.getText());
             ArrayList<Double> choices = new ArrayList<>();
             choices.add(warChoice); choices.add(newEntrantChoice); choices.add(customerIncreaseChoice);
             choices.add(numPlayersChoice); choices.add(decisionLengthChoice); choices.add(warCustomerDecreaseChoice);
+            choices.add(newEntrantDecreaseChoice);
             App.mdbAdmin.saveAdminDecisions(choices);
         });   
     }
@@ -74,6 +77,7 @@ public class AdminChoices extends BorderPane{
         Label numPlayersLabel;
         Label decisionLengthLabel;
         Label warCustomerLabel;
+        Label newEntrantDecreaseLabel;
         Choices(ArrayList<Double> doubleInputs){
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
@@ -179,6 +183,22 @@ public class AdminChoices extends BorderPane{
             warCustomerDecreaseDecision.setPadding(new Insets(10, 0, 10, 0));
             warCustomerDecreaseDecision.setEditable(true);
             this.getChildren().add(warCustomerDecreaseDecision);
+            this.setAlignment(Pos.CENTER_LEFT);
+
+            newEntrantDecreaseLabel = new Label();
+            newEntrantDecreaseLabel.setText("% of market share lost per new entrant");
+            newEntrantDecreaseLabel.setPrefSize(250, 20);
+            newEntrantDecreaseLabel.setPadding(new Insets(10, 0, 10, 0));
+            newEntrantDecreaseLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(newEntrantDecreaseLabel);
+            String input7 = String.valueOf(doubleInputs.get(6));
+            newEntrantDecreaseDecision = new TextField(input7);
+            newEntrantDecreaseDecision.setPrefSize(380, 20);
+            newEntrantDecreaseDecision.setStyle("-fx-font-family: serif");
+
+            newEntrantDecreaseDecision.setPadding(new Insets(10, 0, 10, 0));
+            newEntrantDecreaseDecision.setEditable(true);
+            this.getChildren().add(newEntrantDecreaseDecision);
             this.setAlignment(Pos.CENTER_LEFT);
 
 

@@ -68,8 +68,8 @@ public class ResultCalculations {
         //System.out.println(App.username + " Quality  " + myQualityCustomers + " " +  myAdvertising);
         
         if(App.newEntrantDistruption){
-            myBasicCustomers *= 0.5;
-            myQualityCustomers *= 0.5;
+            myBasicCustomers *= App.newEntrantPercentage/100.0;
+            myQualityCustomers *= App.newEntrantPercentage/100.0;
         }
         double numBasicRobots = myBasicCustomers/App.robotsMadePerPeriod;
         double numQualityRobots = myQualityCustomers/App.robotsMadePerPeriod;

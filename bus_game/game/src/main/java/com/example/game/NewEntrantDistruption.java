@@ -10,6 +10,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.util.ArrayList;
 
 public class NewEntrantDistruption extends BorderPane{
     private Header3 header;
@@ -28,6 +29,9 @@ public class NewEntrantDistruption extends BorderPane{
         App.costPerBasicDrone = 10;
         App.costPerQualityDrone = 30;
         App.robotsCostPerPeriod = 200;
+        ArrayList<Double> choices = App.mdbAdmin.getAdminInputs();
+        double decimalDecrease = (100-choices.get(6)) * 0.01;
+        App.newEntrantPercentage *= decimalDecrease;
         backButton.setOnAction(e -> {
             new CorporateLobby(currStage, currApp);
         });

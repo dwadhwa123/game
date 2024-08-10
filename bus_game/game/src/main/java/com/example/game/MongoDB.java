@@ -9,6 +9,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
@@ -36,17 +37,14 @@ public class MongoDB {
         }
     }
 
-    // public MongoDB(MongoDatabase database, MongoCollection<Document> collection) {
-    //     this.database = database;
-    //     this.collection = collection;
-    // }
-
+    //adds a player to the appropriate game
     public void addEntry(String username, String password, long gameNumber){
         Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("game number", gameNumber)
         .append("cumulative revenue", 0.0).append("cumulative profit", 0.0).append("started", false);
         collection.insertOne(d);
     }
 
+    //sets the player's started value to true after entering the game
     public void makeStarted(String username){
         System.out.print("MADE Started " + username);
         Document query = new Document().append("_id", username);
@@ -58,6 +56,7 @@ public class MongoDB {
         collection.updateOne(query, updates, options);
     }
 
+    //returns whether the last player added to the database has started their game
     public boolean lastStarted(){
         FindIterable<Document> documentCursor = collection.find()
                                                    .sort(Sorts.descending("game number"))
@@ -65,35 +64,7 @@ public class MongoDB {
         return (boolean) documentCursor.first().get("started");
     }
 
-    public void addAdmin(String password){
-        Document d = new Document("_id", "admin").append("password", password).append("war", 30.0).append("new entrant", 60.0).append("customer increase", 5.0)
-        .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0);
-        collection.insertOne(d);
-    }
-
-    public ArrayList<Double> getAdminInputs(){
-        FindIterable<Document> documentCursor = collection.find();
-        ArrayList<Double> ret = new ArrayList<>();
-        for(Document doc: documentCursor){
-            if(doc.get("_id").equals("admin")){
-                ret.add((Double) doc.get("war"));
-                ret.add((Double) doc.get("new entrant"));
-                ret.add((Double) doc.get("customer increase"));
-                ret.add((Double) doc.get("num players"));
-                ret.add((Double) doc.get("decision length"));
-                ret.add((Double) doc.get("war percent change"));
-                return ret;
-            }
-        }
-        ret.add(30.0);
-        ret.add(60.0);
-        ret.add(5.0);
-        ret.add(2.0);
-        ret.add(5.0);
-        ret.add(20.0);
-        return ret;
-    }
-
+       //Saves 3 decisions
     public void saveDecisions(String username, int decision1, int decision2, int decision3){
         Document query = new Document().append("_id", username);
 
@@ -107,6 +78,44 @@ public class MongoDB {
         collection.updateOne(query, updates, options);
     }
 
+////ADMIN methods
+
+    //adds an admin account to the game
+    public void addAdmin(String password){
+        Document d = new Document("_id", "admin").append("password", password).append("war", 30.0).append("new entrant", 60.0).append("customer increase", 5.0)
+        .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0).append("new entrant change", 10.0);
+        collection.insertOne(d);
+    }
+
+    public ArrayList<Double> getAdminInputs(){
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", "admin"));
+        Document doc = documentCursor.first();
+        ArrayList<Double> ret = new ArrayList<>();
+        if(doc == null){
+            ret.add(30.0);
+            ret.add(60.0);
+            ret.add(5.0);
+            ret.add(2.0);
+            ret.add(5.0);
+            ret.add(20.0);
+            ret.add(10.0);
+            return ret;
+        }
+        else{
+            ret.add((Double) doc.get("war"));
+            ret.add((Double) doc.get("new entrant"));
+            ret.add((Double) doc.get("customer increase"));
+            ret.add((Double) doc.get("num players"));
+            ret.add((Double) doc.get("decision length"));
+            ret.add((Double) doc.get("war percent change"));
+            ret.add((Double) doc.get("new entrant change"));
+            return ret;
+        }
+        
+    }
+
+ 
+
     public void saveAdminDecisions(ArrayList<Double> decisions){
         Document query = new Document().append("_id", "admin");
 
@@ -116,12 +125,16 @@ public class MongoDB {
                     Updates.set("customer increase", decisions.get(2)),
                     Updates.set("num players", decisions.get(3)),
                     Updates.set("decision length", decisions.get(4)),
-                    Updates.set("war percent change", decisions.get(5)));
+                    Updates.set("war percent change", decisions.get(5)),
+                    Updates.set("new entrant change", decisions.get(6)));
 
         UpdateOptions options = new UpdateOptions().upsert(false);
 
         collection.updateOne(query, updates, options);
     }
+
+
+
 
     public void saveCumulative(String username, double cumulativeRevenue, double cumulativeProfit){
         Document query = new Document().append("_id", username);
@@ -135,21 +148,11 @@ public class MongoDB {
         collection.updateOne(query, updates, options);
     }
 
-    public String getEnemyUsername(String username, Long gameNumber){
-        FindIterable<Document> documentCursor = collection.find();
-        for(Document doc: documentCursor){
-            if(!doc.get("_id").equals(username) && (Long) doc.get("game number") == gameNumber){
-                return (String) doc.get("_id");
-            }
-        }
-        return null;
-    }
-
     public ArrayList<String> getEnemyUsernames(String username, Long gameNumber){
-        FindIterable<Document> documentCursor = collection.find();
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("game number", gameNumber));
         ArrayList<String> usernames = new ArrayList<>();
         for(Document doc: documentCursor){
-            if(!doc.get("_id").equals(username) && (Long) doc.get("game number") == gameNumber){
+            if(!doc.get("_id").equals(username)){
                 usernames.add((String) doc.get("_id"));
             }
         }
@@ -157,59 +160,35 @@ public class MongoDB {
     }
 
     public Double[] getUserCumulative(String username){
-        FindIterable<Document> documentCursor = collection.find();
-        for(Document doc: documentCursor){
-            if(doc.get("_id").equals(username)){
-                Double revenue = (Double) doc.get("cumulative revenue");
-                Double profit = (Double) doc.get("cumulative profit");
-                Double[] ret = new Double[2];
-                ret[0] = revenue;
-                ret[1] = profit;
-                return ret;
-            }
-        }
-        return null;
-    }
-
-    public Integer[] recieveEnemyInputs(String username, long gameNumber){
-        FindIterable<Document> documentCursor = collection.find();
-        for(Document doc: documentCursor){
-            if(!doc.get("_id").equals(username) && doc.get("game number").equals(gameNumber)){
-                int enemy1 = (Integer) doc.get("basic price");
-                int enemy2 = (Integer) doc.get("quality price");
-                int enemy3 = (Integer) doc.get("advertising spend");
-                Integer[] ret = new Integer[3];
-                ret[0] = enemy1;
-                ret[1] = enemy2;
-                ret[2] = enemy3;
-                return ret;
-            }
-        }
-        return null;
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", username));
+        Document doc = documentCursor.first();
+        Double revenue = (Double) doc.get("cumulative revenue");
+        Double profit = (Double) doc.get("cumulative profit");
+        Double[] ret = new Double[2];
+        ret[0] = revenue;
+        ret[1] = profit;
+        return ret;
     }
 
     public Integer[] getInput(String username){
-        FindIterable<Document> documentCursor = collection.find();
-        for(Document doc: documentCursor){
-            if(doc.get("_id").equals(username)){
-                int enemy1 = (Integer) doc.get("basic price");
-                int enemy2 = (Integer) doc.get("quality price");
-                int enemy3 = (Integer) doc.get("advertising spend");
-                Integer[] ret = new Integer[3];
-                ret[0] = enemy1;
-                ret[1] = enemy2;
-                ret[2] = enemy3;
-                return ret;
-            }
-        }
-        return null;
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", username));
+        Document doc = documentCursor.first();
+
+        int enemy1 = (Integer) doc.get("basic price");
+        int enemy2 = (Integer) doc.get("quality price");
+        int enemy3 = (Integer) doc.get("advertising spend");
+        Integer[] ret = new Integer[3];
+        ret[0] = enemy1;
+        ret[1] = enemy2;
+        ret[2] = enemy3;
+        return ret;
     }
 
     public ArrayList<Integer[]> recieveMultipleEnemyInputs(String username, long gameNumber){
-        FindIterable<Document> documentCursor = collection.find();
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("game number", gameNumber));
         ArrayList<Integer[]> enemyInputs = new ArrayList<>();
         for(Document doc: documentCursor){
-            if(!doc.get("_id").equals(username) && doc.get("game number").equals(gameNumber)){
+            if(!doc.get("_id").equals(username)){
                 int enemy1 = (Integer) doc.get("basic price");
                 int enemy2 = (Integer) doc.get("quality price");
                 int enemy3 = (Integer) doc.get("advertising spend");
@@ -224,32 +203,25 @@ public class MongoDB {
     }
 
     public Integer[] recieveUserInputs(String username){
-        FindIterable<Document> documentCursor = collection.find();
-        for(Document doc: documentCursor){
-            if(doc.get("_id").equals(username)){
-                int enemy1 = (Integer) doc.get("basic price");
-                int enemy2 = (Integer) doc.get("quality price");
-                int enemy3 = (Integer) doc.get("advertising spend");
-                Integer[] ret = new Integer[3];
-                ret[0] = enemy1;
-                ret[1] = enemy2;
-                ret[2] = enemy3;
-                return ret;
-            }
-        }
-        return null;
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", username));
+        Document doc = documentCursor.first();
+        int enemy1 = (Integer) doc.get("basic price");
+        int enemy2 = (Integer) doc.get("quality price");
+        int enemy3 = (Integer) doc.get("advertising spend");
+        Integer[] ret = new Integer[3];
+        ret[0] = enemy1;
+        ret[1] = enemy2;
+        ret[2] = enemy3;
+        return ret;
     }
 
     public long getGameNumber(String username){
-        FindIterable<Document> documentCursor = collection.find();
-        for(Document doc: documentCursor){
-            if(doc.get("_id").equals(username)){
-                long gN = (Long) doc.get("game number");
-                return gN;
-            }
-        }
-        return 0;
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", username));
+        Document doc = documentCursor.first();
+        return (Long) doc.get("game number");
     }
+
+
     public long getPreviousGameNumber(){
         FindIterable<Document> documentCursor = collection.find()
                                                    .sort(Sorts.descending("game number"))
@@ -259,18 +231,17 @@ public class MongoDB {
 
 
     public boolean correctUsernameCheck(String username, String password){
-        FindIterable<Document> documentCursor = collection.find();
-        for(Document doc: documentCursor){
-            if(doc.get("_id").equals(username)){
-                if(doc.get("password").equals(password)){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", username));
+        Document doc = documentCursor.first();
+        if(doc == null){
+            return false;
         }
-        return false;
+        else if(doc.get("password").equals(password)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public long getGameNumberSize(long gameNumber){
@@ -284,6 +255,9 @@ public class MongoDB {
     public long getSize(){
         return this.collection.countDocuments();
     }
+
+
+
     public void stopUntilChange() throws InterruptedException{
         CountDownLatch latch = new CountDownLatch(1);
 

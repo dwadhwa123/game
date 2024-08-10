@@ -45,6 +45,7 @@ public class App extends Application {
     private static ScheduledExecutorService schedulerCumulative;
     public static int numPlayers = 0;
     public static int timer = 0;
+    public static double newEntrantPercentage = 100.0;
 
     @Override
     public void start(Stage stage) throws IOException {
