@@ -22,6 +22,7 @@ public class CompetitorPerformance extends BorderPane {
     private Button competitorPerformanceButton;
     private Button decisionSummaryButton;
     private Button cumulativePerformanceButton;
+    private Button competitorDecisionButton;
     private LeftSideButtons lsb;
     private Scene ourPerformanceScene;
     private Inputs inputs;
@@ -55,6 +56,11 @@ public class CompetitorPerformance extends BorderPane {
             new DecisionSummary(currStage, currApp);
         });
 
+        competitorDecisionButton.setOnAction(e -> {
+            timeline.stop();
+            new CompetitorDecisions(currStage, currApp);
+        });
+        
         cumulativePerformanceButton.setOnAction(e -> {
             timeline.stop();
             new CumulativePerformance(currStage, currApp);
@@ -84,11 +90,14 @@ public class CompetitorPerformance extends BorderPane {
             competitorPerformanceButton.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
             cumulativePerformanceButton = new Button("Cumulative Performance");
             cumulativePerformanceButton.setPrefHeight(40);
+            competitorDecisionButton = new Button("Competitor Decisions");
+            competitorDecisionButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
+            this.getChildren().add(competitorDecisionButton);
             this.getChildren().add(cumulativePerformanceButton);
             this.setAlignment(Pos.CENTER);
         }
@@ -108,51 +117,6 @@ public class CompetitorPerformance extends BorderPane {
 
     class Inputs extends VBox{
         Inputs(){
-
-            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            // Double[] profitRevenueResults = new Double[2];
-            // if(enemyInputs == null){
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(0, 0, 0, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            // }
-            // else{
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(enemyInputs[0], enemyInputs[1], enemyInputs[2], App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            // }
-           
-            // this.setPrefSize(500, 20);
-            // this.setStyle("-fx-font-family: serif");
-            // Label revenueLabel = new Label();
-            // revenueLabel.setText("Revenue"); // 
-            // revenueLabel.setPrefSize(100, 20);// set size of Revenue label
-            // revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            // revenueLabel.setAlignment(Pos.CENTER_LEFT);
-            // this.getChildren().add(revenueLabel); // add label to VBox
-
-            // revenueTF = new TextField(String.valueOf(profitRevenueResults[0])); 
-            // revenueTF.setPrefSize(380, 20); // set size of text field
-            // revenueTF.setStyle("-fx-font-family: serif"); // set background color
-            // // texfield                
-            // revenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
-            // revenueTF.setEditable(false);
-            // this.getChildren().add(revenueTF); 
-            // this.setAlignment(Pos.CENTER_LEFT);
-
-            // this.setPrefSize(500, 20);
-            // this.setStyle("-fx-font-family: serif");
-            // Label profitLabel = new Label();
-            // profitLabel.setText("Profit"); // 
-            // profitLabel.setPrefSize(100, 20);
-            // profitLabel.setPadding(new Insets(10, 0, 10, 0)); 
-            // profitLabel.setAlignment(Pos.CENTER_LEFT);
-            // this.getChildren().add(profitLabel); 
-
-            // profitTF = new TextField(String.valueOf(profitRevenueResults[1])); 
-            // profitTF.setPrefSize(380, 20);
-            // profitTF.setStyle("-fx-font-family: serif"); 
-            // // texfield                
-            // profitTF.setPadding(new Insets(10, 0, 10, 0)); 
-            // profitTF.setEditable(false);
-            // this.getChildren().add(profitTF); 
-            // this.setAlignment(Pos.CENTER_LEFT);
 
             ArrayList<Double[]> enemyScores = getEnemyScores();
 

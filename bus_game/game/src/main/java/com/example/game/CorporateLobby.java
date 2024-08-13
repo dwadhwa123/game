@@ -23,6 +23,7 @@ public class CorporateLobby extends BorderPane {
     private Button competitorPerformanceButton;
     private Button decisionSummaryButton;
     private Button cumulativePerformanceButton;
+    private Button competitorDecisionButton;
     private LeftSideButtons lsb;
     private Scene corporateLobbyScene;
     private InitialConditionLabels initalConditionLabels;
@@ -55,6 +56,12 @@ public class CorporateLobby extends BorderPane {
             timeline.stop();
             new DecisionSummary(currStage, currApp);
         });
+        
+        competitorDecisionButton.setOnAction(e -> {
+            timeline.stop();
+            new CompetitorDecisions(currStage, currApp);
+        });
+
         cumulativePerformanceButton.setOnAction(e -> {
             timeline.stop();
             new CumulativePerformance(currStage, currApp);
@@ -81,11 +88,14 @@ public class CorporateLobby extends BorderPane {
             competitorPerformanceButton.setPrefHeight(40);
             cumulativePerformanceButton = new Button("Cumulative Performance");
             cumulativePerformanceButton.setPrefHeight(40);
+            competitorDecisionButton = new Button("Competitor Decisions");
+            competitorDecisionButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
+            this.getChildren().add(competitorDecisionButton);
             this.getChildren().add(cumulativePerformanceButton);
         }
 

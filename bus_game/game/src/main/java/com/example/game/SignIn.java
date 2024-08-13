@@ -70,7 +70,12 @@ public class SignIn extends BorderPane {
                 LocalDateTime futureDateTime4 = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
                 App.startMonitoringCumulative(futureDateTime4);
                 App.timer = (int) (long) (timeChoices.get(4) * 60);
-                new CorporateLobby(currStage, currApp);  
+                App.numPlayers = (int) App.mdb.getGameNumberSize(App.gameNumber);
+                for(int i = 0; i < App.numPlayers-1; i++){
+                    Integer[] zeroes = {0, 0, 0};
+                    App.lastEnemyDecisions.add(zeroes);
+                }
+                new CorporateLobby(currStage, currApp);
             }
             
         });
@@ -120,7 +125,13 @@ public class SignIn extends BorderPane {
                 LocalDateTime futureDateTime4 = currentDateTime.plusSeconds((long) (timeChoices.get(4) * 60));
                 App.startMonitoringCumulative(futureDateTime4);
                 App.timer = (int) (long) (timeChoices.get(4) * 60);
+                for(int i = 0; i < App.numPlayers-1; i++){
+                    Integer[] zeroes = {0, 0, 0};
+                    App.lastEnemyDecisions.add(zeroes);
+                }
+                
                 new CorporateLobby(currStage, currApp); 
+                
             }
         });
 

@@ -22,6 +22,7 @@ public class CumulativePerformance extends BorderPane {
     private Button competitorPerformanceButton;
     private Button decisionSummaryButton;
     private Button cumulativePerformanceButton;
+    private Button competitorDecisionButton;
     private LeftSideButtons lsb;
     private Scene cumulativePerformanceScene;
     private Inputs inputs;
@@ -57,6 +58,10 @@ public class CumulativePerformance extends BorderPane {
             new CompetitorPerformance(currStage, currApp);
         });
 
+        competitorDecisionButton.setOnAction(e -> {
+            timeline.stop();
+            new CompetitorDecisions(currStage, currApp);
+        });
         decisionSummaryButton.setOnAction(e -> {
             timeline.stop();
             new DecisionSummary(currStage, currApp);
@@ -90,11 +95,14 @@ public class CumulativePerformance extends BorderPane {
             cumulativePerformanceButton = new Button("Cumulative Performance");
             cumulativePerformanceButton.setPrefHeight(40);
             cumulativePerformanceButton.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
+            competitorDecisionButton = new Button("Competitor Decisions");
+            competitorDecisionButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
+            this.getChildren().add(competitorDecisionButton);
             this.getChildren().add(cumulativePerformanceButton);
             this.setAlignment(Pos.CENTER);
         }
