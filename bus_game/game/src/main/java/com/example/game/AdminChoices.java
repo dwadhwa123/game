@@ -35,8 +35,8 @@ public class AdminChoices extends BorderPane{
         this.setTop(header);
         doubleInputs = App.mdbAdmin.getAdminInputs();
         choices = new Choices(doubleInputs);
-        this.setRight(choices);
-        adminChoicesScene = new Scene(this, App.width, App.height*1.65);
+        this.setLeft(choices);
+        adminChoicesScene = new Scene(this, App.width, App.height);
         currStage.setScene(adminChoicesScene);
 
 

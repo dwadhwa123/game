@@ -69,6 +69,7 @@ public class App extends Application {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
+                    App.changeDetected = true;
                     new WarDisruption(currStage, currApp);
                 });
                 scheduler.shutdown();
@@ -86,6 +87,7 @@ public class App extends Application {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
+                    App.changeDetected = true;
                     new NewEntrantDistruption(currStage, currApp);
                 });
                 schedulerEntrant.shutdown();
@@ -103,6 +105,7 @@ public class App extends Application {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
+                    App.changeDetected = true;
                     App.basicCustomers *= 1.05;
                     App.qualityCustomers *= 1.05;
                 });
