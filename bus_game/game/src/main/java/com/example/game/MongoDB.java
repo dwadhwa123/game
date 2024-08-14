@@ -17,7 +17,10 @@ import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import java.util.concurrent.CountDownLatch;
 import java.util.ArrayList;
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MongoDB {
     String uri = "mongodb+srv://dwadhwa:RkzwC5uipJApsk2c@cluster0.nzyceaj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -46,7 +49,6 @@ public class MongoDB {
 
     //sets the player's started value to true after entering the game
     public void makeStarted(String username){
-        System.out.print("MADE Started " + username);
         Document query = new Document().append("_id", username);
         Bson updates = Updates.combine(
                     Updates.set("started", true));
@@ -150,6 +152,7 @@ public class MongoDB {
 
     public ArrayList<String> getEnemyUsernames(String username, Long gameNumber){
         FindIterable<Document> documentCursor = collection.find(Filters.eq("game number", gameNumber));
+        //documentCursor = documentCursor.sort(Sorts.ascending("_id"));
         ArrayList<String> usernames = new ArrayList<>();
         for(Document doc: documentCursor){
             if(!doc.get("_id").equals(username)){
@@ -186,6 +189,7 @@ public class MongoDB {
 
     public ArrayList<Integer[]> recieveMultipleEnemyInputs(String username, long gameNumber){
         FindIterable<Document> documentCursor = collection.find(Filters.eq("game number", gameNumber));
+        //documentCursor = documentCursor.sort(Sorts.ascending("_id"));
         ArrayList<Integer[]> enemyInputs = new ArrayList<>();
         for(Document doc: documentCursor){
             if(!doc.get("_id").equals(username)){
@@ -276,6 +280,49 @@ public class MongoDB {
         // This will block until a change is detected and latch.countDown() is called
         latch.await();
     }
-    
+
+    public void watchForGameChange(long gameNumber) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        executorService.submit(() -> {
+            CountDownLatch latch = new CountDownLatch(1);
+
+            AtomicReference<Document> lastChange = new AtomicReference<>(null);
+
+            // Build the pipeline to filter change stream documents
+            Document matchStage = new Document("$match", new Document("fullDocument.game number", gameNumber)
+                .append("$or", Arrays.asList(
+                    new Document("fullDocument.basic price", new Document("$exists", true)),
+                    new Document("fullDocument.quality price", new Document("$exists", true)),
+                    new Document("fullDocument.advertising spend", new Document("$exists", true))
+                ))
+            );
+
+            try (MongoCursor<ChangeStreamDocument<Document>> cursor = collection.watch(Arrays.asList(matchStage))
+                    .fullDocument(FullDocument.UPDATE_LOOKUP)
+                    .iterator()) {
+
+                while (cursor.hasNext()) {
+                    ChangeStreamDocument<Document> changeStreamDocument = cursor.next();
+                    Document fullDocument = changeStreamDocument.getFullDocument();
+                    if (!fullDocument.equals(lastChange.get())) {
+                        App.changeDetected = true;
+                        lastChange.set(fullDocument);
+                    }
+                    
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                // This will block until a change is detected and latch.countDown() is called
+                latch.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+    }
 
 }

@@ -18,7 +18,6 @@ public class NewEntrantDistruption extends BorderPane{
     private Button backButton;
 
     NewEntrantDistruption(Stage currStage, App currApp){
-        System.out.println("Hello");
         currStage.setResizable(true);
         App.newEntrantDistruption = true;
         App.warDisruption = false;

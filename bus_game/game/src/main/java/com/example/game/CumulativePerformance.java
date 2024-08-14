@@ -68,16 +68,19 @@ public class CumulativePerformance extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            Double [] userCumulative = App.mdb.getUserCumulative(App.username);
-            revenueTF.setText(String.valueOf(userCumulative[0])); 
-            profitTF.setText(String.valueOf(userCumulative[1])); 
+            if(App.hasAccumulated){
+                System.out.print("Hello");
+                Double [] userCumulative = App.mdb.getUserCumulative(App.username);
+                revenueTF.setText(String.valueOf(userCumulative[0])); 
+                profitTF.setText(String.valueOf(userCumulative[1])); 
 
-            ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
-            for(int i = 0; i < revenueTextFields.size(); i++){
-                revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
-                profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
+                ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
+                for(int i = 0; i < revenueTextFields.size(); i++){
+                    revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
+                    profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
+                }
             }
-
+            App.hasAccumulated = false;
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
         timeline.play();
@@ -203,7 +206,7 @@ public class CumulativePerformance extends BorderPane {
                 profitTextFields.add(enemyProfitTF);
             }
 
-            
+            App.hasAccumulated = false;
 
 
             }

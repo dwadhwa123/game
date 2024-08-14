@@ -71,7 +71,7 @@ public class CompetitorDecisions extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if(!App.isFirstDecisionPeriod ){
+            if(!App.isFirstDecisionPeriod && App.hasAccumulated){
                 for(int i = 0; i < basicPriceTextFields.size(); i++){
                     basicPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[0]));
                     qualityPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[1]));

@@ -65,22 +65,15 @@ public class OurPerformance extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            // Integer[] enemyInputs = App.mdb.recieveEnemyInputs(App.username, App.gameNumber);
-            // Double[] profitRevenueResults = new Double[2];
-            // if(enemyInputs == null){
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, 0, 0, 0);
-            // }
-            // else{
-            //     profitRevenueResults = ResultCalculations.twoPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs[0], enemyInputs[1], enemyInputs[2]);
-            // }
-
-            ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
-            Double[] profitRevenueResults = new Double[2];
-            profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+            if(App.changeDetected){
+                ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+                Double[] profitRevenueResults = new Double[2];
+                profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
             
-            revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
-            profitTF.setText(String.valueOf(profitRevenueResults[1])); 
-
+                revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
+                profitTF.setText(String.valueOf(profitRevenueResults[1])); 
+            }
+            App.changeDetected = false;
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
         timeline.play();

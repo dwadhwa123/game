@@ -67,11 +67,14 @@ public class CompetitorPerformance extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
-            for(int i = 0; i < revenueTextFields.size(); i++){
-                revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
-                profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
+            if(App.changeDetected){
+                ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
+                for(int i = 0; i < revenueTextFields.size(); i++){
+                    revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
+                    profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
+                }
             }
+            App.changeDetected = false;
 
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time

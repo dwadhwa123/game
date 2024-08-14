@@ -46,6 +46,10 @@ public class App extends Application {
     public static int numPlayers = 0;
     public static int timer = 0;
     public static double newEntrantPercentage = 100.0;
+    public static boolean isFirstDecisionPeriod = true;
+    public static ArrayList<Integer[]> lastEnemyDecisions = new ArrayList<>();
+    public static boolean hasAccumulated = false;
+    public static boolean changeDetected = false;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -118,6 +122,9 @@ public class App extends Application {
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
                     ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
+                    lastEnemyDecisions = enemyInputs;
+                    App.isFirstDecisionPeriod = false;
+                    App.hasAccumulated = true;
                     Double[] profitRevenueResults = new Double[2];
                     profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
                     Double[] userValues = App.mdb.getUserCumulative(App.username);
