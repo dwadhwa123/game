@@ -2,6 +2,8 @@ package com.example.game;
 
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,11 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import java.time.LocalDateTime;
+import javafx.util.Duration;
 
 public class DecisionSummary extends BorderPane {
     private Header header;
+    Label timer;
     private Button homePageButton;
     private Button ourPerformanceButton;
     private Button competitorPerformanceButton;
@@ -27,6 +31,7 @@ public class DecisionSummary extends BorderPane {
     private Scene decisionSummaryScene;
     private Inputs inputs;
     private ArrayList<Integer> intInputs;
+    private Timeline timeline;
     TextField basicPriceInput;
     TextField qualityPriceInput;
     TextField advertisingSpendInput;
@@ -46,22 +51,27 @@ public class DecisionSummary extends BorderPane {
         currStage.setScene(decisionSummaryScene);
 
         ourPerformanceButton.setOnAction(e -> {
+            timeline.stop();
             new OurPerformance(currStage, currApp);
         });
 
         competitorPerformanceButton.setOnAction(e -> {
+            timeline.stop();
             new CompetitorPerformance(currStage, currApp);
         });
 
         homePageButton.setOnAction(e -> {
+            timeline.stop();
             new CorporateLobby(currStage, currApp);
         });
 
         competitorDecisionButton.setOnAction(e -> {
+            timeline.stop();
             new CompetitorDecisions(currStage, currApp);
         });
         
         cumulativePerformanceButton.setOnAction(e -> {
+            timeline.stop();
             new CumulativePerformance(currStage, currApp);
         });
         saveButton.setOnAction(e -> {   
@@ -72,9 +82,20 @@ public class DecisionSummary extends BorderPane {
                 String advertisingInput = advertisingSpendInput.getText();
                 App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
                 App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
-            });
-    }
+        });
 
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
+        }));
+
+        timeline.setCycleCount(Timeline.INDEFINITE); 
+        timeline.play();
+    }
 
     class Header extends HBox{
         Header(){
@@ -82,6 +103,16 @@ public class DecisionSummary extends BorderPane {
             ourPerformanceButton = new Button("Our Performance");
             homePageButton.setPrefHeight(40);
             ourPerformanceButton.setPrefHeight(40);
+            timer = new Label();
+            timer.setFont(new Font(20));
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
+            timer.setPrefSize(140, 20); // set size of timer label
+            timer.setAlignment(Pos.TOP_LEFT);
             competitorPerformanceButton = new Button("Competitor Performance");
             competitorPerformanceButton.setPrefHeight(40);
             cumulativePerformanceButton = new Button("Cumulative Performance");
@@ -90,12 +121,12 @@ public class DecisionSummary extends BorderPane {
             competitorDecisionButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
+            this.getChildren().add(timer);
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
             this.getChildren().add(competitorDecisionButton);
             this.getChildren().add(cumulativePerformanceButton);
-            this.setAlignment(Pos.CENTER);
         }
 
     }

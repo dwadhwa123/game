@@ -47,7 +47,10 @@ public class App extends Application {
     public static int timer = 0;
     public static double newEntrantPercentage = 100.0;
     public static boolean isFirstDecisionPeriod = true;
+
     public static ArrayList<Integer[]> lastEnemyDecisions = new ArrayList<>();
+    public static ArrayList<Double[]> lastEnemyCustomers = new ArrayList<>();
+
     public static boolean hasAccumulated = false;
     public static boolean changeDetected = false;
 
@@ -126,6 +129,18 @@ public class App extends Application {
                 Platform.runLater(() -> {
                     ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
                     lastEnemyDecisions = enemyInputs;
+                    ArrayList<Double[]>  basicAndQuality = new ArrayList<>();
+                    ArrayList<String> usernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
+
+                for(String str: usernames){
+                    ArrayList<Integer[]> enemyInputs2 = App.mdb.recieveMultipleEnemyInputs(str, App.gameNumber);
+                    Integer[] inputs = App.mdb.getInput(str);
+                    Double[] customerResults = ResultCalculations.multiPlayerCustomerCalculations(inputs[0], inputs[1], inputs[2], enemyInputs2);
+                    basicAndQuality.add(customerResults);
+                }
+                App.lastEnemyCustomers = basicAndQuality;  
+
+                    //lastEnemyCustomers
                     App.isFirstDecisionPeriod = false;
                     App.hasAccumulated = true;
                     Double[] profitRevenueResults = new Double[2];
@@ -137,7 +152,7 @@ public class App extends Application {
                     if(profitRevenueResults[1].isNaN()){
                         profitRevenueResults[1] = 0.0;
                     }
-                    App.mdb.saveCumulative(App.username, Math.floor(userValues[0] +  profitRevenueResults[0] * 100) / 100.0, Math.floor(userValues[1] +  profitRevenueResults[1] * 100) / 100.0);
+                    App.mdb.saveCumulative(App.username, Math.floor((userValues[0] +  profitRevenueResults[0]) * 100) / 100.0, Math.floor((userValues[1] +  profitRevenueResults[1]) * 100) / 100.0);
                 });
                 schedulerCumulative.shutdown();
                 ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();

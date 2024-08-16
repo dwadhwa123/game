@@ -64,13 +64,17 @@ public class ResultCalculations {
         double myBasicCustomers = App.basicCustomers * myBasicScore / sumBasic;
         double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
 
-        //System.out.println(App.username + " Basic  " + myBasicCustomers + " " +  myBasicPrice);
-        //System.out.println(App.username + " Quality  " + myQualityCustomers + " " +  myAdvertising);
-        
+        // System.out.println(App.username + " Basic  " + myBasicCustomers + " ");
+        // System.out.println(App.username + " Quality  " + myQualityCustomers + " ");
+
         if(App.newEntrantDistruption){
             myBasicCustomers *= App.newEntrantPercentage/100.0;
             myQualityCustomers *= App.newEntrantPercentage/100.0;
         }
+        // System.out.println("NEW ENTRANT PERCENTAGE " + App.newEntrantPercentage);
+        // System.out.println(App.username + " Basic  " + myBasicCustomers + " ");
+        // System.out.println(App.username + " Quality  " + myQualityCustomers + " ");
+
         double numBasicRobots = myBasicCustomers/App.robotsMadePerPeriod;
         double numQualityRobots = myQualityCustomers/App.robotsMadePerPeriod;
         double robotRentalCost = (numBasicRobots+numQualityRobots)*App.robotsCostPerPeriod;
@@ -86,5 +90,54 @@ public class ResultCalculations {
         results[0] = revenue;
         results[1] = profit;
         return results;
+    }
+
+    public static Double[] multiPlayerCustomerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, ArrayList<Integer[]> oppDecisions){
+        ArrayList<Integer> basicPrices = new ArrayList<Integer>();
+        ArrayList<Integer> advertisingSpends = new ArrayList<Integer>();
+        basicPrices.add(myBasicPrice);
+        advertisingSpends.add(myAdvertising);
+        for(Integer[] decision: oppDecisions){
+            basicPrices.add(decision[0]);
+            advertisingSpends.add(decision[2]);
+        }
+        Collections.sort(basicPrices);
+        Collections.sort(advertisingSpends);
+        int sumBasic = 0;
+        int sumAdvertising = 0;
+        for(int i = 0; i < basicPrices.size(); i++){
+            sumBasic += basicPrices.get(i);
+            sumAdvertising += advertisingSpends.get(i);
+        }
+
+        //calculating the inverses 
+        ArrayList<Double> basicPricesInverted = new ArrayList<Double>();
+        for(Integer i : basicPrices){
+            double inverse = 1/(double) i;
+            basicPricesInverted.add(inverse);
+        }
+
+        //sum of inverses
+        double sumBasicInverses = 0;
+        for(int i = 0; i < basicPricesInverted.size(); i++){
+            sumBasicInverses += basicPricesInverted.get(i);
+        }
+        double myInverse = 1/(double) myBasicPrice;
+        double myBasicScore = myInverse/sumBasicInverses * sumBasic;
+
+
+        double myBasicCustomers = App.basicCustomers * myBasicScore / sumBasic;
+        double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
+
+        if(App.newEntrantDistruption){
+            myBasicCustomers *= App.newEntrantPercentage/100.0;
+            myQualityCustomers *= App.newEntrantPercentage/100.0;
+        }
+
+        myBasicCustomers = Math.floor(myBasicCustomers * 100) / 100.0;
+        myQualityCustomers = Math.floor(myQualityCustomers * 100) / 100.0;
+      
+        Double [] customers = {myBasicCustomers, myQualityCustomers};
+        return customers;
     }
 }

@@ -73,6 +73,8 @@ public class SignIn extends BorderPane {
                 App.numPlayers = (int) App.mdb.getGameNumberSize(App.gameNumber);
                 for(int i = 0; i < App.numPlayers-1; i++){
                     Integer[] zeroes = {0, 0, 0};
+                    Double[] customers = {0.0, 0.0};
+                    App.lastEnemyCustomers.add(customers);
                     App.lastEnemyDecisions.add(zeroes);
                 }
                 App.mdb.watchForGameChange(App.gameNumber);
@@ -128,6 +130,8 @@ public class SignIn extends BorderPane {
                 for(int i = 0; i < App.numPlayers-1; i++){
                     Integer[] zeroes = {0, 0, 0};
                     App.lastEnemyDecisions.add(zeroes);
+                    Double[] customers = {0.0, 0.0};
+                    App.lastEnemyCustomers.add(customers);
                 }
                 App.mdb.watchForGameChange(App.gameNumber);
                 new CorporateLobby(currStage, currApp); 

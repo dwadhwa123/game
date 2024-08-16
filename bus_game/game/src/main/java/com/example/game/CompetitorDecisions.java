@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.*;
@@ -27,18 +28,22 @@ public class CompetitorDecisions extends BorderPane {
     private Scene previousChoicesScene;
     private AllInputs allInputs;
     private Timeline timeline;
+    private Label timer;
     List<VBox> choicesPlusCustomers = new ArrayList<>();
     List<TextField> basicPriceTextFields = new ArrayList<>();
     List<TextField> qualityPriceTextFields = new ArrayList<>();
     List<TextField> advertisingTextFields = new ArrayList<>();
+    List<TextField> basicCustomerTextFields = new ArrayList<>();
+    List<TextField> qualityCustomerTextFields = new ArrayList<>();
     CompetitorDecisions(Stage currStage, App currApp){
         currStage.setResizable(true);
         header = new Header();
         this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
-        for(Integer[] choices: App.lastEnemyDecisions){
-            choicesPlusCustomers.add(new Inputs(choices));
+        int size = App.lastEnemyDecisions.size();
+        for(int i = 0; i < size; i++){
+            choicesPlusCustomers.add(new Inputs(i));
         }
         allInputs = new AllInputs(choicesPlusCustomers);
         this.setCenter(allInputs);
@@ -71,11 +76,19 @@ public class CompetitorDecisions extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
             if(!App.isFirstDecisionPeriod && App.hasAccumulated){
                 for(int i = 0; i < basicPriceTextFields.size(); i++){
                     basicPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[0]));
                     qualityPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[1]));
                     advertisingTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[2]));
+                    basicCustomerTextFields.get(i).setText(String.valueOf(App.lastEnemyCustomers.get(i)[0]));
+                    qualityCustomerTextFields.get(i).setText(String.valueOf(App.lastEnemyCustomers.get(i)[1]));
                 }
             }
         }));
@@ -91,24 +104,35 @@ public class CompetitorDecisions extends BorderPane {
             ourPerformanceButton = new Button("Our Performance");
             homePageButton.setPrefHeight(40);
             ourPerformanceButton.setPrefHeight(40);
+            timer = new Label();
+            timer.setFont(new Font(20));
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
+            timer.setPrefSize(140, 20); // set size of timer label
+            timer.setAlignment(Pos.TOP_LEFT);
             competitorPerformanceButton = new Button("Competitor Performance");
             competitorPerformanceButton.setPrefHeight(40);
+            cumulativePerformanceButton = new Button("Cumulative Performance");
+            cumulativePerformanceButton.setPrefHeight(40);
             competitorDecisionButton = new Button("Competitor Decisions");
             competitorDecisionButton.setPrefHeight(40);
             competitorDecisionButton.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
-            cumulativePerformanceButton = new Button("Cumulative Performance");
-            cumulativePerformanceButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
+            this.getChildren().add(timer);
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
             this.getChildren().add(competitorDecisionButton);
             this.getChildren().add(cumulativePerformanceButton);
-            this.setAlignment(Pos.CENTER);
         }
 
     }
+
 
     class LeftSideButtons extends VBox{
         LeftSideButtons(){
@@ -122,7 +146,7 @@ public class CompetitorDecisions extends BorderPane {
     }
 
     class Inputs extends VBox{
-        Inputs(Integer[] enemyChoices){
+        Inputs(int index){
 
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
@@ -132,7 +156,7 @@ public class CompetitorDecisions extends BorderPane {
             basicPriceLabel.setAlignment(Pos.CENTER_LEFT);
             this.getChildren().add(basicPriceLabel);
 
-            TextField basicPriceTextField = new TextField(String.valueOf(enemyChoices[0]));
+            TextField basicPriceTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[0]));
             basicPriceTextField.setPrefSize(380, 20); // set size of text field
             basicPriceTextField.setStyle("-fx-font-family: serif"); // set background color
             // texfield                
@@ -149,7 +173,7 @@ public class CompetitorDecisions extends BorderPane {
             qualityPriceLabel.setAlignment(Pos.CENTER_LEFT);
             this.getChildren().add(qualityPriceLabel);
 
-            TextField qualityPriceTextField = new TextField(String.valueOf(enemyChoices[1]));
+            TextField qualityPriceTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[1]));
             qualityPriceTextField.setPrefSize(150, 20); // set size of text field
             qualityPriceTextField.setStyle("-fx-font-family: serif"); // set background color
             // texfield                
@@ -165,7 +189,7 @@ public class CompetitorDecisions extends BorderPane {
             advertisingSpendLabel.setAlignment(Pos.CENTER_LEFT);
             this.getChildren().add(advertisingSpendLabel);
 
-            TextField advertisingSpendTextField = new TextField(String.valueOf(enemyChoices[2]));
+            TextField advertisingSpendTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[2]));
             advertisingSpendTextField.setPrefSize(150, 20); // set size of text field
             advertisingSpendTextField.setStyle("-fx-font-family: serif"); // set background color
             // texfield                
@@ -175,21 +199,42 @@ public class CompetitorDecisions extends BorderPane {
             this.setAlignment(Pos.CENTER_LEFT);
             advertisingTextFields.add(advertisingSpendTextField);
 
+            Label basicCustomerLabel = new Label("Basic Customers");
+            basicCustomerLabel.setPrefSize(100, 20);// set size of label
+            basicCustomerLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            basicCustomerLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(basicCustomerLabel);
+
+            TextField basicCustomerTextField = new TextField(String.valueOf(App.lastEnemyCustomers.get(index)[0]));
+            basicCustomerTextField.setPrefSize(150, 20); // set size of text field
+            basicCustomerTextField.setStyle("-fx-font-family: serif"); // set background color
+            // texfield                
+            basicCustomerTextField.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            basicCustomerTextField.setEditable(false);
+            this.getChildren().add(basicCustomerTextField); 
+            this.setAlignment(Pos.CENTER_LEFT);
+            basicCustomerTextFields.add(basicCustomerTextField);
+
+            Label qualityCustomerLabel = new Label("Quality Customers");
+            qualityCustomerLabel.setPrefSize(100, 20);// set size of label
+            qualityCustomerLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            qualityCustomerLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(qualityCustomerLabel);
+
+            TextField qualityCustomerTextField = new TextField(String.valueOf(App.lastEnemyCustomers.get(index)[1]));
+            qualityCustomerTextField.setPrefSize(150, 20); // set size of text field
+            qualityCustomerTextField.setStyle("-fx-font-family: serif"); // set background color
+            // texfield                
+            qualityCustomerTextField.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            qualityCustomerTextField.setEditable(false);
+            this.getChildren().add(qualityCustomerTextField); 
+            this.setAlignment(Pos.CENTER_LEFT);
+            qualityCustomerTextFields.add(qualityCustomerTextField);
+
 
             }
         }
 
-        // public static ArrayList<Double[]> getEnemyScores(){
-        //     ArrayList<Double[]> profitsAndRevenues = new ArrayList<>();
-        //     ArrayList<String> usernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
-        //     for(String str: usernames){
-        //         ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(str, App.gameNumber);
-        //         Integer[] inputs = App.mdb.getInput(str);
-        //         Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(inputs[0], inputs[1], inputs[2], enemyInputs);
-        //         profitsAndRevenues.add(profitRevenueResults);
-        //     }
-        //     return profitsAndRevenues;
-        // }
 
 
         class AllInputs extends HBox{

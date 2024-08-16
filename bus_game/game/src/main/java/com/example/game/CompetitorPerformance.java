@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.*;
@@ -27,6 +28,7 @@ public class CompetitorPerformance extends BorderPane {
     private Scene ourPerformanceScene;
     private Inputs inputs;
     private Timeline timeline; 
+    private Label timer;
     TextField revenueTF;
     TextField profitTF;
     List<TextField> revenueTextFields = new ArrayList<>();
@@ -67,6 +69,12 @@ public class CompetitorPerformance extends BorderPane {
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
             if(App.changeDetected){
                 ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
                 for(int i = 0; i < revenueTextFields.size(); i++){
@@ -88,21 +96,31 @@ public class CompetitorPerformance extends BorderPane {
             ourPerformanceButton = new Button("Our Performance");
             homePageButton.setPrefHeight(40);
             ourPerformanceButton.setPrefHeight(40);
+            timer = new Label();
+            timer.setFont(new Font(20));
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
+            timer.setPrefSize(140, 20); // set size of timer label
+            timer.setAlignment(Pos.TOP_LEFT);
             competitorPerformanceButton = new Button("Competitor Performance");
             competitorPerformanceButton.setPrefHeight(40);
-            competitorPerformanceButton.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
             cumulativePerformanceButton = new Button("Cumulative Performance");
             cumulativePerformanceButton.setPrefHeight(40);
             competitorDecisionButton = new Button("Competitor Decisions");
             competitorDecisionButton.setPrefHeight(40);
+            competitorPerformanceButton.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
+            this.getChildren().add(timer);
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
             this.getChildren().add(competitorDecisionButton);
             this.getChildren().add(cumulativePerformanceButton);
-            this.setAlignment(Pos.CENTER);
         }
 
     }
@@ -162,6 +180,7 @@ public class CompetitorPerformance extends BorderPane {
                 this.setAlignment(Pos.CENTER_LEFT);
                 profitTextFields.add(profitTF);
             }
+            App.changeDetected = false;
         }
 
         public static ArrayList<Double[]> getEnemyScores(){

@@ -15,9 +15,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class CorporateLobby extends BorderPane {
-    //private Header header;
+    private Header header;
     Label timer;
-    private FullHeader fullHeader;
+    //private FullHeader fullHeader;
     private Button homePageButton;
     private Button ourPerformanceButton;
     private Button competitorPerformanceButton;
@@ -31,10 +31,8 @@ public class CorporateLobby extends BorderPane {
     Label basicCustomers;
     Label qualityCustomers;
     CorporateLobby(Stage currStage, App currApp){
-        // header = new Header();
-        // this.setTop(header);
-        fullHeader = new FullHeader();
-        this.setTop(fullHeader);
+        header = new Header();
+        this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
         initalConditionLabels = new InitialConditionLabels();
@@ -70,7 +68,12 @@ public class CorporateLobby extends BorderPane {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             basicCustomers.setText("Basic Customers: " + App.basicCustomers);
             qualityCustomers.setText("Quality Customers: " + App.qualityCustomers);
-            timer.setText(String.valueOf(App.timer));
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
         timeline.play();
@@ -84,6 +87,17 @@ public class CorporateLobby extends BorderPane {
             ourPerformanceButton = new Button("Our Performance");
             homePageButton.setPrefHeight(40);
             ourPerformanceButton.setPrefHeight(40);
+            timer = new Label();
+            timer.setFont(new Font(20));
+            if(App.timer >= 60){
+                timer.setText(String.valueOf(App.timer/60) + " min");
+            }
+            else{
+                timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
+            }
+            
+            timer.setPrefSize(140, 20); // set size of timer label
+            timer.setAlignment(Pos.TOP_LEFT);
             competitorPerformanceButton = new Button("Competitor Performance");
             competitorPerformanceButton.setPrefHeight(40);
             cumulativePerformanceButton = new Button("Cumulative Performance");
@@ -92,6 +106,7 @@ public class CorporateLobby extends BorderPane {
             competitorDecisionButton.setPrefHeight(40);
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
+            this.getChildren().add(timer);
             this.getChildren().add(homePageButton);
             this.getChildren().add(ourPerformanceButton);
             this.getChildren().add(competitorPerformanceButton);
@@ -99,25 +114,6 @@ public class CorporateLobby extends BorderPane {
             this.getChildren().add(cumulativePerformanceButton);
         }
 
-    }
-    class Timer extends HBox{
-        Timer(){
-            timer = new Label();
-            timer.setFont(new Font(20));
-            timer.setText(String.valueOf(App.timer)); // create prompt label
-            timer.setPrefSize(140, 20); // set size of prompt label
-            timer.setPadding(new Insets(10, 0, 10, 0));
-            this.setStyle("-fx-font-family: serif");
-            this.getChildren().add(timer);
-        }
-    }
-
-    class FullHeader extends HBox{
-        FullHeader(){
-            Timer t = new Timer();
-            Header h = new Header();
-            this.getChildren().addAll(t, h);
-        }
     }
 
     class LeftSideButtons extends VBox{
