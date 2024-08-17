@@ -140,13 +140,13 @@ public class CompetitorPerformance extends BorderPane {
         Inputs(){
 
             ArrayList<Double[]> enemyScores = getEnemyScores();
-
+            int index = 0;
             for(Double[] score: enemyScores){
                 this.setPrefSize(500, 20);
                 this.setStyle("-fx-font-family: serif");
                 Label revenueLabel = new Label();
-                revenueLabel.setText("Revenue"); // 
-                revenueLabel.setPrefSize(100, 20);// set size of Revenue label
+                revenueLabel.setText(App.enemyUsernames.get(index) + "'s Revenue"); // 
+                revenueLabel.setPrefSize(250, 20);// set size of Revenue label
                 revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
                 revenueLabel.setAlignment(Pos.CENTER_LEFT);
                 this.getChildren().add(revenueLabel); // add label to VBox
@@ -164,8 +164,8 @@ public class CompetitorPerformance extends BorderPane {
                 this.setPrefSize(500, 20);
                 this.setStyle("-fx-font-family: serif");
                 Label profitLabel = new Label();
-                profitLabel.setText("Profit"); // 
-                profitLabel.setPrefSize(100, 20);
+                profitLabel.setText(App.enemyUsernames.get(index) + "'s Profit"); // 
+                profitLabel.setPrefSize(250, 20);
                 profitLabel.setPadding(new Insets(10, 0, 10, 0)); 
                 profitLabel.setAlignment(Pos.CENTER_LEFT);
                 this.getChildren().add(profitLabel); 
@@ -179,6 +179,8 @@ public class CompetitorPerformance extends BorderPane {
                 this.getChildren().add(profitTF); 
                 this.setAlignment(Pos.CENTER_LEFT);
                 profitTextFields.add(profitTF);
+
+                index++;
             }
             App.changeDetected = false;
         }

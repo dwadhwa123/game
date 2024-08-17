@@ -39,14 +39,15 @@ public class App extends Application {
     public static MongoDB mdbAdmin = new MongoDB("admin");
     private static ScheduledExecutorService scheduler;
     private static ScheduledExecutorService schedulerEntrant;
-    public static boolean warDisruption = false;
-    public static boolean newEntrantDistruption = false;
     private static ScheduledExecutorService schedulerCustomerIncrease;
     private static ScheduledExecutorService schedulerCumulative;
     public static int numPlayers = 0;
     public static int timer = 0;
     public static double newEntrantPercentage = 100.0;
     public static boolean isFirstDecisionPeriod = true;
+    public static ArrayList<String> enemyUsernames;
+    public static boolean isWarDisruption = false;
+    public static boolean isNewEntrantDisruption = false;
 
     public static ArrayList<Integer[]> lastEnemyDecisions = new ArrayList<>();
     public static ArrayList<Double[]> lastEnemyCustomers = new ArrayList<>();
@@ -72,7 +73,7 @@ public class App extends Application {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
-                    App.changeDetected = true;
+                    isWarDisruption = true;
                     new WarDisruption(currStage, currApp);
                 });
                 scheduler.shutdown();
@@ -90,7 +91,7 @@ public class App extends Application {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
-                    App.changeDetected = true;
+                    isNewEntrantDisruption = true;
                     new NewEntrantDistruption(currStage, currApp);
                 });
                 schedulerEntrant.shutdown();

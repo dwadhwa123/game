@@ -19,20 +19,21 @@ public class NewEntrantDistruption extends BorderPane{
 
     NewEntrantDistruption(Stage currStage, App currApp){
         currStage.setResizable(true);
-        App.newEntrantDistruption = true;
-        App.warDisruption = false;
         header = new Header3("New Entrant Into the Market");
         this.setTop(header);
         newEntrantDisruptionScene = new Scene(this, App.width, App.height);
         currStage.setScene(newEntrantDisruptionScene);
-        App.costPerBasicDrone = 10;
-        App.costPerQualityDrone = 30;
-        App.robotsCostPerPeriod = 200;
         ArrayList<Double> choices = App.mdbAdmin.getAdminInputs();
         double decimalDecrease = (100-choices.get(6)) * 0.01;
         App.newEntrantPercentage *= decimalDecrease;
         backButton.setOnAction(e -> {
-            new CorporateLobby(currStage, currApp);
+            App.isNewEntrantDisruption = false;
+            if(App.isWarDisruption){
+                new WarDisruption(currStage, currApp);
+            }
+            else{
+                new CorporateLobby(currStage, currApp);
+            }
         });
     }
     

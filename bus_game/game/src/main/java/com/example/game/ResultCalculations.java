@@ -5,27 +5,27 @@ import java.util.Collections;
 
 public class ResultCalculations {
 
-    public static Double[] twoPlayerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, int oppBasicPrice, int oppQualityPrice, int oppAdvertising){
-        double myBasicCustomers = ((double)(oppBasicPrice))/(myBasicPrice) * App.basicCustomers/2;
-        double myQualityCustomers = ((double)(myAdvertising))/(oppAdvertising) * App.qualityCustomers/2;
-        if(App.newEntrantDistruption){
-            myBasicCustomers *= 0.5;
-            myQualityCustomers *= 0.5;
-        }
-        double numBasicRobots = myBasicCustomers/App.robotsMadePerPeriod;
-        double numQualityRobots = myQualityCustomers/App.robotsMadePerPeriod;
-        double robotRentalCost = (numBasicRobots+numQualityRobots)*App.robotsCostPerPeriod;
-        double basicMaterialCost = numBasicRobots * 10 * App.costPerBasicDrone;
-        double qualityMaterialCost = numQualityRobots * 10 * App.costPerQualityDrone;
-        double qualityCost = myAdvertising + qualityMaterialCost;
-        double revenue = (myBasicPrice * numBasicRobots * 10) + (myQualityPrice * numQualityRobots * 10);
-        double cost = robotRentalCost + basicMaterialCost + qualityCost;
-        double profit = revenue-cost;
-        Double[] results = new Double[2];
-        results[0] = revenue;
-        results[1] = profit;
-        return results;
-    }
+    // public static Double[] twoPlayerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, int oppBasicPrice, int oppQualityPrice, int oppAdvertising){
+    //     double myBasicCustomers = ((double)(oppBasicPrice))/(myBasicPrice) * App.basicCustomers/2;
+    //     double myQualityCustomers = ((double)(myAdvertising))/(oppAdvertising) * App.qualityCustomers/2;
+    //     // if(App.newEntrantDistruption){
+    //     //     myBasicCustomers *= 0.5;
+    //     //     myQualityCustomers *= 0.5;
+    //     // }
+    //     double numBasicRobots = myBasicCustomers/App.robotsMadePerPeriod;
+    //     double numQualityRobots = myQualityCustomers/App.robotsMadePerPeriod;
+    //     double robotRentalCost = (numBasicRobots+numQualityRobots)*App.robotsCostPerPeriod;
+    //     double basicMaterialCost = numBasicRobots * 10 * App.costPerBasicDrone;
+    //     double qualityMaterialCost = numQualityRobots * 10 * App.costPerQualityDrone;
+    //     double qualityCost = myAdvertising + qualityMaterialCost;
+    //     double revenue = (myBasicPrice * numBasicRobots * 10) + (myQualityPrice * numQualityRobots * 10);
+    //     double cost = robotRentalCost + basicMaterialCost + qualityCost;
+    //     double profit = revenue-cost;
+    //     Double[] results = new Double[2];
+    //     results[0] = revenue;
+    //     results[1] = profit;
+    //     return results;
+    // }
 
     public static Double[] multiPlayerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, ArrayList<Integer[]> oppDecisions){
         ArrayList<Integer> basicPrices = new ArrayList<Integer>();
@@ -67,10 +67,10 @@ public class ResultCalculations {
         // System.out.println(App.username + " Basic  " + myBasicCustomers + " ");
         // System.out.println(App.username + " Quality  " + myQualityCustomers + " ");
 
-        if(App.newEntrantDistruption){
-            myBasicCustomers *= App.newEntrantPercentage/100.0;
-            myQualityCustomers *= App.newEntrantPercentage/100.0;
-        }
+        
+        myBasicCustomers *= App.newEntrantPercentage/100.0;
+        myQualityCustomers *= App.newEntrantPercentage/100.0;
+        
         // System.out.println("NEW ENTRANT PERCENTAGE " + App.newEntrantPercentage);
         // System.out.println(App.username + " Basic  " + myBasicCustomers + " ");
         // System.out.println(App.username + " Quality  " + myQualityCustomers + " ");
@@ -129,10 +129,10 @@ public class ResultCalculations {
         double myBasicCustomers = App.basicCustomers * myBasicScore / sumBasic;
         double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
 
-        if(App.newEntrantDistruption){
-            myBasicCustomers *= App.newEntrantPercentage/100.0;
-            myQualityCustomers *= App.newEntrantPercentage/100.0;
-        }
+        
+        myBasicCustomers *= App.newEntrantPercentage/100.0;
+        myQualityCustomers *= App.newEntrantPercentage/100.0;
+        
 
         myBasicCustomers = Math.floor(myBasicCustomers * 100) / 100.0;
         myQualityCustomers = Math.floor(myQualityCustomers * 100) / 100.0;

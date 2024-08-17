@@ -18,13 +18,12 @@ public class WarDisruption extends BorderPane{
     private Button backButton;
 
     WarDisruption(Stage currStage, App currApp){
+        System.out.print("War Reached");
         currStage.setResizable(true);
         header = new Header3("War Has Broken Out - Material and Robot Shortages");
         this.setTop(header);
         warDisruptionScene = new Scene(this, App.width, App.height);
         currStage.setScene(warDisruptionScene);
-        App.warDisruption = true;
-        App.newEntrantDistruption = false;
         App.costPerBasicDrone = 20;
         App.costPerQualityDrone = 60;
         App.robotsCostPerPeriod = 400;
@@ -32,7 +31,13 @@ public class WarDisruption extends BorderPane{
         App.basicCustomers =  (int) (App.basicCustomers * (1-(choices.get(5).doubleValue()/100)));
         App.qualityCustomers = (int) (App.qualityCustomers * (1-(choices.get(5).doubleValue()/100)));
         backButton.setOnAction(e -> {
-            new CorporateLobby(currStage, currApp);
+            App.isWarDisruption = false;
+            if(App.isNewEntrantDisruption){
+                new NewEntrantDistruption(currStage, currApp);
+            }
+            else{
+                new CorporateLobby(currStage, currApp);
+            }
         });
     }
     

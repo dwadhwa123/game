@@ -148,8 +148,18 @@ public class CompetitorDecisions extends BorderPane {
     class Inputs extends VBox{
         Inputs(int index){
 
+
+
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
+
+            Label usernameLabel = new Label(App.enemyUsernames.get(index) + "'s Decisions");
+            usernameLabel.setPrefSize(150, 20);// set size of label
+            usernameLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            usernameLabel.setAlignment(Pos.CENTER);
+            this.getChildren().add(usernameLabel);
+
+
             Label basicPriceLabel = new Label("Basic Price");
             basicPriceLabel.setPrefSize(100, 20);// set size of label
             basicPriceLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label

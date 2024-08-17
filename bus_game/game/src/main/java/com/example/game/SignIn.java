@@ -78,6 +78,7 @@ public class SignIn extends BorderPane {
                     App.lastEnemyDecisions.add(zeroes);
                 }
                 App.mdb.watchForGameChange(App.gameNumber);
+                App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
                 new CorporateLobby(currStage, currApp);
             }
             
@@ -134,6 +135,7 @@ public class SignIn extends BorderPane {
                     App.lastEnemyCustomers.add(customers);
                 }
                 App.mdb.watchForGameChange(App.gameNumber);
+                App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
                 new CorporateLobby(currStage, currApp); 
                 
             }

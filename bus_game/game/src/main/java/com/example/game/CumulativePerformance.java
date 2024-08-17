@@ -147,7 +147,7 @@ class Header extends HBox{
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
             Label revenueLabel = new Label();
-            revenueLabel.setText("Revenue"); // 
+            revenueLabel.setText("My Revenue"); // 
             revenueLabel.setPrefSize(100, 20);// set size of Revenue label
             revenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
             revenueLabel.setAlignment(Pos.CENTER_LEFT);
@@ -165,7 +165,7 @@ class Header extends HBox{
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
             Label profitLabel = new Label();
-            profitLabel.setText("Profit"); // 
+            profitLabel.setText("My Profit"); // 
             profitLabel.setPrefSize(100, 20);// set size of Profit label
             profitLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
             profitLabel.setAlignment(Pos.CENTER_LEFT);
@@ -182,12 +182,12 @@ class Header extends HBox{
 
 
             ArrayList<Double[]> enemyScores = getEnemyScores();
-
+            int index = 0;
             for(Double[] score: enemyScores){
                 this.setPrefSize(500, 20);
                 this.setStyle("-fx-font-family: serif");
                 Label revenueEnemyLabel = new Label();
-                revenueEnemyLabel.setText("Competitor's Revenue"); // 
+                revenueEnemyLabel.setText(App.enemyUsernames.get(index) + "'s total Revenue"); // 
                 revenueEnemyLabel.setPrefSize(160, 20);// set size of Revenue label
                 revenueEnemyLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
                 revenueEnemyLabel.setAlignment(Pos.CENTER_LEFT);
@@ -206,7 +206,7 @@ class Header extends HBox{
                 this.setPrefSize(500, 20);
                 this.setStyle("-fx-font-family: serif");
                 Label profitEnemyLabel = new Label();
-                profitEnemyLabel.setText("Competitors's Profit"); // 
+                profitEnemyLabel.setText(App.enemyUsernames.get(index) + "'s total Profit"); // 
                 profitEnemyLabel.setPrefSize(160, 20);// set size of Profit label
                 profitEnemyLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
                 profitEnemyLabel.setAlignment(Pos.CENTER_LEFT);
@@ -221,6 +221,7 @@ class Header extends HBox{
                 this.getChildren().add(enemyProfitTF); 
                 this.setAlignment(Pos.CENTER_LEFT);
                 profitTextFields.add(enemyProfitTF);
+                index++;
             }
 
             App.hasAccumulated = false;
