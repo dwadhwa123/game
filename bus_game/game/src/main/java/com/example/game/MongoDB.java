@@ -20,7 +20,12 @@ import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class MongoDB {
     String uri = "mongodb+srv://dwadhwa:RkzwC5uipJApsk2c@cluster0.nzyceaj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -82,10 +87,11 @@ public class MongoDB {
 
 ////ADMIN methods
 
+
     //adds an admin account to the game
     public void addAdmin(String password){
         Document d = new Document("_id", "admin").append("password", password).append("war", 30.0).append("new entrant", 60.0).append("customer increase", 5.0)
-        .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0).append("new entrant change", 10.0);
+        .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0).append("new entrant change", 10.0).append("start time", LocalDateTime.now()).append("started", false);
         collection.insertOne(d);
     }
 
@@ -116,6 +122,43 @@ public class MongoDB {
         
     }
 
+    public LocalDateTime getStartTime(){
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", "admin"));
+        Document doc = documentCursor.first();
+        Date date = doc.getDate("start time");
+
+        // Convert java.util.Date to java.time.LocalDateTime
+        return convertToLocalDateTime(date).plusHours(7);
+    }
+
+    private LocalDateTime convertToLocalDateTime(Date date) {
+        // Convert java.util.Date to java.time.LocalDateTime
+        Instant instant = date.toInstant();
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    }
+
+    public boolean getStarted(){
+        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", "admin"));
+        Document doc = documentCursor.first();
+        return (boolean) doc.get("started");
+
+    }
+
+    public void setToZero(String username){
+        Document query = new Document().append("_id", username);
+
+        Bson updates = Updates.combine(
+            Updates.set("basic price", 0),
+            Updates.set("quality price", 0),
+            Updates.set("advertising spend", 0),
+            Updates.set("cumulative revenue", 0.0),
+            Updates.set("cumulative profit", 0.0));
+
+        UpdateOptions options = new UpdateOptions().upsert(false);
+
+        collection.updateOne(query, updates, options);
+    }
+    
  
 
     public void saveAdminDecisions(ArrayList<Double> decisions){
@@ -132,6 +175,25 @@ public class MongoDB {
 
         UpdateOptions options = new UpdateOptions().upsert(false);
 
+        collection.updateOne(query, updates, options);
+    }
+
+    public void startGame(LocalDateTime ltd){
+        Document query = new Document().append("_id", "admin");
+        Bson updates = Updates.combine(
+                    Updates.set("start time", ltd),
+                    Updates.set("started", true));
+
+        UpdateOptions options = new UpdateOptions().upsert(false);
+        collection.updateOne(query, updates, options);
+    }
+
+    public void endGame(){
+        Document query = new Document().append("_id", "admin");
+        Bson updates = Updates.combine(
+                    Updates.set("started", false));
+
+        UpdateOptions options = new UpdateOptions().upsert(false);
         collection.updateOne(query, updates, options);
     }
 
@@ -323,6 +385,56 @@ public class MongoDB {
             }
         });
 
+    }
+
+    public void watchForGameEnd() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+    
+        executorService.submit(() -> {
+            // Use CountDownLatch to block until the change is detected
+            CountDownLatch latch = new CountDownLatch(1);
+    
+            // AtomicReference to store the last seen 'started' field value
+            AtomicReference<Object> lastStartedValue = new AtomicReference<>(null);
+    
+            // Build the pipeline to filter change stream documents for the document with '_id' 'admin'
+            Document matchStage = new Document("$match", new Document("fullDocument._id", "admin"));
+    
+            try (MongoCursor<ChangeStreamDocument<Document>> cursor = collection.watch(Arrays.asList(matchStage))
+                    .fullDocument(FullDocument.UPDATE_LOOKUP)
+                    .iterator()) {
+    
+                while (cursor.hasNext()) {
+                    ChangeStreamDocument<Document> changeStreamDocument = cursor.next();
+                    Document fullDocument = changeStreamDocument.getFullDocument();
+    
+                    if (fullDocument != null && fullDocument.containsKey("started")) {
+                        Object currentStartedValue = fullDocument.get("started");
+    
+                        // Check if the 'started' field value has changed
+                        if (!currentStartedValue.equals(lastStartedValue.get())) {
+                            App.mdb.setToZero(App.username);
+                            App.scheduler.shutdown();
+                            App.schedulerEntrant.shutdown();
+                            App.schedulerCumulative.shutdown();
+                            App.schedulerCustomerIncrease.shutdown();
+                            lastStartedValue.set(currentStartedValue);
+                            // Signal that a change has been detected
+                            latch.countDown();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    
+            try {
+                // This will block until a change is detected and latch.countDown() is called
+                latch.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
     }
 
 }

@@ -37,10 +37,10 @@ public class App extends Application {
     public static long gameNumber;
     public static MongoDB mdb = new MongoDB("user_collection");
     public static MongoDB mdbAdmin = new MongoDB("admin");
-    private static ScheduledExecutorService scheduler;
-    private static ScheduledExecutorService schedulerEntrant;
-    private static ScheduledExecutorService schedulerCustomerIncrease;
-    private static ScheduledExecutorService schedulerCumulative;
+    public static ScheduledExecutorService scheduler;
+    public static ScheduledExecutorService schedulerEntrant;
+    public static ScheduledExecutorService schedulerCustomerIncrease;
+    public static ScheduledExecutorService schedulerCumulative;
     public static int numPlayers = 0;
     public static int timer = 0;
     public static double newEntrantPercentage = 100.0;

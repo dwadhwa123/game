@@ -10,11 +10,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.*;
-
-import com.example.game.AdminChoices.Choices;
+import java.time.LocalDateTime;
 
 public class AdminChoices extends BorderPane{
     private Scene adminChoicesScene;
@@ -27,6 +25,8 @@ public class AdminChoices extends BorderPane{
     TextField warCustomerDecreaseDecision;
     TextField newEntrantDecreaseDecision;
     private Button saveButton;
+    private Button startGameButton;
+    private Button endGameButton;
     ArrayList<Double> doubleInputs;
     Choices choices;
     AdminChoices(Stage currStage, App currApp){
@@ -55,6 +55,15 @@ public class AdminChoices extends BorderPane{
             choices.add(newEntrantDecreaseChoice);
             App.mdbAdmin.saveAdminDecisions(choices);
         });   
+
+        startGameButton.setOnAction( e -> {
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            App.mdbAdmin.startGame(currentDateTime);
+        });
+
+        endGameButton.setOnAction( e -> {
+            App.mdbAdmin.endGame();
+        });
     }
     class Header3 extends HBox{
         Header3(){
@@ -205,9 +214,16 @@ public class AdminChoices extends BorderPane{
             saveButton = new Button("Save");
             saveButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
             this.getChildren().add(saveButton);
-            this.setPrefSize(500, 60);
-            this.setStyle("-fx-font-family: serif");
-            this.setAlignment(Pos.CENTER_LEFT);
+
+            startGameButton = new Button("Start Game");
+            startGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            this.getChildren().add(startGameButton);
+
+            endGameButton = new Button("End Game");
+            endGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            this.getChildren().add(endGameButton);
+
+
 
         }
 
