@@ -2,11 +2,12 @@ package com.example.game;
 
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
-
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 
@@ -14,9 +15,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import com.example.game.SignIn.AccountLogIn;
+import com.example.game.SignIn.Password;
+import com.example.game.SignIn.Username;
+
 public class SignIn extends BorderPane {
     private Header3 header3;
     private AccountLogIn accountLogIn;
+    private Scene signInScene;
 
     private Button loginButton;
     private Button signUpButton;
@@ -37,18 +43,22 @@ public class SignIn extends BorderPane {
         loginButton = accountLogIn.getLoginButton();
         signUpButton = accountLogIn.getSignUpButton();
 
+        signInScene = new Scene(this, App.width, App.height);
+        currStage.setScene(signInScene);
+        currStage.show();
 
         currStage.setResizable(true);
         this.setCenter(accountLogIn);
 
         loginButton.setOnAction(e -> {
             App.username = username.getUsernameField().getText();
+            boolean isStarted = App.mdbAdmin.getStarted();
             if(App.username.equals("admin")){
                 if(!App.mdbAdmin.correctUsernameCheck(username.getUsernameField().getText(), password.getPasswordField().getText())){
                     correctPasswordCheck.setVisible(true);
                 }
                 else{
-                    new AdminChoices(currStage, currApp);
+                    new AdminChoices(currStage, currApp, isStarted);
                 }
             }
             if(!App.mdb.correctUsernameCheck(username.getUsernameField().getText(), password.getPasswordField().getText())){
@@ -56,39 +66,45 @@ public class SignIn extends BorderPane {
                 correctPasswordCheck.setVisible(true);
             }
             else{
-                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
-                Integer[] userInputs = App.mdb.recieveUserInputs(App.username);
-                App.userBasicPrice = userInputs[0];
-                App.userQualityPrice = userInputs[1];
-                App.userAdvertisingSpend = userInputs[2];
-                App.gameNumber = App.mdb.getGameNumber(App.username);
-                LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
-                Duration duration = Duration.between(gameStartTime, LocalDateTime.now());
-                long differenceInSeconds = duration.getSeconds();
-                App.username = username.getUsernameField().getText();
-                App.mdb.makeStarted(App.username);
+                if(isStarted){
+                    ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+                    Integer[] userInputs = App.mdb.recieveUserInputs(App.username);
+                    App.userBasicPrice = userInputs[0];
+                    App.userQualityPrice = userInputs[1];
+                    App.userAdvertisingSpend = userInputs[2];
+                    App.gameNumber = App.mdb.getGameNumber(App.username);
+                    LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
+                    Duration duration = Duration.between(gameStartTime, LocalDateTime.now());
+                    long differenceInSeconds = duration.getSeconds();
+                    App.username = username.getUsernameField().getText();
+                    App.mdb.makeStarted(App.username);
 
-                LocalDateTime futureDateTime = gameStartTime.plusSeconds((long) (timeChoices.get(0) * 60));
-                App.startMonitoring(futureDateTime, currStage, currApp);
-                LocalDateTime futureDateTime2 = gameStartTime.plusSeconds((long) (timeChoices.get(1) * 60));
-                App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-                LocalDateTime futureDateTime3 = gameStartTime.plusSeconds((long) (timeChoices.get(2) * 60));
-                App.startMonitoringCustomerIncrease(futureDateTime3);
-                LocalDateTime futureDateTime4 = gameStartTime.plusSeconds((long) (timeChoices.get(4) * 60));
-                App.startMonitoringCumulative(futureDateTime4);
-                App.timer = (int) (((long) (timeChoices.get(4) * 60)) -  differenceInSeconds);
-                App.numPlayers = (int) App.mdb.getGameNumberSize(App.gameNumber);
-                for(int i = 0; i < App.numPlayers-1; i++){
-                    Integer[] zeroes = {0, 0, 0};
-                    Double[] customers = {0.0, 0.0};
-                    App.lastEnemyCustomers.add(customers);
-                    App.lastEnemyDecisions.add(zeroes);
+                    LocalDateTime futureDateTime = gameStartTime.plusSeconds((long) (timeChoices.get(0) * 60));
+                    App.startMonitoring(futureDateTime, currStage, currApp);
+                    LocalDateTime futureDateTime2 = gameStartTime.plusSeconds((long) (timeChoices.get(1) * 60));
+                    App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
+                    LocalDateTime futureDateTime3 = gameStartTime.plusSeconds((long) (timeChoices.get(2) * 60));
+                    App.startMonitoringCustomerIncrease(futureDateTime3);
+                    LocalDateTime futureDateTime4 = gameStartTime.plusSeconds((long) (timeChoices.get(4) * 60));
+                    App.startMonitoringCumulative(futureDateTime4);
+                    App.timer = (int) (((long) (timeChoices.get(4) * 60)) -  differenceInSeconds);
+                    App.numPlayers = (int) App.mdb.getGameNumberSize(App.gameNumber);
+                    for(int i = 0; i < App.numPlayers-1; i++){
+                        Integer[] zeroes = {0, 0, 0};
+                        Double[] customers = {0.0, 0.0};
+                        App.lastEnemyCustomers.add(customers);
+                        App.lastEnemyDecisions.add(zeroes);
+                    }
+                    App.mdb.watchForGameChange(App.gameNumber);
+                    App.mdbAdmin.watchForGameEnd(currStage, currApp);
+                    App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
+                    App.mdb.setToZero(App.username);
+                    new CorporateLobby(currStage, currApp);
                 }
-                App.mdb.watchForGameChange(App.gameNumber);
-                App.mdbAdmin.watchForGameEnd();
-                App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
-                App.mdb.setToZero(App.username);
-                new CorporateLobby(currStage, currApp);
+                else{
+                    correctPasswordCheck.setText("Game has not started yet");
+                    correctPasswordCheck.setVisible(true);
+                }
             }
             
         });
@@ -108,49 +124,56 @@ public class SignIn extends BorderPane {
                 }
                 if(username.getUsernameField().getText().equals("admin")){
                     App.mdbAdmin.addAdmin(password.getPasswordField().getText()); 
-                    new AdminChoices(currStage, currApp);
+                    new AdminChoices(currStage, currApp, false);
                 }
                 else{
                     ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
                     App.numPlayers = (int) (timeChoices.get(3).doubleValue());
                     App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText(), App.gameNumber);
                     App.playerNumber = (int) App.mdb.getGameNumberSize(App.gameNumber);
-                    if(App.playerNumber < App.numPlayers){
-                        try {
-                            for(int i = App.playerNumber; i < App.numPlayers; i++){
-                                App.mdb.stopUntilChange();
+                    Platform.runLater(() -> {
+                        correctPasswordCheck.setText("Successfully Registered. Waiting for opponents...");
+                        correctPasswordCheck.setVisible(true);
+                    });
+                    new Thread(() -> {
+                        if(App.playerNumber < App.numPlayers){
+                            
+                            try {
+                                for (int i = App.playerNumber; i < App.numPlayers; i++) {
+                                    App.mdb.stopUntilInsertion(); 
+                                }
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
                             }
-                        } catch (InterruptedException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
                         }
-                    }
-                    LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
-                    Duration duration = Duration.between(gameStartTime, LocalDateTime.now());
-                    long differenceInSeconds = duration.getSeconds();
-                    App.username = username.getUsernameField().getText();
-                    App.mdb.makeStarted(App.username);
-    
-                    LocalDateTime futureDateTime = gameStartTime.plusSeconds((long) (timeChoices.get(0) * 60));
-                    App.startMonitoring(futureDateTime, currStage, currApp);
-                    LocalDateTime futureDateTime2 = gameStartTime.plusSeconds((long) (timeChoices.get(1) * 60));
-                    App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-                    LocalDateTime futureDateTime3 = gameStartTime.plusSeconds((long) (timeChoices.get(2) * 60));
-                    App.startMonitoringCustomerIncrease(futureDateTime3);
-                    LocalDateTime futureDateTime4 = gameStartTime.plusSeconds((long) (timeChoices.get(4) * 60));
-                    App.startMonitoringCumulative(futureDateTime4);
-                    App.timer = (int) (((long) (timeChoices.get(4) * 60)) -  differenceInSeconds);
-                    for(int i = 0; i < App.numPlayers-1; i++){
-                        Integer[] zeroes = {0, 0, 0};
-                        App.lastEnemyDecisions.add(zeroes);
-                        Double[] customers = {0.0, 0.0};
-                        App.lastEnemyCustomers.add(customers);
-                    }
-                    App.mdb.watchForGameChange(App.gameNumber);
-                    App.mdbAdmin.watchForGameEnd();
-                    App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
-                    new CorporateLobby(currStage, currApp); 
-                    
+                        LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
+                        Duration duration = Duration.between(gameStartTime, LocalDateTime.now());
+                        long differenceInSeconds = duration.getSeconds();
+                        App.username = username.getUsernameField().getText();
+                        App.mdb.makeStarted(App.username);
+        
+                        LocalDateTime futureDateTime = gameStartTime.plusSeconds((long) (timeChoices.get(0) * 60));
+                        App.startMonitoring(futureDateTime, currStage, currApp);
+                        LocalDateTime futureDateTime2 = gameStartTime.plusSeconds((long) (timeChoices.get(1) * 60));
+                        App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
+                        LocalDateTime futureDateTime3 = gameStartTime.plusSeconds((long) (timeChoices.get(2) * 60));
+                        App.startMonitoringCustomerIncrease(futureDateTime3);
+                        LocalDateTime futureDateTime4 = gameStartTime.plusSeconds((long) (timeChoices.get(4) * 60));
+                        App.startMonitoringCumulative(futureDateTime4);
+                        App.timer = (int) (((long) (timeChoices.get(4) * 60)) -  differenceInSeconds);
+                        for(int i = 0; i < App.numPlayers-1; i++){
+                            Integer[] zeroes = {0, 0, 0};
+                            App.lastEnemyDecisions.add(zeroes);
+                            Double[] customers = {0.0, 0.0};
+                            App.lastEnemyCustomers.add(customers);
+                        }
+                        App.mdb.watchForGameChange(App.gameNumber);
+                        App.mdbAdmin.watchForGameEnd(currStage, currApp);
+                        App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
+                        Platform.runLater(() -> {
+                            new CorporateLobby(currStage, currApp); 
+                        });
+                    }).start();
                 }
             }
             else{
@@ -239,7 +262,7 @@ public class SignIn extends BorderPane {
     class CorrectPasswordLabel extends HBox{
         CorrectPasswordLabel(){
             correctPasswordCheck = new Label("Incorrect Password");
-            correctPasswordCheck.setPrefSize(200, 20);
+            correctPasswordCheck.setPrefSize(400, 20);
             correctPasswordCheck.setPadding(new Insets(10, 0, 10, 0));
             correctPasswordCheck.setAlignment(Pos.CENTER);
             correctPasswordCheck.setVisible(false);

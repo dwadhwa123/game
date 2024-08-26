@@ -29,12 +29,12 @@ public class AdminChoices extends BorderPane{
     private Button endGameButton;
     ArrayList<Double> doubleInputs;
     Choices choices;
-    AdminChoices(Stage currStage, App currApp){
+    AdminChoices(Stage currStage, App currApp, boolean started){
         currStage.setResizable(true);
         header = new Header3();
         this.setTop(header);
         doubleInputs = App.mdbAdmin.getAdminInputs();
-        choices = new Choices(doubleInputs);
+        choices = new Choices(doubleInputs, started);
         this.setLeft(choices);
         adminChoicesScene = new Scene(this, App.width, 1600);
         currStage.setScene(adminChoicesScene);
@@ -59,10 +59,14 @@ public class AdminChoices extends BorderPane{
         startGameButton.setOnAction( e -> {
             LocalDateTime currentDateTime = LocalDateTime.now();
             App.mdbAdmin.startGame(currentDateTime);
+            startGameButton.setStyle("-fx-background-color: orange; -fx-text-fill: black;");
+            endGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
         });
 
         endGameButton.setOnAction( e -> {
             App.mdbAdmin.endGame();
+            endGameButton.setStyle("-fx-background-color: orange; -fx-text-fill: black;");
+            startGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
         });
     }
     class Header3 extends HBox{
@@ -87,7 +91,7 @@ public class AdminChoices extends BorderPane{
         Label decisionLengthLabel;
         Label warCustomerLabel;
         Label newEntrantDecreaseLabel;
-        Choices(ArrayList<Double> doubleInputs){
+        Choices(ArrayList<Double> doubleInputs, boolean started){
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
             warDecisionLabel = new Label();
@@ -210,20 +214,24 @@ public class AdminChoices extends BorderPane{
             this.getChildren().add(newEntrantDecreaseDecision);
             this.setAlignment(Pos.CENTER_LEFT);
 
-
             saveButton = new Button("Save");
             saveButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
             this.getChildren().add(saveButton);
 
             startGameButton = new Button("Start Game");
-            startGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
-            this.getChildren().add(startGameButton);
-
             endGameButton = new Button("End Game");
-            endGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+
+            if(started){
+                startGameButton.setStyle("-fx-background-color: orange; -fx-text-fill: black;");
+                endGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            }
+            else{
+                endGameButton.setStyle("-fx-background-color: orange; -fx-text-fill: black;");
+                startGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            }
+
+            this.getChildren().add(startGameButton);
             this.getChildren().add(endGameButton);
-
-
 
         }
 

@@ -15,7 +15,12 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
+
 import java.util.concurrent.CountDownLatch;
+
+import javafx.application.Platform;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
@@ -145,7 +150,9 @@ public class MongoDB {
     }
 
     public void setToZero(String username){
+        System.err.println(username + " is being set to zero");
         Document query = new Document().append("_id", username);
+        System.out.println("Document " + query);
 
         Bson updates = Updates.combine(
             Updates.set("basic price", 0),
@@ -324,22 +331,23 @@ public class MongoDB {
 
 
 
-    public void stopUntilChange() throws InterruptedException{
+    public void stopUntilInsertion() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
-
+    
         try (MongoCursor<ChangeStreamDocument<Document>> cursor = collection.watch().fullDocument(FullDocument.UPDATE_LOOKUP).iterator()) {
             while (cursor.hasNext()) {
                 ChangeStreamDocument<Document> changeStreamDocument = cursor.next();
-                Document fullDocument = changeStreamDocument.getFullDocument();
-
-                // Optionally, you can handle the change here
-                // For demonstration, we just release the latch
-                latch.countDown();
-                return;
+                String operationType = changeStreamDocument.getOperationType().getValue();
+                if ("insert".equalsIgnoreCase(operationType)){
+                    Document fullDocument = changeStreamDocument.getFullDocument();
+                    // Release the latch as an insertion was detected
+                    latch.countDown();
+                    return;
+                }
             }
         }
-
-        // This will block until a change is detected and latch.countDown() is called
+    
+        // This will block until an insertion is detected and latch.countDown() is called
         latch.await();
     }
 
@@ -387,7 +395,7 @@ public class MongoDB {
 
     }
 
-    public void watchForGameEnd() {
+    public void watchForGameEnd(Stage currStage, App currApp) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
     
         executorService.submit(() -> {
@@ -408,7 +416,7 @@ public class MongoDB {
                     ChangeStreamDocument<Document> changeStreamDocument = cursor.next();
                     Document fullDocument = changeStreamDocument.getFullDocument();
     
-                    if (fullDocument != null && fullDocument.containsKey("started")) {
+                    if (fullDocument != null && fullDocument.containsKey("started") && (boolean) fullDocument.get("started") == false) {
                         Object currentStartedValue = fullDocument.get("started");
     
                         // Check if the 'started' field value has changed
@@ -419,7 +427,9 @@ public class MongoDB {
                             App.schedulerCumulative.shutdown();
                             App.schedulerCustomerIncrease.shutdown();
                             lastStartedValue.set(currentStartedValue);
-                            // Signal that a change has been detected
+                            Platform.runLater(() -> {
+                                new GameEnded(currStage, currApp);
+                            });
                             latch.countDown();
                         }
                     }

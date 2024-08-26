@@ -57,10 +57,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        SignIn signIn = new SignIn(stage, this);
-        signInScene = new Scene(signIn, App.width, App.height);
-        stage.setScene(signInScene);
-        stage.show();
+       new SignIn(stage, this);
     }
 
     public static void main(String[] args) {
