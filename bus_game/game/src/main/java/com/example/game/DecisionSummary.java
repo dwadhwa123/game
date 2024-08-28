@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,6 +33,7 @@ public class DecisionSummary extends BorderPane {
     private Inputs inputs;
     private ArrayList<Integer> intInputs;
     private Timeline timeline;
+    private Label decisionSaved;
     TextField basicPriceInput;
     TextField qualityPriceInput;
     TextField advertisingSpendInput;
@@ -75,13 +77,17 @@ public class DecisionSummary extends BorderPane {
             new CumulativePerformance(currStage, currApp);
         });
         saveButton.setOnAction(e -> {   
-                String basicInput = basicPriceInput.getText();
-                App.userBasicPrice = Integer.parseInt(basicInput);
-                String qualityInput = qualityPriceInput.getText();
-                App.userQualityPrice = Integer.parseInt(qualityInput);
-                String advertisingInput = advertisingSpendInput.getText();
-                App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
-                App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            String basicInput = basicPriceInput.getText();
+            App.userBasicPrice = Integer.parseInt(basicInput);
+            String qualityInput = qualityPriceInput.getText();
+            App.userQualityPrice = Integer.parseInt(qualityInput);
+            String advertisingInput = advertisingSpendInput.getText();
+            App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
+            App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            Platform.runLater(() -> {
+                decisionSaved.setText("Decisions Saved");
+                decisionSaved.setVisible(true);
+            });
         });
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -212,6 +218,14 @@ public class DecisionSummary extends BorderPane {
             this.setPrefSize(500, 60);
             this.setStyle("-fx-font-family: serif");
             this.setAlignment(Pos.CENTER_LEFT);
+
+            decisionSaved = new Label();
+            decisionSaved.setText("Choices Saved");
+            decisionSaved.setPrefSize(200, 20);
+            decisionSaved.setPadding(new Insets(10, 0, 10, 0));
+            decisionSaved.setAlignment(Pos.CENTER_LEFT);
+            decisionSaved.setVisible(false);
+            this.getChildren().add(decisionSaved);
 
         }
 

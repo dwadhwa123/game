@@ -64,7 +64,7 @@ public class App extends Application {
         launch();
     }
 
-    public static void startMonitoring(LocalDateTime ltd, Stage currStage, App currApp) {
+    public static void startMonitoringWar(LocalDateTime ltd, Stage currStage, App currApp) {
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             LocalDateTime now = LocalDateTime.now();
@@ -77,7 +77,7 @@ public class App extends Application {
                 ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(0) * 60));
-                App.startMonitoring(futureDateTime, currStage, currApp);
+                App.startMonitoringWar(futureDateTime, currStage, currApp);
             }
         }, 0, 1, TimeUnit.SECONDS);
     }

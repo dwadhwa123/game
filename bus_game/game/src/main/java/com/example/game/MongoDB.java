@@ -161,6 +161,7 @@ public class MongoDB {
             Updates.set("cumulative revenue", 0.0),
             Updates.set("cumulative profit", 0.0));
 
+        System.out.print(query.get("basic price"));
         UpdateOptions options = new UpdateOptions().upsert(false);
 
         collection.updateOne(query, updates, options);
@@ -427,6 +428,18 @@ public class MongoDB {
                             App.schedulerCumulative.shutdown();
                             App.schedulerCustomerIncrease.shutdown();
                             lastStartedValue.set(currentStartedValue);
+                            App.qualityCustomers = 200;
+                            App.basicCustomers = 200;
+                            App.newEntrantPercentage = 0;
+                            App.userBasicPrice = 0;
+                            App.userQualityPrice = 0;
+                            App.userAdvertisingSpend = 0;
+                            App.costPerBasicDrone = 10;
+                            App.costPerQualityDrone = 20;
+                            App.robotsCostPerPeriod = 200;
+                            App.isFirstDecisionPeriod = true;
+                            App.isNewEntrantDisruption = false;
+                            App.isWarDisruption = false;
                             Platform.runLater(() -> {
                                 new GameEnded(currStage, currApp);
                             });

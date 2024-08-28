@@ -75,6 +75,8 @@ public class CompetitorPerformance extends BorderPane {
             else{
                 timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
             }
+
+            //only checks for changes when the competitor makes a change
             if(App.changeDetected){
                 ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
                 for(int i = 0; i < revenueTextFields.size(); i++){
@@ -185,6 +187,7 @@ public class CompetitorPerformance extends BorderPane {
             App.changeDetected = false;
         }
 
+        //Does the multi player calculations from each competitor's perspective to calculate all the revenues and profits
         public static ArrayList<Double[]> getEnemyScores(){
             ArrayList<Double[]> profitsAndRevenues = new ArrayList<>();
             ArrayList<String> usernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);

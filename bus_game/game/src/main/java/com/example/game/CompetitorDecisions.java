@@ -43,13 +43,15 @@ public class CompetitorDecisions extends BorderPane {
         this.setLeft(lsb);
         int size = App.lastEnemyDecisions.size();
         for(int i = 0; i < size; i++){
-            choicesPlusCustomers.add(new Inputs(i));
+            choicesPlusCustomers.add(new Inputs(i)); //pass in an index to signify which competitor it is 
         }
         allInputs = new AllInputs(choicesPlusCustomers);
         this.setCenter(allInputs);
 
         previousChoicesScene = new Scene(this, App.width, App.height);
         currStage.setScene(previousChoicesScene);
+
+        //Going to different tabs, stops timelines because they are not needed on other scenes
         homePageButton.setOnAction(e -> {
             timeline.stop();
             new CorporateLobby(currStage, currApp);
@@ -75,13 +77,18 @@ public class CompetitorDecisions extends BorderPane {
             new CumulativePerformance(currStage, currApp);
         });
 
+        //Used to allow user to see changes without leaving the scene
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            
+            //sets timer in minutes other than last 60 seconds
             if(App.timer >= 60){
                 timer.setText(String.valueOf(App.timer/60) + " min");
             }
             else{
                 timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
             }
+            
+            //only check if a decision period has passed
             if(!App.isFirstDecisionPeriod && App.hasAccumulated){
                 for(int i = 0; i < basicPriceTextFields.size(); i++){
                     basicPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[0]));

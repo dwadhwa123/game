@@ -1,5 +1,6 @@
 package com.example.game;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,6 +28,7 @@ public class AdminChoices extends BorderPane{
     private Button saveButton;
     private Button startGameButton;
     private Button endGameButton;
+    private Label decisionSaved;
     ArrayList<Double> doubleInputs;
     Choices choices;
     AdminChoices(Stage currStage, App currApp, boolean started){
@@ -40,7 +42,7 @@ public class AdminChoices extends BorderPane{
         currStage.setScene(adminChoicesScene);
 
 
-
+        //saves the admin choices to database
         saveButton.setOnAction(e -> {
             double warChoice = Double.parseDouble(warDecision.getText());
             double newEntrantChoice = Double.parseDouble(newEntrantDecision.getText());
@@ -54,19 +56,33 @@ public class AdminChoices extends BorderPane{
             choices.add(numPlayersChoice); choices.add(decisionLengthChoice); choices.add(warCustomerDecreaseChoice);
             choices.add(newEntrantDecreaseChoice);
             App.mdbAdmin.saveAdminDecisions(choices);
+            Platform.runLater(() -> {
+                decisionSaved.setText("Choices Saved");
+                decisionSaved.setVisible(true);
+            });
         });   
 
+        //changes the started value to true and saves the time the button was pressed
         startGameButton.setOnAction( e -> {
             LocalDateTime currentDateTime = LocalDateTime.now();
             App.mdbAdmin.startGame(currentDateTime);
             startGameButton.setStyle("-fx-background-color: orange; -fx-text-fill: black;");
             endGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            Platform.runLater(() -> {
+                decisionSaved.setText("Game Started");
+                decisionSaved.setVisible(true);
+            });
         });
 
+        //changes the started value to false
         endGameButton.setOnAction( e -> {
             App.mdbAdmin.endGame();
             endGameButton.setStyle("-fx-background-color: orange; -fx-text-fill: black;");
             startGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            Platform.runLater(() -> {
+                decisionSaved.setText("Game Ended");
+                decisionSaved.setVisible(true);
+            });
         });
     }
     class Header3 extends HBox{
@@ -221,6 +237,7 @@ public class AdminChoices extends BorderPane{
             startGameButton = new Button("Start Game");
             endGameButton = new Button("End Game");
 
+            //sets the button that shows which is the current state to orange 
             if(started){
                 startGameButton.setStyle("-fx-background-color: orange; -fx-text-fill: black;");
                 endGameButton.setStyle("-fx-background-color: white; -fx-text-fill: black;");
@@ -232,6 +249,14 @@ public class AdminChoices extends BorderPane{
 
             this.getChildren().add(startGameButton);
             this.getChildren().add(endGameButton);
+
+            decisionSaved = new Label();
+            decisionSaved.setText("Choices Saved");
+            decisionSaved.setPrefSize(200, 20);
+            decisionSaved.setPadding(new Insets(10, 0, 10, 0));
+            decisionSaved.setAlignment(Pos.CENTER_LEFT);
+            decisionSaved.setVisible(false);
+            this.getChildren().add(decisionSaved);
 
         }
 
