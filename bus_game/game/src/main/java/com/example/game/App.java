@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * JavaFX App
@@ -37,7 +38,7 @@ public class App extends Application {
     public static long gameNumber;
     public static MongoDB mdb = new MongoDB("user_collection");
     public static MongoDB mdbAdmin = new MongoDB("admin");
-    public static ScheduledExecutorService scheduler;
+    public static ScheduledExecutorService schedulerWar;
     public static ScheduledExecutorService schedulerEntrant;
     public static ScheduledExecutorService schedulerCustomerIncrease;
     public static ScheduledExecutorService schedulerCumulative;
@@ -54,6 +55,7 @@ public class App extends Application {
 
     public static boolean hasAccumulated = false;
     public static boolean changeDetected = false;
+    private final static ReentrantLock lock = new ReentrantLock();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -65,15 +67,19 @@ public class App extends Application {
     }
 
     public static void startMonitoringWar(LocalDateTime ltd, Stage currStage, App currApp) {
-        scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> {
+        schedulerWar = Executors.newScheduledThreadPool(1);
+        schedulerWar.scheduleAtFixedRate(() -> {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
-                    isWarDisruption = true;
-                    new WarDisruption(currStage, currApp);
+                    App.isWarDisruption = true;
+                    if(!App.isNewEntrantDisruption){
+                        lock.lock();
+                        new WarDisruption(currStage, currApp);
+                        lock.unlock();
+                    }
                 });
-                scheduler.shutdown();
+                schedulerWar.shutdown();
                 ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(0) * 60));
@@ -88,8 +94,12 @@ public class App extends Application {
             LocalDateTime now = LocalDateTime.now();
             if (now.isAfter(ltd)) {
                 Platform.runLater(() -> {
-                    isNewEntrantDisruption = true;
-                    new NewEntrantDistruption(currStage, currApp);
+                    App.isNewEntrantDisruption = true;
+                    if(!App.isWarDisruption){
+                        lock.lock();
+                        new NewEntrantDistruption(currStage, currApp);
+                        lock.unlock();
+                    }
                 });
                 schedulerEntrant.shutdown();
                 ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();

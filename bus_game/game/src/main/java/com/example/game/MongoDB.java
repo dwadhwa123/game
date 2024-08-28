@@ -423,14 +423,14 @@ public class MongoDB {
                         // Check if the 'started' field value has changed
                         if (!currentStartedValue.equals(lastStartedValue.get())) {
                             App.mdb.setToZero(App.username);
-                            App.scheduler.shutdown();
+                            App.schedulerWar.shutdown();
                             App.schedulerEntrant.shutdown();
                             App.schedulerCumulative.shutdown();
                             App.schedulerCustomerIncrease.shutdown();
                             lastStartedValue.set(currentStartedValue);
                             App.qualityCustomers = 200;
                             App.basicCustomers = 200;
-                            App.newEntrantPercentage = 0;
+                            App.newEntrantPercentage = 100.0;
                             App.userBasicPrice = 0;
                             App.userQualityPrice = 0;
                             App.userAdvertisingSpend = 0;
