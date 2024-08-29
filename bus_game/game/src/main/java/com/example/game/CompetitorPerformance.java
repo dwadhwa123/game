@@ -2,6 +2,7 @@ package com.example.game;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -79,10 +80,12 @@ public class CompetitorPerformance extends BorderPane {
             //only checks for changes when the competitor makes a change
             if(App.changeDetected){
                 ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
-                for(int i = 0; i < revenueTextFields.size(); i++){
-                    revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
-                    profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
-                }
+                Platform.runLater(() -> {
+                    for(int i = 0; i < revenueTextFields.size(); i++){
+                        revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
+                        profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
+                    }
+                });
             }
             App.changeDetected = false;
 
@@ -142,6 +145,8 @@ public class CompetitorPerformance extends BorderPane {
         Inputs(){
 
             ArrayList<Double[]> enemyScores = getEnemyScores();
+            
+            Platform.runLater(() -> {
             int index = 0;
             for(Double[] score: enemyScores){
                 this.setPrefSize(500, 20);
@@ -184,6 +189,7 @@ public class CompetitorPerformance extends BorderPane {
 
                 index++;
             }
+            });
             App.changeDetected = false;
         }
 
