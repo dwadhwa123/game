@@ -2,6 +2,7 @@ package com.example.game;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -33,6 +34,8 @@ public class CompetitorDecisions extends BorderPane {
     List<TextField> basicPriceTextFields = new ArrayList<>();
     List<TextField> qualityPriceTextFields = new ArrayList<>();
     List<TextField> advertisingTextFields = new ArrayList<>();
+    List<TextField> basicDroneRobotsTextFields = new ArrayList<>();
+    List<TextField> qualityDroneRobotsTextFields = new ArrayList<>();
     List<TextField> basicCustomerTextFields = new ArrayList<>();
     List<TextField> qualityCustomerTextFields = new ArrayList<>();
     CompetitorDecisions(Stage currStage, App currApp){
@@ -90,13 +93,17 @@ public class CompetitorDecisions extends BorderPane {
             
             //only check if a decision period has passed
             if(!App.isFirstDecisionPeriod && App.hasAccumulated){
-                for(int i = 0; i < basicPriceTextFields.size(); i++){
-                    basicPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[0]));
-                    qualityPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[1]));
-                    advertisingTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[2]));
-                    basicCustomerTextFields.get(i).setText(String.valueOf(App.lastEnemyCustomers.get(i)[0]));
-                    qualityCustomerTextFields.get(i).setText(String.valueOf(App.lastEnemyCustomers.get(i)[1]));
-                }
+                Platform.runLater(() -> {
+                    for(int i = 0; i < basicPriceTextFields.size(); i++){
+                        basicPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[0]));
+                        qualityPriceTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[1]));
+                        advertisingTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[2]));
+                        basicDroneRobotsTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[3]));
+                        qualityDroneRobotsTextFields.get(i).setText(String.valueOf(App.lastEnemyDecisions.get(i)[4]));
+                        basicCustomerTextFields.get(i).setText(String.valueOf(App.lastEnemyCustomers.get(i)[0]));
+                        qualityCustomerTextFields.get(i).setText(String.valueOf(App.lastEnemyCustomers.get(i)[1]));
+                    }
+                });
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
@@ -170,7 +177,7 @@ public class CompetitorDecisions extends BorderPane {
             Label basicPriceLabel = new Label("Basic Price");
             basicPriceLabel.setPrefSize(100, 20);// set size of label
             basicPriceLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            basicPriceLabel.setAlignment(Pos.CENTER_LEFT);
+            basicPriceLabel.setAlignment(Pos.CENTER);
             this.getChildren().add(basicPriceLabel);
 
             TextField basicPriceTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[0]));
@@ -187,7 +194,7 @@ public class CompetitorDecisions extends BorderPane {
             Label qualityPriceLabel = new Label("Quality Price");
             qualityPriceLabel.setPrefSize(100, 20);// set size of label
             qualityPriceLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            qualityPriceLabel.setAlignment(Pos.CENTER_LEFT);
+            qualityPriceLabel.setAlignment(Pos.CENTER);
             this.getChildren().add(qualityPriceLabel);
 
             TextField qualityPriceTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[1]));
@@ -203,7 +210,7 @@ public class CompetitorDecisions extends BorderPane {
             Label advertisingSpendLabel = new Label("Advertising Spend");
             advertisingSpendLabel.setPrefSize(100, 20);// set size of label
             advertisingSpendLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            advertisingSpendLabel.setAlignment(Pos.CENTER_LEFT);
+            advertisingSpendLabel.setAlignment(Pos.CENTER);
             this.getChildren().add(advertisingSpendLabel);
 
             TextField advertisingSpendTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[2]));
@@ -216,10 +223,43 @@ public class CompetitorDecisions extends BorderPane {
             this.setAlignment(Pos.CENTER_LEFT);
             advertisingTextFields.add(advertisingSpendTextField);
 
+            Label basicDroneRobotsLabel = new Label("Basic Drone Robots");
+            basicDroneRobotsLabel.setPrefSize(170, 20);// set size of label
+            basicDroneRobotsLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            basicDroneRobotsLabel.setAlignment(Pos.CENTER);
+            this.getChildren().add(basicDroneRobotsLabel);
+
+            TextField basicDroneRobotsTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[3]));
+            basicDroneRobotsTextField.setPrefSize(150, 20); // set size of text field
+            basicDroneRobotsTextField.setStyle("-fx-font-family: serif"); // set background color
+            // texfield                
+            basicDroneRobotsTextField.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            basicDroneRobotsTextField.setEditable(false);
+            this.getChildren().add(basicDroneRobotsTextField); 
+            this.setAlignment(Pos.CENTER_LEFT);
+            basicDroneRobotsTextFields.add(basicDroneRobotsTextField);
+
+            Label qualityDroneRobotsLabel = new Label("Quality Drone Robots");
+            qualityDroneRobotsLabel.setPrefSize(170, 20);// set size of label
+            qualityDroneRobotsLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            qualityDroneRobotsLabel.setAlignment(Pos.CENTER);
+            this.getChildren().add(qualityDroneRobotsLabel);
+
+            TextField qualityDroneRobotsTextField = new TextField(String.valueOf(App.lastEnemyDecisions.get(index)[4]));
+            qualityDroneRobotsTextField.setPrefSize(190, 20); // set size of text field
+            qualityDroneRobotsTextField.setStyle("-fx-font-family: serif"); // set background color
+            // texfield                
+            qualityDroneRobotsTextField.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            qualityDroneRobotsTextField.setEditable(false);
+            this.getChildren().add(qualityDroneRobotsTextField); 
+            this.setAlignment(Pos.CENTER_LEFT);
+            qualityDroneRobotsTextFields.add(qualityDroneRobotsTextField);
+
+
             Label basicCustomerLabel = new Label("Basic Customers");
             basicCustomerLabel.setPrefSize(100, 20);// set size of label
             basicCustomerLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            basicCustomerLabel.setAlignment(Pos.CENTER_LEFT);
+            basicCustomerLabel.setAlignment(Pos.CENTER);
             this.getChildren().add(basicCustomerLabel);
 
             TextField basicCustomerTextField = new TextField(String.valueOf(App.lastEnemyCustomers.get(index)[0]));
@@ -235,7 +275,7 @@ public class CompetitorDecisions extends BorderPane {
             Label qualityCustomerLabel = new Label("Quality Customers");
             qualityCustomerLabel.setPrefSize(100, 20);// set size of label
             qualityCustomerLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
-            qualityCustomerLabel.setAlignment(Pos.CENTER_LEFT);
+            qualityCustomerLabel.setAlignment(Pos.CENTER);
             this.getChildren().add(qualityCustomerLabel);
 
             TextField qualityCustomerTextField = new TextField(String.valueOf(App.lastEnemyCustomers.get(index)[1]));

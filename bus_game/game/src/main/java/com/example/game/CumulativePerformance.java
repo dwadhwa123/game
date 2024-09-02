@@ -2,6 +2,7 @@ package com.example.game;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -78,14 +79,16 @@ public class CumulativePerformance extends BorderPane {
             }
             if(App.hasAccumulated){
                 Double [] userCumulative = App.mdb.getUserCumulative(App.username);
-                revenueTF.setText(String.valueOf(userCumulative[0])); 
-                profitTF.setText(String.valueOf(userCumulative[1])); 
-
                 ArrayList<Double[]> enemyScores = Inputs.getEnemyScores();
-                for(int i = 0; i < revenueTextFields.size(); i++){
-                    revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
-                    profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
-                }
+
+                Platform.runLater(() -> {
+                    for(int i = 0; i < revenueTextFields.size(); i++){
+                        revenueTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[0]));
+                        profitTextFields.get(i).setText(String.valueOf(enemyScores.get(i)[1]));
+                    }
+                    revenueTF.setText(String.valueOf(userCumulative[0])); 
+                    profitTF.setText(String.valueOf(userCumulative[1])); 
+                });
             }
             App.hasAccumulated = false;
         }));

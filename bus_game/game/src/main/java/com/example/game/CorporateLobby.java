@@ -133,7 +133,8 @@ public class CorporateLobby extends BorderPane {
         Label pricePerQualityDrone;
         Label costPerQualityDrone;
         Label robotsCostPerPeriod;
-        Label robotsMadePerPeriod;
+        Label basicDronesMadePerPeriod;
+        Label qualityDronesMadePerPeriod;
         InitialConditionLabels(){
             this.setStyle("-fx-font-family: serif");
             pricePerBasicDrone = new Label();
@@ -192,12 +193,20 @@ public class CorporateLobby extends BorderPane {
             this.getChildren().add(robotsCostPerPeriod);
 
             this.setStyle("-fx-font-family: serif");
-            robotsMadePerPeriod = new Label();
-            robotsMadePerPeriod.setText("Robots Made Per Period: " + App.robotsMadePerPeriod);
-            robotsMadePerPeriod.setPrefSize(200, 20);
-            robotsMadePerPeriod.setPadding(new Insets(10, 0, 10, 0));
-            robotsMadePerPeriod.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(robotsMadePerPeriod);
+            basicDronesMadePerPeriod = new Label();
+            basicDronesMadePerPeriod.setText(" Basic Drones Made Per Period: " + App.basicDronesMadePerPeriod);
+            basicDronesMadePerPeriod.setPrefSize(200, 20);
+            basicDronesMadePerPeriod.setPadding(new Insets(10, 0, 10, 0));
+            basicDronesMadePerPeriod.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(basicDronesMadePerPeriod);
+
+            this.setStyle("-fx-font-family: serif");
+            qualityDronesMadePerPeriod = new Label();
+            qualityDronesMadePerPeriod.setText(" Basic Drones Made Per Period: " + App.qualityDronesMadePerPeriod);
+            qualityDronesMadePerPeriod.setPrefSize(200, 20);
+            qualityDronesMadePerPeriod.setPadding(new Insets(10, 0, 10, 0));
+            qualityDronesMadePerPeriod.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(qualityDronesMadePerPeriod);
 
         }
     }

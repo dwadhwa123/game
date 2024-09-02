@@ -2,6 +2,7 @@ package com.example.game;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -75,11 +76,13 @@ public class OurPerformance extends BorderPane {
             }
             if(App.changeDetected){
                 ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
-                Double[] profitRevenueResults = new Double[2];
-                profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+                Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
             
-                revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
-                profitTF.setText(String.valueOf(profitRevenueResults[1])); 
+                Platform.runLater(() -> {
+                    revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
+                    profitTF.setText(String.valueOf(profitRevenueResults[1])); 
+                });
+                 
             }
             App.changeDetected = false;
         }));

@@ -199,7 +199,7 @@ public class CompetitorPerformance extends BorderPane {
             ArrayList<String> usernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
             for(String str: usernames){
                 ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(str, App.gameNumber);
-                Integer[] inputs = App.mdb.getInput(str);
+                Integer[] inputs = App.mdb.recieveUserInputs(str);
                 Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(inputs[0], inputs[1], inputs[2], enemyInputs);
                 profitsAndRevenues.add(profitRevenueResults);
             }

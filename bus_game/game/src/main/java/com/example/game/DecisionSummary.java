@@ -37,6 +37,8 @@ public class DecisionSummary extends BorderPane {
     TextField basicPriceInput;
     TextField qualityPriceInput;
     TextField advertisingSpendInput;
+    TextField basicDroneRobotsInput;
+    TextField qualityDroneRobotsInput;
     DecisionSummary(Stage currStage, App currApp){
         currStage.setResizable(true);
         header = new Header();
@@ -48,6 +50,8 @@ public class DecisionSummary extends BorderPane {
         intInputs.add(App.userBasicPrice);
         intInputs.add(App.userQualityPrice);
         intInputs.add(App.userAdvertisingSpend);
+        intInputs.add(App.userBasicDroneRobots);
+        intInputs.add(App.userQualityDroneRobots);
         inputs = new Inputs(intInputs);
         this.setCenter(inputs);
         currStage.setScene(decisionSummaryScene);
@@ -83,7 +87,11 @@ public class DecisionSummary extends BorderPane {
             App.userQualityPrice = Integer.parseInt(qualityInput);
             String advertisingInput = advertisingSpendInput.getText();
             App.userAdvertisingSpend = Integer.parseInt(advertisingInput);
-            App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend);
+            String basicDroneRobots = basicDroneRobotsInput.getText();
+            App.userBasicDroneRobots = Integer.parseInt(basicDroneRobots);
+            String qualityDroneRobots = qualityDroneRobotsInput.getText();
+            App.userQualityDroneRobots = Integer.parseInt(qualityDroneRobots);
+            App.mdb.saveDecisions(App.username, App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots);
             Platform.runLater(() -> {
                 decisionSaved.setText("Decisions Saved");
                 decisionSaved.setVisible(true);
@@ -153,6 +161,8 @@ public class DecisionSummary extends BorderPane {
         Label basicPrice;
         Label qualityPrice;
         Label advertisingSpend;
+        Label basicDroneRobots;
+        Label qualityDroneRobots;
         Inputs(ArrayList<Integer> integerInputs){
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
@@ -209,6 +219,39 @@ public class DecisionSummary extends BorderPane {
             advertisingSpendInput.setPadding(new Insets(10, 0, 10, 0));
             advertisingSpendInput.setEditable(true);
             this.getChildren().add(advertisingSpendInput);
+            this.setAlignment(Pos.CENTER_LEFT);
+
+            basicDroneRobots = new Label();
+
+            basicDroneRobots.setText("Basic Drone Robots" + ": ");
+            basicDroneRobots.setPrefSize(200, 20);
+            basicDroneRobots.setPadding(new Insets(10, 0, 10, 0));
+            basicDroneRobots.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(basicDroneRobots);
+            String input4 = String.valueOf(integerInputs.get(3));
+            basicDroneRobotsInput = new TextField(input4);
+            basicDroneRobotsInput.setPrefSize(380, 20);
+            basicDroneRobotsInput.setStyle("-fx-font-family: serif");
+
+            basicDroneRobotsInput.setPadding(new Insets(10, 0, 10, 0));
+            basicDroneRobotsInput.setEditable(true);
+            this.getChildren().add(basicDroneRobotsInput);
+
+            qualityDroneRobots = new Label();
+
+            qualityDroneRobots.setText("Quality Drone Robots" + ": ");
+            qualityDroneRobots.setPrefSize(200, 20);
+            qualityDroneRobots.setPadding(new Insets(10, 0, 10, 0));
+            qualityDroneRobots.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(qualityDroneRobots);
+            String input5 = String.valueOf(integerInputs.get(4));
+            qualityDroneRobotsInput = new TextField(input5);
+            qualityDroneRobotsInput.setPrefSize(380, 20);
+            qualityDroneRobotsInput.setStyle("-fx-font-family: serif");
+
+            qualityDroneRobotsInput.setPadding(new Insets(10, 0, 10, 0));
+            qualityDroneRobotsInput.setEditable(true);
+            this.getChildren().add(qualityDroneRobotsInput);
             this.setAlignment(Pos.CENTER_LEFT);
 
 

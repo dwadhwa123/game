@@ -52,8 +52,8 @@ public class MongoDB {
 
     //adds a player to the appropriate game
     public void addEntry(String username, String password, long gameNumber){
-        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("game number", gameNumber)
-        .append("cumulative revenue", 0.0).append("cumulative profit", 0.0).append("started", false);
+        Document d = new Document("_id", username).append("password", password).append("basic price", 0).append("quality price", 0).append("advertising spend", 0).append("basic drone robots", 0).append("quality drone robots", 0).
+        append("game number", gameNumber).append("cumulative revenue", 0.0).append("cumulative profit", 0.0).append("started", false);
         collection.insertOne(d);
     }
 
@@ -77,13 +77,15 @@ public class MongoDB {
     }
 
        //Saves 3 decisions
-    public void saveDecisions(String username, int decision1, int decision2, int decision3){
+    public void saveDecisions(String username, int decision1, int decision2, int decision3, int decision4, int decision5){
         Document query = new Document().append("_id", username);
 
         Bson updates = Updates.combine(
                     Updates.set("basic price", decision1),
                     Updates.set("quality price", decision2),
-                    Updates.set("advertising spend", decision3));
+                    Updates.set("advertising spend", decision3),
+                    Updates.set("basic drone robots", decision4),
+                    Updates.set("quality drone robots", decision5));
 
         UpdateOptions options = new UpdateOptions().upsert(false);
 
@@ -158,6 +160,8 @@ public class MongoDB {
             Updates.set("basic price", 0),
             Updates.set("quality price", 0),
             Updates.set("advertising spend", 0),
+            Updates.set("basic drone robots", 0),
+            Updates.set("quality drone robots", 0),
             Updates.set("cumulative revenue", 0.0),
             Updates.set("cumulative profit", 0.0));
 
@@ -243,17 +247,20 @@ public class MongoDB {
         return ret;
     }
 
-    public Integer[] getInput(String username){
+    public Integer[] recieveUserInputs(String username){
         FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", username));
         Document doc = documentCursor.first();
-
         int enemy1 = (Integer) doc.get("basic price");
         int enemy2 = (Integer) doc.get("quality price");
         int enemy3 = (Integer) doc.get("advertising spend");
-        Integer[] ret = new Integer[3];
+        int enemy4 = (Integer) doc.get("basic drone robots");
+        int enemy5 = (Integer) doc.get("quality drone robots");
+        Integer[] ret = new Integer[5];
         ret[0] = enemy1;
         ret[1] = enemy2;
         ret[2] = enemy3;
+        ret[3] = enemy4;
+        ret[4] = enemy5;
         return ret;
     }
 
@@ -266,27 +273,18 @@ public class MongoDB {
                 int enemy1 = (Integer) doc.get("basic price");
                 int enemy2 = (Integer) doc.get("quality price");
                 int enemy3 = (Integer) doc.get("advertising spend");
-                Integer[] ret = new Integer[3];
+                int enemy4 = (Integer) doc.get("basic drone robots");
+                int enemy5 = (Integer) doc.get("quality drone robots");
+                Integer[] ret = new Integer[5];
                 ret[0] = enemy1;
                 ret[1] = enemy2;
                 ret[2] = enemy3;
+                ret[3] = enemy4;
+                ret[4] = enemy5;
                 enemyInputs.add(ret);
             }
         }
         return enemyInputs;
-    }
-
-    public Integer[] recieveUserInputs(String username){
-        FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", username));
-        Document doc = documentCursor.first();
-        int enemy1 = (Integer) doc.get("basic price");
-        int enemy2 = (Integer) doc.get("quality price");
-        int enemy3 = (Integer) doc.get("advertising spend");
-        Integer[] ret = new Integer[3];
-        ret[0] = enemy1;
-        ret[1] = enemy2;
-        ret[2] = enemy3;
-        return ret;
     }
 
     public long getGameNumber(String username){
@@ -352,6 +350,7 @@ public class MongoDB {
         latch.await();
     }
 
+    //only checks for when a competitor makes a decision change
     public void watchForGameChange(long gameNumber) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -365,7 +364,9 @@ public class MongoDB {
                 .append("$or", Arrays.asList(
                     new Document("fullDocument.basic price", new Document("$exists", true)),
                     new Document("fullDocument.quality price", new Document("$exists", true)),
-                    new Document("fullDocument.advertising spend", new Document("$exists", true))
+                    new Document("fullDocument.advertising spend", new Document("$exists", true)),
+                    new Document("fullDocument.basic drone robots", new Document("$exists", true)),
+                    new Document("fullDocument.quality drone robots", new Document("$exists", true))
                 ))
             );
 
@@ -434,6 +435,8 @@ public class MongoDB {
                             App.userBasicPrice = 0;
                             App.userQualityPrice = 0;
                             App.userAdvertisingSpend = 0;
+                            App.userBasicDroneRobots = 0;
+                            App.userQualityDroneRobots = 0;
                             App.costPerBasicDrone = 10;
                             App.costPerQualityDrone = 20;
                             App.robotsCostPerPeriod = 200;

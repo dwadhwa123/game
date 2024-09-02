@@ -19,12 +19,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * JavaFX App
  */
 public class App extends Application {
-    private Scene signInScene;
-    public static int height = 400;
+    public static int height = 800;
     public static int width = 800;
     public static int userBasicPrice = 0;
     public static int userQualityPrice = 0;
     public static int userAdvertisingSpend = 0;
+    public static int userBasicDroneRobots = 0;
+    public static int userQualityDroneRobots = 0;    
     public static String username;
     public static int pricePerBasicDrone = 60;
     public static int costPerBasicDrone = 10;
@@ -33,7 +34,8 @@ public class App extends Application {
     public static int basicCustomers = 200;
     public static int qualityCustomers = 200;
     public static int robotsCostPerPeriod= 200;
-    public static int robotsMadePerPeriod = 10;
+    public static int basicDronesMadePerPeriod = 10;
+    public static int qualityDronesMadePerPeriod = 1;
     public static int playerNumber = 0;
     public static long gameNumber;
     public static MongoDB mdb = new MongoDB("user_collection");
@@ -142,7 +144,7 @@ public class App extends Application {
 
                 for(String str: usernames){
                     ArrayList<Integer[]> enemyInputs2 = App.mdb.recieveMultipleEnemyInputs(str, App.gameNumber);
-                    Integer[] inputs = App.mdb.getInput(str);
+                    Integer[] inputs = App.mdb.recieveUserInputs(str);
                     Double[] customerResults = ResultCalculations.multiPlayerCustomerCalculations(inputs[0], inputs[1], inputs[2], enemyInputs2);
                     basicAndQuality.add(customerResults);
                 }

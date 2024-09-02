@@ -70,13 +70,16 @@ public class ResultCalculations {
         
         myBasicCustomers *= App.newEntrantPercentage/100.0;
         myQualityCustomers *= App.newEntrantPercentage/100.0;
+        if(myQualityPrice > 5000){
+            myQualityCustomers = 0;
+        }
         
         // System.out.println("NEW ENTRANT PERCENTAGE " + App.newEntrantPercentage);
         // System.out.println(App.username + " Basic  " + myBasicCustomers + " ");
         // System.out.println(App.username + " Quality  " + myQualityCustomers + " ");
 
-        double numBasicRobots = myBasicCustomers/App.robotsMadePerPeriod;
-        double numQualityRobots = myQualityCustomers/App.robotsMadePerPeriod;
+        double numBasicRobots = myBasicCustomers/App.basicDronesMadePerPeriod;
+        double numQualityRobots = myQualityCustomers/App.qualityDronesMadePerPeriod;
         double robotRentalCost = (numBasicRobots+numQualityRobots)*App.robotsCostPerPeriod;
         double basicMaterialCost = numBasicRobots * 10 * App.costPerBasicDrone;
         double qualityMaterialCost = numQualityRobots * 10 * App.costPerQualityDrone;
@@ -128,6 +131,10 @@ public class ResultCalculations {
 
         double myBasicCustomers = App.basicCustomers * myBasicScore / sumBasic;
         double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
+
+        if(myQualityPrice > 5000){
+            myQualityCustomers = 0;
+        }
 
         
         myBasicCustomers *= App.newEntrantPercentage/100.0;

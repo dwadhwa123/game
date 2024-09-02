@@ -73,6 +73,8 @@ public class SignIn extends BorderPane {
                     App.userBasicPrice = userInputs[0];
                     App.userQualityPrice = userInputs[1];
                     App.userAdvertisingSpend = userInputs[2];
+                    App.userBasicDroneRobots = userInputs[3];
+                    App.userQualityDroneRobots = userInputs[4];
                     App.gameNumber = App.mdb.getGameNumber(App.username);
 
 
@@ -125,7 +127,7 @@ public class SignIn extends BorderPane {
 
                     App.numPlayers = (int) App.mdb.getGameNumberSize(App.gameNumber);
                     for(int i = 0; i < App.numPlayers-1; i++){
-                        Integer[] zeroes = {0, 0, 0};
+                        Integer[] zeroes = {0, 0, 0, 0, 0};
                         Double[] customers = {0.0, 0.0};
                         App.lastEnemyCustomers.add(customers);
                         App.lastEnemyDecisions.add(zeroes);
@@ -228,7 +230,7 @@ public class SignIn extends BorderPane {
                         App.timer = (int) (((long) timeCumulative * (numTimesCumulative+1) - differenceInSeconds));
 
                         for(int i = 0; i < App.numPlayers-1; i++){
-                            Integer[] zeroes = {0, 0, 0};
+                            Integer[] zeroes = {0, 0, 0, 0, 0};
                             App.lastEnemyDecisions.add(zeroes);
                             Double[] customers = {0.0, 0.0};
                             App.lastEnemyCustomers.add(customers);
