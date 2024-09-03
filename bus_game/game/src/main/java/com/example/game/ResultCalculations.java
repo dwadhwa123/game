@@ -27,7 +27,7 @@ public class ResultCalculations {
     //     return results;
     // }
 
-    public static Double[] multiPlayerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, ArrayList<Integer[]> oppDecisions){
+    public static Double[] multiPlayerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, int myBasicDroneRobots, int myQualityDroneRobots, ArrayList<Integer[]> oppDecisions){
         ArrayList<Integer> basicPrices = new ArrayList<Integer>();
         ArrayList<Integer> advertisingSpends = new ArrayList<Integer>();
         basicPrices.add(myBasicPrice);
@@ -73,20 +73,61 @@ public class ResultCalculations {
         if(myQualityPrice > 5000){
             myQualityCustomers = 0;
         }
-        
-        // System.out.println("NEW ENTRANT PERCENTAGE " + App.newEntrantPercentage);
-        // System.out.println(App.username + " Basic  " + myBasicCustomers + " ");
-        // System.out.println(App.username + " Quality  " + myQualityCustomers + " ");
 
-        double numBasicRobots = myBasicCustomers/App.basicDronesMadePerPeriod;
-        double numQualityRobots = myQualityCustomers/App.qualityDronesMadePerPeriod;
-        double robotRentalCost = (numBasicRobots+numQualityRobots)*App.robotsCostPerPeriod;
-        double basicMaterialCost = numBasicRobots * 10 * App.costPerBasicDrone;
-        double qualityMaterialCost = numQualityRobots * 10 * App.costPerQualityDrone;
-        double qualityCost = myAdvertising + qualityMaterialCost;
-        double revenue = (myBasicPrice * numBasicRobots * 10) + (myQualityPrice * numQualityRobots * 10);
-        double cost = robotRentalCost + basicMaterialCost + qualityCost;
-        double profit = revenue-cost;
+        myBasicCustomers = Math.floor(myBasicCustomers * 100) / 100.0;
+        myQualityCustomers = Math.floor(myQualityCustomers * 100) / 100.0;
+        
+
+        double basicRobotsNeeded = myBasicDroneRobots/App.basicDronesMadePerPeriod;
+        double basicDronesAvailable = myBasicDroneRobots + App.lastUserInventory[0];
+        double basicRevenues = 0.0;
+        if(basicDronesAvailable > myBasicCustomers){
+            basicRevenues = myBasicCustomers * myBasicPrice;
+        }
+        else{
+            basicRevenues = basicDronesAvailable * myBasicPrice;
+        }
+
+        double basicCosts = basicRobotsNeeded * 200;
+        double basicProfits = basicRevenues - basicCosts;
+
+        double qualityRobotsNeeded = myQualityDroneRobots/App.qualityDronesMadePerPeriod;
+        double qualityDronesAvailable = myQualityDroneRobots + App.lastUserInventory[1];
+        double qualityRevenues = 0.0;
+        if(qualityDronesAvailable > myQualityCustomers){
+            qualityRevenues = myQualityCustomers * myQualityPrice;
+        }
+        else{
+            qualityRevenues = qualityDronesAvailable * myQualityPrice;
+        }
+
+        double qualityCosts = qualityRobotsNeeded * 200 + myAdvertising;
+        double qualityProfits = qualityRevenues - qualityCosts;
+
+        double profit = basicProfits + qualityProfits;
+        double revenue = basicRevenues + qualityRevenues;
+
+        System.out.println("Basic Customers: " + myBasicCustomers);
+        System.out.println("Quality Customers: " + myQualityCustomers);
+        System.out.println("Basic Revenue: " + basicRevenues);
+        System.out.println("Quality Revenue: " + qualityRevenues);
+        System.out.println("Basic Cost: " + basicCosts);
+        System.out.println("Quality Cost: " + qualityCosts);
+        System.out.println("Basic Profits: " + basicProfits);
+        System.out.println("Quality Profits: " + basicProfits);
+        System.out.println("Basic Drones Available: " + basicDronesAvailable);
+        System.out.println("Quality Drones Available: " + qualityDronesAvailable);
+
+
+        // double numBasicRobots = myBasicCustomers/App.basicDronesMadePerPeriod;
+        // double numQualityRobots = myQualityCustomers/App.qualityDronesMadePerPeriod;
+        // double robotRentalCost = (numBasicRobots+numQualityRobots)*App.robotsCostPerPeriod;
+        // double basicMaterialCost = numBasicRobots * 10 * App.costPerBasicDrone;
+        // double qualityMaterialCost = numQualityRobots * 10 * App.costPerQualityDrone;
+        // double qualityCost = myAdvertising + qualityMaterialCost;
+        // double revenue = (myBasicPrice * numBasicRobots * 10) + (myQualityPrice * numQualityRobots * 10);
+        // double cost = robotRentalCost + basicMaterialCost + qualityCost;
+        // double profit = revenue-cost;
         Double[] results = new Double[2];
         revenue = Math.floor(revenue * 100) / 100.0;
         profit = Math.floor(profit * 100) / 100.0;
@@ -95,7 +136,7 @@ public class ResultCalculations {
         return results;
     }
 
-    public static Double[] multiPlayerCustomerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, ArrayList<Integer[]> oppDecisions){
+    public static Double[] multiPlayerCustomerCalculations(int myBasicPrice, int myQualityPrice, int myAdvertising, int myBasicDroneRobots, int myQualityDroneRobots, ArrayList<Integer[]> oppDecisions){
         ArrayList<Integer> basicPrices = new ArrayList<Integer>();
         ArrayList<Integer> advertisingSpends = new ArrayList<Integer>();
         basicPrices.add(myBasicPrice);

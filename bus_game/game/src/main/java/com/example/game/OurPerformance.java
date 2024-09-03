@@ -76,7 +76,7 @@ public class OurPerformance extends BorderPane {
             }
             if(App.changeDetected){
                 ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
-                Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+                Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
             
                 Platform.runLater(() -> {
                     revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
@@ -142,7 +142,7 @@ class Header extends HBox{
 
             ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
             Double[] profitRevenueResults = new Double[2];
-            profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+            profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
             
            
             this.setPrefSize(500, 20);

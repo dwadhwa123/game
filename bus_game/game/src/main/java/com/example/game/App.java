@@ -54,6 +54,7 @@ public class App extends Application {
 
     public static ArrayList<Integer[]> lastEnemyDecisions = new ArrayList<>();
     public static ArrayList<Double[]> lastEnemyCustomers = new ArrayList<>();
+    public static Double[] lastUserInventory = {0.0, 0.0};
 
     public static boolean hasAccumulated = false;
     public static boolean changeDetected = false;
@@ -142,19 +143,23 @@ public class App extends Application {
                     ArrayList<Double[]>  basicAndQuality = new ArrayList<>();
                     ArrayList<String> usernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
 
-                for(String str: usernames){
-                    ArrayList<Integer[]> enemyInputs2 = App.mdb.recieveMultipleEnemyInputs(str, App.gameNumber);
-                    Integer[] inputs = App.mdb.recieveUserInputs(str);
-                    Double[] customerResults = ResultCalculations.multiPlayerCustomerCalculations(inputs[0], inputs[1], inputs[2], enemyInputs2);
-                    basicAndQuality.add(customerResults);
-                }
-                App.lastEnemyCustomers = basicAndQuality;  
+                    for(String str: usernames){
+                        ArrayList<Integer[]> enemyInputs2 = App.mdb.recieveMultipleEnemyInputs(str, App.gameNumber);
+                        Integer[] inputs = App.mdb.recieveUserInputs(str);
+                        Double[] customerResults = ResultCalculations.multiPlayerCustomerCalculations(inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], enemyInputs2);
+                        basicAndQuality.add(customerResults);
+                    }
+                    App.lastEnemyCustomers = basicAndQuality;  
+
+                    Double[] userCustomerResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
+                    App.lastUserInventory[0] += Math.max(App.userBasicDroneRobots-userCustomerResults[0], 0);
+                    App.lastUserInventory[1] += Math.max(App.userQualityDroneRobots-userCustomerResults[1], 0);
 
                     //lastEnemyCustomers
                     App.isFirstDecisionPeriod = false;
                     App.hasAccumulated = true;
                     Double[] profitRevenueResults = new Double[2];
-                    profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, enemyInputs);
+                    profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
                     Double[] userValues = App.mdb.getUserCumulative(App.username);
                     if(profitRevenueResults[0].isNaN()){
                         profitRevenueResults[0] = 0.0;
