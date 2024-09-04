@@ -151,9 +151,31 @@ public class App extends Application {
                     }
                     App.lastEnemyCustomers = basicAndQuality;  
 
-                    Double[] userCustomerResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
-                    App.lastUserInventory[0] += Math.max(App.userBasicDroneRobots-userCustomerResults[0], 0);
-                    App.lastUserInventory[1] += Math.max(App.userQualityDroneRobots-userCustomerResults[1], 0);
+                    Double[] userCustomerResults = ResultCalculations.multiPlayerCustomerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
+                    if(App.userBasicDroneRobots > userCustomerResults[0]){
+                        App.lastUserInventory[0] += App.userBasicDroneRobots-userCustomerResults[0];
+                    }
+                    else{
+                        if(App.userBasicDroneRobots + App.lastUserInventory[0] > userCustomerResults[0]){
+                            App.lastUserInventory[0] = App.userBasicDroneRobots + App.lastUserInventory[0] - userCustomerResults[0];
+                        }
+                        else{
+                            App.lastUserInventory[0] = 0.0;
+                        }
+                    }
+
+                    if(App.userQualityDroneRobots > userCustomerResults[1]){
+                        App.lastUserInventory[1] += App.userQualityDroneRobots-userCustomerResults[1];
+                    }
+                    else{
+                        if(App.userQualityDroneRobots + App.lastUserInventory[1] > userCustomerResults[1]){
+                            App.lastUserInventory[1] = App.userQualityDroneRobots + App.lastUserInventory[1] - userCustomerResults[1];
+                        }
+                        else{
+                            App.lastUserInventory[1] = 0.0;
+                        }
+                    }
+                    
 
                     //lastEnemyCustomers
                     App.isFirstDecisionPeriod = false;

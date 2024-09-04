@@ -114,9 +114,11 @@ public class ResultCalculations {
         System.out.println("Basic Cost: " + basicCosts);
         System.out.println("Quality Cost: " + qualityCosts);
         System.out.println("Basic Profits: " + basicProfits);
-        System.out.println("Quality Profits: " + basicProfits);
+        System.out.println("Quality Profits: " + qualityProfits);
         System.out.println("Basic Drones Available: " + basicDronesAvailable);
         System.out.println("Quality Drones Available: " + qualityDronesAvailable);
+        System.out.println("Basic Drones Inventory: " + App.lastUserInventory[0]);
+        System.out.println("Quality Drones Inventory: " + App.lastUserInventory[1]);
 
 
         // double numBasicRobots = myBasicCustomers/App.basicDronesMadePerPeriod;

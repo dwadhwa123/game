@@ -223,7 +223,7 @@ public class DecisionSummary extends BorderPane {
 
             basicDroneRobots = new Label();
 
-            basicDroneRobots.setText("Basic Drone Robots" + ": ");
+            basicDroneRobots.setText("Basic Drones" + ": ");
             basicDroneRobots.setPrefSize(200, 20);
             basicDroneRobots.setPadding(new Insets(10, 0, 10, 0));
             basicDroneRobots.setAlignment(Pos.CENTER_LEFT);
@@ -239,7 +239,7 @@ public class DecisionSummary extends BorderPane {
 
             qualityDroneRobots = new Label();
 
-            qualityDroneRobots.setText("Quality Drone Robots" + ": ");
+            qualityDroneRobots.setText("Quality Drones" + ": ");
             qualityDroneRobots.setPrefSize(200, 20);
             qualityDroneRobots.setPadding(new Insets(10, 0, 10, 0));
             qualityDroneRobots.setAlignment(Pos.CENTER_LEFT);
