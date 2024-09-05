@@ -128,45 +128,45 @@ public class CorporateLobby extends BorderPane {
     }
 
     class InitialConditionLabels extends VBox{
-        Label pricePerBasicDrone;
-        Label costPerBasicDrone;
-        Label pricePerQualityDrone;
-        Label costPerQualityDrone;
+        // Label pricePerBasicDrone;
+        // Label costPerBasicDrone;
+        // Label pricePerQualityDrone;
+        // Label costPerQualityDrone;
         Label robotsCostPerPeriod;
         Label basicDronesMadePerPeriod;
         Label qualityDronesMadePerPeriod;
         InitialConditionLabels(){
-            this.setStyle("-fx-font-family: serif");
-            pricePerBasicDrone = new Label();
-            pricePerBasicDrone.setText("Price Per Basic Drone: $" + App.pricePerBasicDrone);
-            pricePerBasicDrone.setPrefSize(200, 20);
-            pricePerBasicDrone.setPadding(new Insets(10, 0, 10, 0));
-            pricePerBasicDrone.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(pricePerBasicDrone);
+            // this.setStyle("-fx-font-family: serif");
+            // pricePerBasicDrone = new Label();
+            // pricePerBasicDrone.setText("Price Per Basic Drone: $" + App.pricePerBasicDrone);
+            // pricePerBasicDrone.setPrefSize(200, 20);
+            // pricePerBasicDrone.setPadding(new Insets(10, 0, 10, 0));
+            // pricePerBasicDrone.setAlignment(Pos.CENTER_LEFT);
+            // this.getChildren().add(pricePerBasicDrone);
 
-            this.setStyle("-fx-font-family: serif");
-            costPerBasicDrone = new Label();
-            costPerBasicDrone.setText("Cost Per Basic Drone: $" + App.costPerBasicDrone);
-            costPerBasicDrone.setPrefSize(200, 20);
-            costPerBasicDrone.setPadding(new Insets(10, 0, 10, 0));
-            costPerBasicDrone.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(costPerBasicDrone);
+            // this.setStyle("-fx-font-family: serif");
+            // costPerBasicDrone = new Label();
+            // costPerBasicDrone.setText("Cost Per Basic Drone: $" + App.costPerBasicDrone);
+            // costPerBasicDrone.setPrefSize(200, 20);
+            // costPerBasicDrone.setPadding(new Insets(10, 0, 10, 0));
+            // costPerBasicDrone.setAlignment(Pos.CENTER_LEFT);
+            // this.getChildren().add(costPerBasicDrone);
 
-            this.setStyle("-fx-font-family: serif");
-            pricePerQualityDrone = new Label();
-            pricePerQualityDrone.setText("Price Per Quality Drone: $" + App.pricePerQualityDrone);
-            pricePerQualityDrone.setPrefSize(200, 20);
-            pricePerQualityDrone.setPadding(new Insets(10, 0, 10, 0));
-            pricePerQualityDrone.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(pricePerQualityDrone);
+            // this.setStyle("-fx-font-family: serif");
+            // pricePerQualityDrone = new Label();
+            // pricePerQualityDrone.setText("Price Per Quality Drone: $" + App.pricePerQualityDrone);
+            // pricePerQualityDrone.setPrefSize(200, 20);
+            // pricePerQualityDrone.setPadding(new Insets(10, 0, 10, 0));
+            // pricePerQualityDrone.setAlignment(Pos.CENTER_LEFT);
+            // this.getChildren().add(pricePerQualityDrone);
 
-            this.setStyle("-fx-font-family: serif");
-            costPerQualityDrone = new Label();
-            costPerQualityDrone.setText("Cost Per Quality Drone: $" + App.costPerQualityDrone);
-            costPerQualityDrone.setPrefSize(200, 20);
-            costPerQualityDrone.setPadding(new Insets(10, 0, 10, 0));
-            costPerQualityDrone.setAlignment(Pos.CENTER_LEFT);
-            this.getChildren().add(costPerQualityDrone);
+            // this.setStyle("-fx-font-family: serif");
+            // costPerQualityDrone = new Label();
+            // costPerQualityDrone.setText("Cost Per Quality Drone: $" + App.costPerQualityDrone);
+            // costPerQualityDrone.setPrefSize(200, 20);
+            // costPerQualityDrone.setPadding(new Insets(10, 0, 10, 0));
+            // costPerQualityDrone.setAlignment(Pos.CENTER_LEFT);
+            // this.getChildren().add(costPerQualityDrone);
 
             this.setStyle("-fx-font-family: serif");
             basicCustomers = new Label();

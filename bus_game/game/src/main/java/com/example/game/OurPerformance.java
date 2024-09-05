@@ -32,6 +32,12 @@ public class OurPerformance extends BorderPane {
     private Label timer;
     TextField revenueTF;
     TextField profitTF;
+    TextField basicRevenueTF;
+    TextField basicProfitTF;
+    TextField qualityRevenueTF;
+    TextField qualityProfitTF;
+    TextField basicInventoryTF;
+    TextField qualityInventoryTF;
     Integer[] enemyInputs;
     OurPerformance(Stage currStage, App currApp){
         currStage.setResizable(true);
@@ -76,11 +82,17 @@ public class OurPerformance extends BorderPane {
             }
             if(App.changeDetected){
                 ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
-                Double[] profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
+                Double[] profitRevenueResults = ResultCalculations.multiPlayerExtraCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
             
                 Platform.runLater(() -> {
                     revenueTF.setText(String.valueOf(profitRevenueResults[0])); 
                     profitTF.setText(String.valueOf(profitRevenueResults[1])); 
+                    basicRevenueTF.setText(String.valueOf(profitRevenueResults[2]));
+                    basicProfitTF.setText(String.valueOf(profitRevenueResults[3]));
+                    qualityRevenueTF.setText(String.valueOf(profitRevenueResults[4]));
+                    qualityProfitTF.setText(String.valueOf(profitRevenueResults[5]));
+                    basicInventoryTF.setText(String.valueOf(App.lastUserInventory[0]));
+                    qualityInventoryTF.setText(String.valueOf(App.lastUserInventory[1]));
                 });
                  
             }
@@ -141,9 +153,8 @@ class Header extends HBox{
         Inputs(){
 
             ArrayList<Integer[]> enemyInputs = App.mdb.recieveMultipleEnemyInputs(App.username, App.gameNumber);
-            Double[] profitRevenueResults = new Double[2];
-            profitRevenueResults = ResultCalculations.multiPlayerCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
-            
+            Double[] profitRevenueResults = new Double[6];
+            profitRevenueResults = ResultCalculations.multiPlayerExtraCalculations(App.userBasicPrice, App.userQualityPrice, App.userAdvertisingSpend, App.userBasicDroneRobots, App.userQualityDroneRobots, enemyInputs);
            
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
@@ -163,8 +174,6 @@ class Header extends HBox{
             this.getChildren().add(revenueTF); 
             this.setAlignment(Pos.CENTER_LEFT);
 
-            this.setPrefSize(500, 20);
-            this.setStyle("-fx-font-family: serif");
             Label profitLabel = new Label();
             profitLabel.setText("Profit"); // 
             profitLabel.setPrefSize(100, 20);// set size of Profit label
@@ -180,9 +189,114 @@ class Header extends HBox{
             profitTF.setEditable(false);
             this.getChildren().add(profitTF); 
             this.setAlignment(Pos.CENTER_LEFT);
+
+            Label basicRevenueLabel = new Label();
+            basicRevenueLabel.setText("Basic Revenue"); // 
+            basicRevenueLabel.setPrefSize(100, 20);// set size of Revenue label
+            basicRevenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            basicRevenueLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(basicRevenueLabel); 
+
+            basicRevenueTF = new TextField(String.valueOf(profitRevenueResults[2])); 
+            basicRevenueTF.setPrefSize(380, 20); // set size of text field
+            basicRevenueTF.setStyle("-fx-font-family: serif"); // set background color
+            // texfield                
+            basicRevenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            basicRevenueTF.setEditable(false);
+            this.getChildren().add(basicRevenueTF); 
+            this.setAlignment(Pos.CENTER_LEFT);
+
+
+            Label basicProfitLabel = new Label();
+            basicProfitLabel.setText("Basic Profit");  
+            basicProfitLabel.setPrefSize(100, 20);// set size of Profit label
+            basicProfitLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            basicProfitLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(basicProfitLabel); 
+
+            basicProfitTF = new TextField(String.valueOf(profitRevenueResults[3])); 
+            basicProfitTF.setPrefSize(380, 20); 
+            basicProfitTF.setStyle("-fx-font-family: serif"); 
+            // texfield                
+            basicProfitTF.setPadding(new Insets(10, 0, 10, 0)); 
+            basicProfitTF.setEditable(false);
+            this.getChildren().add(basicProfitTF); 
+            this.setAlignment(Pos.CENTER_LEFT);
+
+            Label qualityRevenueLabel = new Label();
+            qualityRevenueLabel.setText("Quality Revenue"); // 
+            qualityRevenueLabel.setPrefSize(100, 20);// set size of Revenue label
+            qualityRevenueLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            qualityRevenueLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(qualityRevenueLabel); 
+
+            qualityRevenueTF = new TextField(String.valueOf(profitRevenueResults[4])); 
+            qualityRevenueTF.setPrefSize(380, 20); // set size of text field
+            qualityRevenueTF.setStyle("-fx-font-family: serif"); // set background color              
+            qualityRevenueTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            qualityRevenueTF.setEditable(false);
+            this.getChildren().add(qualityRevenueTF); 
+            this.setAlignment(Pos.CENTER_LEFT);
+
+            this.setPrefSize(500, 20);
+            this.setStyle("-fx-font-family: serif");
+            Label qualityProfitLabel = new Label();
+            qualityProfitLabel.setText("Profit"); // 
+            qualityProfitLabel.setPrefSize(100, 20);// set size of Profit label
+            qualityProfitLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            qualityProfitLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(qualityProfitLabel); 
+
+            qualityProfitTF = new TextField(String.valueOf(profitRevenueResults[5])); 
+            qualityProfitTF.setPrefSize(380, 20); 
+            qualityProfitTF.setStyle("-fx-font-family: serif"); 
+            // texfield                
+            qualityProfitTF.setPadding(new Insets(10, 0, 10, 0)); 
+            qualityProfitTF.setEditable(false);
+            this.getChildren().add(qualityProfitTF); 
+            this.setAlignment(Pos.CENTER_LEFT);
+
+            Label basicInventoryLabel = new Label();
+            basicInventoryLabel.setText("Basic Inventory"); // 
+            basicInventoryLabel.setPrefSize(100, 20);// set size of Revenue label
+            basicInventoryLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            basicInventoryLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(basicInventoryLabel); 
+
+            basicInventoryTF = new TextField(String.valueOf(App.lastUserInventory[0])); 
+            basicInventoryTF.setPrefSize(380, 20); // set size of text field
+            basicInventoryTF.setStyle("-fx-font-family: serif"); // set background color              
+            basicInventoryTF.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+            basicInventoryTF.setEditable(false);
+            this.getChildren().add(basicInventoryTF); 
+            this.setAlignment(Pos.CENTER_LEFT);
+
+            Label qualityInventoryLabel= new Label();
+            qualityInventoryLabel.setText("Quality Inventory"); // 
+            qualityInventoryLabel.setPrefSize(100, 20);// set size of Profit label
+            qualityInventoryLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
+            qualityInventoryLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(qualityInventoryLabel); 
+
+            qualityInventoryTF = new TextField(String.valueOf(App.lastUserInventory[1])); 
+            qualityInventoryTF.setPrefSize(380, 20); 
+            qualityInventoryTF.setStyle("-fx-font-family: serif"); 
+            // texfield                
+            qualityInventoryTF.setPadding(new Insets(10, 0, 10, 0)); 
+            qualityInventoryTF.setEditable(false);
+            this.getChildren().add(qualityInventoryTF); 
+            this.setAlignment(Pos.CENTER_LEFT);
+
+
+
+
+
+
+
+
             App.changeDetected = false;
-            }
-
-
         }
+
+
     }
+}
