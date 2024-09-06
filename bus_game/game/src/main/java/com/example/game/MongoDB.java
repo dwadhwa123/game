@@ -32,6 +32,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MongoDB {
     String uri = "mongodb+srv://dwadhwa:RkzwC5uipJApsk2c@cluster0.nzyceaj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
     //String uri = "mongodb+srv://dwadhwa:dzRtn9jb0AW1gjKZ@cluster1.2oiy60e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1";
@@ -97,10 +100,25 @@ public class MongoDB {
 
     //adds an admin account to the game
     public void addAdmin(String password){
+        ArrayList<Long> lst = new ArrayList<>();
         Document d = new Document("_id", "admin").append("password", password).append("war", 30.0).append("new entrant", 60.0).append("customer increase", 5.0)
         .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0).append("new entrant change", 10.0).append("start time", LocalDateTime.now()).append("started", false);
         collection.insertOne(d);
     }
+
+    // public void addGameNumber(long gameNumber){
+    //     Document query = new Document().append("_id", "admin");
+    //     Document document = collection.find(query).first();
+    //     ArrayList<Long> gN = (ArrayList<Long>) document.get("game numbers");
+    //     gN.add(gameNumber);
+
+    //     Bson updates = Updates.combine(
+    //         Updates.set("game numbers", gN));
+            
+    //     UpdateOptions options = new UpdateOptions().upsert(false);
+
+    //     collection.updateOne(query, updates, options);
+    // }
 
     public ArrayList<Double> getAdminInputs(){
         FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", "admin"));
@@ -147,14 +165,15 @@ public class MongoDB {
     public boolean getStarted(){
         FindIterable<Document> documentCursor = collection.find(Filters.eq("_id", "admin"));
         Document doc = documentCursor.first();
+        if(doc == null){
+            return false;
+        }
         return (boolean) doc.get("started");
 
     }
 
     public void setToZero(String username){
-        System.err.println(username + " is being set to zero");
         Document query = new Document().append("_id", username);
-        System.out.println("Document " + query);
 
         Bson updates = Updates.combine(
             Updates.set("basic price", 0),
@@ -165,7 +184,6 @@ public class MongoDB {
             Updates.set("cumulative revenue", 0.0),
             Updates.set("cumulative profit", 0.0));
 
-        System.out.print(query.get("basic price"));
         UpdateOptions options = new UpdateOptions().upsert(false);
 
         collection.updateOne(query, updates, options);

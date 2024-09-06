@@ -51,8 +51,8 @@ public class SignIn extends BorderPane {
         this.setCenter(accountLogIn);
 
         loginButton.setOnAction(e -> {
-            App.username = username.getUsernameField().getText();
             boolean isStarted = App.mdbAdmin.getStarted();
+            App.username = username.getUsernameField().getText();
             if(App.username.equals("admin")){
                 if(!App.mdbAdmin.correctUsernameCheck(username.getUsernameField().getText(), password.getPasswordField().getText())){
                     correctPasswordCheck.setVisible(true);
@@ -76,6 +76,7 @@ public class SignIn extends BorderPane {
                     App.userBasicDroneRobots = userInputs[3];
                     App.userQualityDroneRobots = userInputs[4];
                     App.gameNumber = App.mdb.getGameNumber(App.username);
+                    System.out.print(App.gameNumber);
 
 
                     LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
@@ -147,6 +148,10 @@ public class SignIn extends BorderPane {
             
         });
         signUpButton.setOnAction(e -> {
+            if(username.getUsernameField().getText().equals("admin")){
+                App.mdbAdmin.addAdmin(password.getPasswordField().getText()); 
+                new AdminChoices(currStage, currApp, false);
+            }
             if(App.mdbAdmin.getStarted()){
                 if(App.mdb.getSize() == 0){
                     App.gameNumber = 1;
@@ -160,91 +165,87 @@ public class SignIn extends BorderPane {
                         App.gameNumber = App.mdb.getPreviousGameNumber();
                     }
                 }
-                if(username.getUsernameField().getText().equals("admin")){
-                    App.mdbAdmin.addAdmin(password.getPasswordField().getText()); 
-                    new AdminChoices(currStage, currApp, false);
-                }
-                else{
-                    ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
-                    App.numPlayers = (int) (timeChoices.get(3).doubleValue());
-                    App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText(), App.gameNumber);
-                    App.playerNumber = (int) App.mdb.getGameNumberSize(App.gameNumber);
-                    Platform.runLater(() -> {
-                        correctPasswordCheck.setText("Successfully Registered. Waiting for opponents...");
-                        correctPasswordCheck.setVisible(true);
-                    });
-                    new Thread(() -> {
-                        if(App.playerNumber < App.numPlayers){
-                            try {
-                                for (int i = App.playerNumber; i < App.numPlayers; i++) {
-                                    App.mdb.stopUntilInsertion(); 
-                                }
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
+                System.out.print(App.gameNumber);
+                ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
+                App.numPlayers = (int) (timeChoices.get(3).doubleValue());
+                App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText(), App.gameNumber);
+                App.playerNumber = (int) App.mdb.getGameNumberSize(App.gameNumber);
+                Platform.runLater(() -> {
+                    correctPasswordCheck.setText("Successfully Registered. Waiting for opponents...");
+                    correctPasswordCheck.setVisible(true);
+                });
+                new Thread(() -> {
+                    if(App.playerNumber < App.numPlayers){
+                        try {
+                            for (int i = App.playerNumber; i < App.numPlayers; i++) {
+                                App.mdb.stopUntilInsertion(); 
                             }
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
                         }
-                        LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
-                        Duration duration = Duration.between(gameStartTime, LocalDateTime.now());
-                        long differenceInSeconds = duration.getSeconds();
-                        App.username = username.getUsernameField().getText();
-                        App.mdb.makeStarted(App.username);
+                    }
+                    LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
+                    Duration duration = Duration.between(gameStartTime, LocalDateTime.now());
+                    long differenceInSeconds = duration.getSeconds();
+                    App.username = username.getUsernameField().getText();
+                    App.mdb.makeStarted(App.username);
 
-        
-                        long timeWar = (long) (timeChoices.get(0) * 60);
-                        long timeNewEntrant = (long) (timeChoices.get(1) * 60);
-                        long timeCustomerIncrease = (long) (timeChoices.get(2) * 60);
-                        long timeCumulative = (long) (timeChoices.get(4) * 60);
-                        Double warPercentage = timeChoices.get(5);
-                        Double newEntrant = timeChoices.get(6);
     
-                        int numTimesWar = (int) (differenceInSeconds/timeWar);
-                        int numTimesNewEntrant = (int) (differenceInSeconds/timeNewEntrant);
-                        int numTimesCustomerIncrease = (int) (differenceInSeconds/timeCustomerIncrease);
-                        int numTimesCumulative = (int) (differenceInSeconds/timeCumulative);
-    
-                        if(numTimesWar > 0){
-                            App.costPerBasicDrone = 20;
-                            App.costPerQualityDrone = 60;
-                            App.robotsCostPerPeriod = 400;
-                        }
-                       
-                        App.basicCustomers =  (int) (App.basicCustomers * Math.pow((1-(warPercentage.doubleValue()/100)), numTimesWar));
-                        App.qualityCustomers = (int) (App.qualityCustomers * Math.pow((1-(warPercentage.doubleValue()/100)), numTimesWar));
-                        
-                        double decimalDecrease = (100-newEntrant) * 0.01;
-                        App.newEntrantPercentage *= Math.pow(decimalDecrease, numTimesNewEntrant);
-    
-                        App.basicCustomers *= Math.pow(1.05, numTimesCustomerIncrease);
-                        App.qualityCustomers *= Math.pow(1.05, numTimesCustomerIncrease);
-    
-    
-                        LocalDateTime futureDateTime = gameStartTime.plusSeconds(timeWar * (numTimesWar+1));
-                        App.startMonitoringWar(futureDateTime, currStage, currApp);
-                        LocalDateTime futureDateTime2 = gameStartTime.plusSeconds(timeNewEntrant * (numTimesNewEntrant+1));
-                        App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-                        LocalDateTime futureDateTime3 = gameStartTime.plusSeconds(timeCustomerIncrease * (numTimesCustomerIncrease+1));
-                        App.startMonitoringCustomerIncrease(futureDateTime3);
-                        LocalDateTime futureDateTime4 = gameStartTime.plusSeconds(timeCumulative * (numTimesCumulative+1));
-                        App.startMonitoringCumulative(futureDateTime4);
-    
-                        App.timer = (int) (((long) timeCumulative * (numTimesCumulative+1) - differenceInSeconds));
+                    long timeWar = (long) (timeChoices.get(0) * 60);
+                    long timeNewEntrant = (long) (timeChoices.get(1) * 60);
+                    long timeCustomerIncrease = (long) (timeChoices.get(2) * 60);
+                    long timeCumulative = (long) (timeChoices.get(4) * 60);
+                    Double warPercentage = timeChoices.get(5);
+                    Double newEntrant = timeChoices.get(6);
 
-                        for(int i = 0; i < App.numPlayers-1; i++){
-                            Integer[] zeroes = {0, 0, 0, 0, 0};
-                            App.lastEnemyDecisions.add(zeroes);
-                            Double[] customers = {0.0, 0.0};
-                            App.lastEnemyCustomers.add(customers);
-                        }
+                    int numTimesWar = (int) (differenceInSeconds/timeWar);
+                    int numTimesNewEntrant = (int) (differenceInSeconds/timeNewEntrant);
+                    int numTimesCustomerIncrease = (int) (differenceInSeconds/timeCustomerIncrease);
+                    int numTimesCumulative = (int) (differenceInSeconds/timeCumulative);
 
-                        App.mdb.watchForGameChange(App.gameNumber);
-                        App.mdbAdmin.watchForGameEnd(currStage, currApp);
-                        App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
+                    if(numTimesWar > 0){
+                        App.costPerBasicDrone = 20;
+                        App.costPerQualityDrone = 60;
+                        App.robotsCostPerPeriod = 400;
+                    }
+                
+                    App.basicCustomers =  (int) (App.basicCustomers * Math.pow((1-(warPercentage.doubleValue()/100)), numTimesWar));
+                    App.qualityCustomers = (int) (App.qualityCustomers * Math.pow((1-(warPercentage.doubleValue()/100)), numTimesWar));
+                    
+                    double decimalDecrease = (100-newEntrant) * 0.01;
+                    App.newEntrantPercentage *= Math.pow(decimalDecrease, numTimesNewEntrant);
 
-                        Platform.runLater(() -> {
-                            new CorporateLobby(currStage, currApp); 
-                        });
-                    }).start();
-                }
+                    App.basicCustomers *= Math.pow(1.05, numTimesCustomerIncrease);
+                    App.qualityCustomers *= Math.pow(1.05, numTimesCustomerIncrease);
+
+
+                    LocalDateTime futureDateTime = gameStartTime.plusSeconds(timeWar * (numTimesWar+1));
+                    App.startMonitoringWar(futureDateTime, currStage, currApp);
+                    LocalDateTime futureDateTime2 = gameStartTime.plusSeconds(timeNewEntrant * (numTimesNewEntrant+1));
+                    App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
+                    LocalDateTime futureDateTime3 = gameStartTime.plusSeconds(timeCustomerIncrease * (numTimesCustomerIncrease+1));
+                    App.startMonitoringCustomerIncrease(futureDateTime3);
+                    LocalDateTime futureDateTime4 = gameStartTime.plusSeconds(timeCumulative * (numTimesCumulative+1));
+                    App.startMonitoringCumulative(futureDateTime4);
+
+                    App.timer = (int) (((long) timeCumulative * (numTimesCumulative+1) - differenceInSeconds));
+
+                    for(int i = 0; i < App.numPlayers-1; i++){
+                        Integer[] zeroes = {0, 0, 0, 0, 0};
+                        App.lastEnemyDecisions.add(zeroes);
+                        Double[] customers = {0.0, 0.0};
+                        App.lastEnemyCustomers.add(customers);
+                    }
+
+                    App.mdb.watchForGameChange(App.gameNumber);
+                    App.mdbAdmin.watchForGameEnd(currStage, currApp);
+                    App.enemyUsernames = App.mdb.getEnemyUsernames(App.username, App.gameNumber);
+
+                    Platform.runLater(() -> {
+                        new CorporateLobby(currStage, currApp); 
+                    });
+                }).start();
+                
             }
             else{
                 correctPasswordCheck.setText("Game has not started yet");

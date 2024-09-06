@@ -88,7 +88,7 @@ public class AdminChoices extends BorderPane{
     class Header3 extends HBox{
         Header3(){
             Label header = new Label("Administrative Choices");
-            header.setPrefSize(300, 60);
+            header.setPrefSize(300, 50);
             header.setStyle("-fx-font-family: serif");
             header.setFont(new Font(20));
             header.setAlignment(Pos.CENTER);
