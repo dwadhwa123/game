@@ -67,7 +67,6 @@ public class SignIn extends BorderPane {
             }
             else{
                 if(isStarted){
-                    //App.mdb.setToZero(App.username);
                     ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
                     Integer[] userInputs = App.mdb.recieveUserInputs(App.username);
                     App.userBasicPrice = userInputs[0];

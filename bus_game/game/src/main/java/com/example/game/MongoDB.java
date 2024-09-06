@@ -172,9 +172,25 @@ public class MongoDB {
 
     }
 
-    public void setToZero(String username){
-        Document query = new Document().append("_id", username);
+    // public void setToZero(String username){
+    //     Document query = new Document().append("_id", username);
 
+    //     Bson updates = Updates.combine(
+    //         Updates.set("basic price", 0),
+    //         Updates.set("quality price", 0),
+    //         Updates.set("advertising spend", 0),
+    //         Updates.set("basic drone robots", 0),
+    //         Updates.set("quality drone robots", 0),
+    //         Updates.set("cumulative revenue", 0.0),
+    //         Updates.set("cumulative profit", 0.0));
+
+    //     UpdateOptions options = new UpdateOptions().upsert(false);
+
+    //     collection.updateOne(query, updates, options);
+    // }
+
+    public void setAllToZero() {
+        // Define the update to set the specified fields to 0
         Bson updates = Updates.combine(
             Updates.set("basic price", 0),
             Updates.set("quality price", 0),
@@ -182,11 +198,11 @@ public class MongoDB {
             Updates.set("basic drone robots", 0),
             Updates.set("quality drone robots", 0),
             Updates.set("cumulative revenue", 0.0),
-            Updates.set("cumulative profit", 0.0));
-
-        UpdateOptions options = new UpdateOptions().upsert(false);
-
-        collection.updateOne(query, updates, options);
+            Updates.set("cumulative profit", 0.0)
+        );
+    
+        // Perform the update operation on all documents
+        collection.updateMany(new Document(), updates);
     }
     
  
@@ -441,7 +457,6 @@ public class MongoDB {
     
                         // Check if the 'started' field value has changed
                         if (!currentStartedValue.equals(lastStartedValue.get())) {
-                            App.mdb.setToZero(App.username);
                             App.schedulerWar.shutdown();
                             App.schedulerEntrant.shutdown();
                             App.schedulerCumulative.shutdown();

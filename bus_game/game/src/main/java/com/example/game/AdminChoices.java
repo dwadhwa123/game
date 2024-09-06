@@ -83,6 +83,7 @@ public class AdminChoices extends BorderPane{
                 decisionSaved.setText("Game Ended");
                 decisionSaved.setVisible(true);
             });
+            App.mdb.setAllToZero();
         });
     }
     class Header3 extends HBox{
