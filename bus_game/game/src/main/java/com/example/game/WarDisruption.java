@@ -11,6 +11,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.*;
+import java.time.LocalDateTime;
 
 public class WarDisruption extends BorderPane{
     private Header3 header;
@@ -29,6 +30,8 @@ public class WarDisruption extends BorderPane{
         ArrayList<Double> choices = App.mdbAdmin.getAdminInputs();
         App.basicCustomers =  (int) (App.basicCustomers * (1-(choices.get(5).doubleValue()/100)));
         App.qualityCustomers = (int) (App.qualityCustomers * (1-(choices.get(5).doubleValue()/100)));
+        LocalDateTime warEndTime = LocalDateTime.now().plusSeconds((long) (choices.get(6) * 60));
+        App.startMonitoringWarEnd(warEndTime);
         backButton.setOnAction(e -> {
             App.isWarDisruption = false;
             if(App.isNewEntrantDisruption){

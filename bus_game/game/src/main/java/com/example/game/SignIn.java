@@ -15,10 +15,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import com.example.game.SignIn.AccountLogIn;
-import com.example.game.SignIn.Password;
-import com.example.game.SignIn.Username;
-
 public class SignIn extends BorderPane {
     private Header3 header3;
     private AccountLogIn accountLogIn;
@@ -112,14 +108,14 @@ public class SignIn extends BorderPane {
                     App.qualityCustomers *= Math.pow(1.05, numTimesCustomerIncrease);
 
 
-                    LocalDateTime futureDateTime = gameStartTime.plusSeconds(timeWar * (numTimesWar+1));
-                    App.startMonitoringWar(futureDateTime, currStage, currApp);
-                    LocalDateTime futureDateTime2 = gameStartTime.plusSeconds(timeNewEntrant * (numTimesNewEntrant+1));
-                    App.startMonitoringEntrant(futureDateTime2, currStage, currApp);
-                    LocalDateTime futureDateTime3 = gameStartTime.plusSeconds(timeCustomerIncrease * (numTimesCustomerIncrease+1));
-                    App.startMonitoringCustomerIncrease(futureDateTime3);
-                    LocalDateTime futureDateTime4 = gameStartTime.plusSeconds(timeCumulative * (numTimesCumulative+1));
-                    App.startMonitoringCumulative(futureDateTime4);
+                    LocalDateTime warTime = gameStartTime.plusSeconds(timeWar * (numTimesWar+1));
+                    App.startMonitoringWar(warTime, currStage, currApp);
+                    LocalDateTime newEntrantTime = gameStartTime.plusSeconds(timeNewEntrant * (numTimesNewEntrant+1));
+                    App.startMonitoringEntrant(newEntrantTime, currStage, currApp);
+                    LocalDateTime customerIncreaseTime = gameStartTime.plusSeconds(timeCustomerIncrease * (numTimesCustomerIncrease+1));
+                    App.startMonitoringCustomerIncrease(customerIncreaseTime);
+                    LocalDateTime decisionPeriodTime = gameStartTime.plusSeconds(timeCumulative * (numTimesCumulative+1));
+                    App.startMonitoringCumulative(decisionPeriodTime);
 
                     App.timer = (int) (((long) timeCumulative * (numTimesCumulative+1) - differenceInSeconds));
 

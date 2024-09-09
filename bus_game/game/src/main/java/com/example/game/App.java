@@ -31,7 +31,7 @@ public class App extends Application {
     public static int costPerBasicDrone = 10;
     public static int pricePerQualityDrone = 100;
     public static int costPerQualityDrone = 30;
-    public static int basicCustomers = 200;
+    public static int basicCustomers = 2000;
     public static int qualityCustomers = 200;
     public static int robotsCostPerPeriod= 200;
     public static int basicDronesMadePerPeriod = 10;
@@ -44,6 +44,7 @@ public class App extends Application {
     public static ScheduledExecutorService schedulerEntrant;
     public static ScheduledExecutorService schedulerCustomerIncrease;
     public static ScheduledExecutorService schedulerCumulative;
+    public static ScheduledExecutorService schedulerWarEnd;
     public static int numPlayers = 0;
     public static int timer = 0;
     public static double newEntrantPercentage = 100.0;
@@ -128,6 +129,20 @@ public class App extends Application {
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 LocalDateTime futureDateTime = currentDateTime.plusSeconds((long) (timeChoices.get(2) * 60));
                 App.startMonitoringCustomerIncrease(futureDateTime);
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public static void startMonitoringWarEnd(LocalDateTime ltd){
+        schedulerWarEnd = Executors.newScheduledThreadPool(1);
+        schedulerWarEnd.scheduleAtFixedRate(() -> {
+            LocalDateTime now = LocalDateTime.now();
+            if (now.isAfter(ltd)) {
+                Platform.runLater(() -> {
+                    App.changeDetected = true;
+                    App.robotsCostPerPeriod = 200;
+                });
+                schedulerWarEnd.shutdown();
             }
         }, 0, 1, TimeUnit.SECONDS);
     }

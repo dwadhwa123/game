@@ -24,7 +24,7 @@ public class NewEntrantDistruption extends BorderPane{
         newEntrantDisruptionScene = new Scene(this, App.width, App.height);
         currStage.setScene(newEntrantDisruptionScene);
         ArrayList<Double> choices = App.mdbAdmin.getAdminInputs();
-        double decimalDecrease = (100-choices.get(6)) * 0.01;
+        double decimalDecrease = (100-choices.get(7)) * 0.01;
         App.newEntrantPercentage *= decimalDecrease;
         System.out.println(App.newEntrantPercentage);
         backButton.setOnAction(e -> {

@@ -241,7 +241,7 @@ class Header extends HBox{
             this.setPrefSize(500, 20);
             this.setStyle("-fx-font-family: serif");
             Label qualityProfitLabel = new Label();
-            qualityProfitLabel.setText("Profit"); // 
+            qualityProfitLabel.setText("Quality Profit"); // 
             qualityProfitLabel.setPrefSize(100, 20);// set size of Profit label
             qualityProfitLabel.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the label
             qualityProfitLabel.setAlignment(Pos.CENTER_LEFT);

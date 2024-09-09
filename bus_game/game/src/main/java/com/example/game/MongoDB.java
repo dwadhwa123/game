@@ -100,9 +100,9 @@ public class MongoDB {
 
     //adds an admin account to the game
     public void addAdmin(String password){
-        ArrayList<Long> lst = new ArrayList<>();
         Document d = new Document("_id", "admin").append("password", password).append("war", 30.0).append("new entrant", 60.0).append("customer increase", 5.0)
-        .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0).append("new entrant change", 10.0).append("start time", LocalDateTime.now()).append("started", false);
+        .append("num players", 2.0).append("decision length", 5.0).append("war percent change", 20.0).append("new entrant change", 10.0).append("start time", LocalDateTime.now()).append("started", false)
+        .append("war length", 5.0);
         collection.insertOne(d);
     }
 
@@ -131,6 +131,7 @@ public class MongoDB {
             ret.add(2.0);
             ret.add(5.0);
             ret.add(20.0);
+            ret.add(5.0);
             ret.add(10.0);
             return ret;
         }
@@ -141,6 +142,7 @@ public class MongoDB {
             ret.add((Double) doc.get("num players"));
             ret.add((Double) doc.get("decision length"));
             ret.add((Double) doc.get("war percent change"));
+            ret.add((Double) doc.get("war length"));
             ret.add((Double) doc.get("new entrant change"));
             return ret;
         }
@@ -217,7 +219,8 @@ public class MongoDB {
                     Updates.set("num players", decisions.get(3)),
                     Updates.set("decision length", decisions.get(4)),
                     Updates.set("war percent change", decisions.get(5)),
-                    Updates.set("new entrant change", decisions.get(6)));
+                    Updates.set("war length", decisions.get(6)),
+                    Updates.set("new entrant percentage", decisions.get(7)));
 
         UpdateOptions options = new UpdateOptions().upsert(false);
 
@@ -463,7 +466,7 @@ public class MongoDB {
                             App.schedulerCustomerIncrease.shutdown();
                             lastStartedValue.set(currentStartedValue);
                             App.qualityCustomers = 200;
-                            App.basicCustomers = 200;
+                            App.basicCustomers = 2000;
                             App.newEntrantPercentage = 100.0;
                             App.userBasicPrice = 0;
                             App.userQualityPrice = 0;
@@ -476,6 +479,8 @@ public class MongoDB {
                             App.isFirstDecisionPeriod = true;
                             App.isNewEntrantDisruption = false;
                             App.isWarDisruption = false;
+                            App.lastUserInventory[0] = 0.0;
+                            App.lastUserInventory[1] = 0.0;
                             Platform.runLater(() -> {
                                 new GameEnded(currStage, currApp);
                             });

@@ -66,7 +66,7 @@ public class ResultCalculations {
 
         myBasicCustomers *= App.newEntrantPercentage/100.0;
         myQualityCustomers *= App.newEntrantPercentage/100.0;
-        if(myQualityPrice > 5000){
+        if(myQualityPrice > 500){
             myQualityCustomers = 0;
         }
 
@@ -168,7 +168,7 @@ public class ResultCalculations {
 
         myBasicCustomers *= App.newEntrantPercentage/100.0;
         myQualityCustomers *= App.newEntrantPercentage/100.0;
-        if(myQualityPrice > 5000){
+        if(myQualityPrice > 500){
             myQualityCustomers = 0;
         }
 
@@ -231,7 +231,7 @@ public class ResultCalculations {
         results[2] = basicRevenues;
         results[3] = basicProfits;
         results[4] = qualityRevenues;
-        results[5] = basicRevenues;
+        results[5] = qualityProfits;
         return results;
     }
 
@@ -273,7 +273,7 @@ public class ResultCalculations {
         double myBasicCustomers = App.basicCustomers * myBasicScore / sumBasic;
         double myQualityCustomers = (double) (App.qualityCustomers) * myAdvertising / sumAdvertising;
 
-        if(myQualityPrice > 5000){
+        if(myQualityPrice > 500){
             myQualityCustomers = 0;
         }
 

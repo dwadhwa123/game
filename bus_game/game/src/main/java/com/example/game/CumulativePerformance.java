@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -43,10 +44,14 @@ public class CumulativePerformance extends BorderPane {
         this.setTop(header);
         lsb = new LeftSideButtons();
         this.setLeft(lsb);
+        inputs = new Inputs();
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(inputs);
+        scrollPane.setFitToWidth(true); 
         cumulativePerformanceScene = new Scene(this, App.width, App.height);
         currStage.setScene(cumulativePerformanceScene);
-        inputs = new Inputs();
-        this.setCenter(inputs);
+        this.setRight(scrollPane);
+
         homePageButton.setOnAction(e -> {
             timeline.stop();
             new CorporateLobby(currStage, currApp);

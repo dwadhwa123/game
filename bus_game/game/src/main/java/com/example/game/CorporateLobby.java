@@ -30,6 +30,7 @@ public class CorporateLobby extends BorderPane {
     private Timeline timeline;
     Label basicCustomers;
     Label qualityCustomers;
+    Label robotsCostPerPeriod;
     CorporateLobby(Stage currStage, App currApp){
         header = new Header();
         this.setTop(header);
@@ -68,12 +69,14 @@ public class CorporateLobby extends BorderPane {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             basicCustomers.setText("Basic Customers: " + App.basicCustomers);
             qualityCustomers.setText("Quality Customers: " + App.qualityCustomers);
+            robotsCostPerPeriod.setText("Robots Cost Per Period: $" + App.robotsCostPerPeriod);
             if(App.timer >= 60){
                 timer.setText(String.valueOf(App.timer/60) + " min");
             }
             else{
                 timer.setText(String.valueOf(App.timer)); // show seconds if under a minute
             }
+            
         }));
         timeline.setCycleCount(Timeline.INDEFINITE); //Runs for an indefinite time
         timeline.play();
@@ -132,7 +135,6 @@ public class CorporateLobby extends BorderPane {
         // Label costPerBasicDrone;
         // Label pricePerQualityDrone;
         // Label costPerQualityDrone;
-        Label robotsCostPerPeriod;
         Label basicDronesMadePerPeriod;
         Label qualityDronesMadePerPeriod;
         InitialConditionLabels(){
@@ -194,7 +196,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             basicDronesMadePerPeriod = new Label();
-            basicDronesMadePerPeriod.setText(" Basic Drones Made Per Period: " + App.basicDronesMadePerPeriod);
+            basicDronesMadePerPeriod.setText("Basic Drones Made Per Period: " + App.basicDronesMadePerPeriod);
             basicDronesMadePerPeriod.setPrefSize(200, 20);
             basicDronesMadePerPeriod.setPadding(new Insets(10, 0, 10, 0));
             basicDronesMadePerPeriod.setAlignment(Pos.CENTER_LEFT);
@@ -202,7 +204,7 @@ public class CorporateLobby extends BorderPane {
 
             this.setStyle("-fx-font-family: serif");
             qualityDronesMadePerPeriod = new Label();
-            qualityDronesMadePerPeriod.setText(" Basic Drones Made Per Period: " + App.qualityDronesMadePerPeriod);
+            qualityDronesMadePerPeriod.setText("Quality Drones Made Per Period: " + App.qualityDronesMadePerPeriod);
             qualityDronesMadePerPeriod.setPrefSize(200, 20);
             qualityDronesMadePerPeriod.setPadding(new Insets(10, 0, 10, 0));
             qualityDronesMadePerPeriod.setAlignment(Pos.CENTER_LEFT);

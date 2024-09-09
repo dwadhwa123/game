@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -24,6 +25,7 @@ public class AdminChoices extends BorderPane{
     TextField numPlayersDecision;
     TextField decisionLengthDecision;
     TextField warCustomerDecreaseDecision;
+    TextField warLengthDecision;
     TextField newEntrantDecreaseDecision;
     private Button saveButton;
     private Button startGameButton;
@@ -37,6 +39,13 @@ public class AdminChoices extends BorderPane{
         this.setTop(header);
         doubleInputs = App.mdbAdmin.getAdminInputs();
         choices = new Choices(doubleInputs, started);
+        choices.setPadding(new Insets(0, 0, 100,40));
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(choices);
+        scrollPane.setFitToWidth(true); 
+        this.setCenter(scrollPane);
+
         this.setLeft(choices);
         adminChoicesScene = new Scene(this, App.width, App.height);
         currStage.setScene(adminChoicesScene);
@@ -50,11 +59,12 @@ public class AdminChoices extends BorderPane{
             double numPlayersChoice = Double.parseDouble(numPlayersDecision.getText());
             double decisionLengthChoice = Double.parseDouble(decisionLengthDecision.getText());
             double warCustomerDecreaseChoice = Double.parseDouble(warCustomerDecreaseDecision.getText());
+            double warLengthChoice = Double.parseDouble(warLengthDecision.getText());
             double newEntrantDecreaseChoice = Double.parseDouble(newEntrantDecreaseDecision.getText());
             ArrayList<Double> choices = new ArrayList<>();
             choices.add(warChoice); choices.add(newEntrantChoice); choices.add(customerIncreaseChoice);
             choices.add(numPlayersChoice); choices.add(decisionLengthChoice); choices.add(warCustomerDecreaseChoice);
-            choices.add(newEntrantDecreaseChoice);
+            choices.add(warLengthChoice); choices.add(newEntrantDecreaseChoice); 
             App.mdbAdmin.saveAdminDecisions(choices);
             Platform.runLater(() -> {
                 decisionSaved.setText("Choices Saved");
@@ -107,6 +117,7 @@ public class AdminChoices extends BorderPane{
         Label numPlayersLabel;
         Label decisionLengthLabel;
         Label warCustomerLabel;
+        Label warLengthLabel;
         Label newEntrantDecreaseLabel;
         Choices(ArrayList<Double> doubleInputs, boolean started){
             this.setPrefSize(500, 20);
@@ -215,14 +226,30 @@ public class AdminChoices extends BorderPane{
             this.getChildren().add(warCustomerDecreaseDecision);
             this.setAlignment(Pos.CENTER_LEFT);
 
+            warLengthLabel = new Label();
+            warLengthLabel.setText("Length of war");
+            warLengthLabel.setPrefSize(220, 20);
+            warLengthLabel.setPadding(new Insets(10, 0, 10, 0));
+            warLengthLabel.setAlignment(Pos.CENTER_LEFT);
+            this.getChildren().add(warLengthLabel);
+            String input7 = String.valueOf(doubleInputs.get(6));
+            warLengthDecision = new TextField(input7);
+            warLengthDecision.setPrefSize(380, 20);
+            warLengthDecision.setStyle("-fx-font-family: serif");
+
+            warLengthDecision.setPadding(new Insets(10, 0, 10, 0));
+            warLengthDecision.setEditable(true);
+            this.getChildren().add(warLengthDecision);
+
+
             newEntrantDecreaseLabel = new Label();
             newEntrantDecreaseLabel.setText("% of market share lost per new entrant");
             newEntrantDecreaseLabel.setPrefSize(250, 20);
             newEntrantDecreaseLabel.setPadding(new Insets(10, 0, 10, 0));
             newEntrantDecreaseLabel.setAlignment(Pos.CENTER_LEFT);
             this.getChildren().add(newEntrantDecreaseLabel);
-            String input7 = String.valueOf(doubleInputs.get(6));
-            newEntrantDecreaseDecision = new TextField(input7);
+            String input8 = String.valueOf(doubleInputs.get(7));
+            newEntrantDecreaseDecision = new TextField(input8);
             newEntrantDecreaseDecision.setPrefSize(380, 20);
             newEntrantDecreaseDecision.setStyle("-fx-font-family: serif");
 
@@ -258,6 +285,8 @@ public class AdminChoices extends BorderPane{
             decisionSaved.setAlignment(Pos.CENTER_LEFT);
             decisionSaved.setVisible(false);
             this.getChildren().add(decisionSaved);
+
+            this.setPadding(getInsets());
 
         }
 
