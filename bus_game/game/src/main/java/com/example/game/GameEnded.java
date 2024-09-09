@@ -25,7 +25,6 @@ public class GameEnded extends BorderPane{
         currStage.setScene(gameEndedScene);
         backButton.setOnAction(e -> {
             Platform.runLater(() -> {
-                System.out.print("BACK BUTTON PRESSED");
                 new SignIn(currStage, currApp); 
             });
         });

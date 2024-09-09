@@ -108,18 +108,18 @@ public class ResultCalculations {
         qualityRevenues = Math.floor(qualityRevenues * 100) / 100.0;
         qualityProfits = Math.floor(qualityProfits * 100) / 100.0;
 
-        System.out.println("Basic Customers: " + myBasicCustomers);
-        System.out.println("Quality Customers: " + myQualityCustomers);
-        System.out.println("Basic Revenue: " + basicRevenues);
-        System.out.println("Quality Revenue: " + qualityRevenues);
-        System.out.println("Basic Cost: " + basicCosts);
-        System.out.println("Quality Cost: " + qualityCosts);
-        System.out.println("Basic Profits: " + basicProfits);
-        System.out.println("Quality Profits: " + qualityProfits);
-        System.out.println("Basic Drones Available: " + basicDronesAvailable);
-        System.out.println("Quality Drones Available: " + qualityDronesAvailable);
-        System.out.println("Basic Drones Inventory: " + App.lastUserInventory[0]);
-        System.out.println("Quality Drones Inventory: " + App.lastUserInventory[1]);
+        // System.out.println("Basic Customers: " + myBasicCustomers);
+        // System.out.println("Quality Customers: " + myQualityCustomers);
+        // System.out.println("Basic Revenue: " + basicRevenues);
+        // System.out.println("Quality Revenue: " + qualityRevenues);
+        // System.out.println("Basic Cost: " + basicCosts);
+        // System.out.println("Quality Cost: " + qualityCosts);
+        // System.out.println("Basic Profits: " + basicProfits);
+        // System.out.println("Quality Profits: " + qualityProfits);
+        // System.out.println("Basic Drones Available: " + basicDronesAvailable);
+        // System.out.println("Quality Drones Available: " + qualityDronesAvailable);
+        // System.out.println("Basic Drones Inventory: " + App.lastUserInventory[0]);
+        // System.out.println("Quality Drones Inventory: " + App.lastUserInventory[1]);
 
         Double[] results = new Double[2];
         revenue = Math.floor(revenue * 100) / 100.0;
@@ -210,18 +210,18 @@ public class ResultCalculations {
         qualityRevenues = Math.floor(qualityRevenues * 100) / 100.0;
         qualityProfits = Math.floor(qualityProfits * 100) / 100.0;
 
-        System.out.println("Basic Customers: " + myBasicCustomers);
-        System.out.println("Quality Customers: " + myQualityCustomers);
-        System.out.println("Basic Revenue: " + basicRevenues);
-        System.out.println("Quality Revenue: " + qualityRevenues);
-        System.out.println("Basic Cost: " + basicCosts);
-        System.out.println("Quality Cost: " + qualityCosts);
-        System.out.println("Basic Profits: " + basicProfits);
-        System.out.println("Quality Profits: " + qualityProfits);
-        System.out.println("Basic Drones Available: " + basicDronesAvailable);
-        System.out.println("Quality Drones Available: " + qualityDronesAvailable);
-        System.out.println("Basic Drones Inventory: " + App.lastUserInventory[0]);
-        System.out.println("Quality Drones Inventory: " + App.lastUserInventory[1]);
+        // System.out.println("Basic Customers: " + myBasicCustomers);
+        // System.out.println("Quality Customers: " + myQualityCustomers);
+        // System.out.println("Basic Revenue: " + basicRevenues);
+        // System.out.println("Quality Revenue: " + qualityRevenues);
+        // System.out.println("Basic Cost: " + basicCosts);
+        // System.out.println("Quality Cost: " + qualityCosts);
+        // System.out.println("Basic Profits: " + basicProfits);
+        // System.out.println("Quality Profits: " + qualityProfits);
+        // System.out.println("Basic Drones Available: " + basicDronesAvailable);
+        // System.out.println("Quality Drones Available: " + qualityDronesAvailable);
+        // System.out.println("Basic Drones Inventory: " + App.lastUserInventory[0]);
+        // System.out.println("Quality Drones Inventory: " + App.lastUserInventory[1]);
 
         Double[] results = new Double[6];
         revenue = Math.floor(revenue * 100) / 100.0;

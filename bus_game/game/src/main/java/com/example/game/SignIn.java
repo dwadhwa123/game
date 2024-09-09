@@ -71,7 +71,6 @@ public class SignIn extends BorderPane {
                     App.userBasicDroneRobots = userInputs[3];
                     App.userQualityDroneRobots = userInputs[4];
                     App.gameNumber = App.mdb.getGameNumber(App.username);
-                    System.out.print(App.gameNumber);
 
 
                     LocalDateTime gameStartTime = App.mdbAdmin.getStartTime();
@@ -160,7 +159,6 @@ public class SignIn extends BorderPane {
                         App.gameNumber = App.mdb.getPreviousGameNumber();
                     }
                 }
-                System.out.print(App.gameNumber);
                 ArrayList<Double> timeChoices = App.mdbAdmin.getAdminInputs();
                 App.numPlayers = (int) (timeChoices.get(3).doubleValue());
                 App.mdb.addEntry(username.getUsernameField().getText(), password.getPasswordField().getText(), App.gameNumber);
